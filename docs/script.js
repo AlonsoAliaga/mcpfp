@@ -711,14 +711,13 @@ function updateSkin(inCache = true) {
     skinCtx.drawImage(loadedSkinBuffer, 20, 37, 8, 8, 6, 12, 8, 8); // Chest Other (top layer)
     skinCtx.drawImage(loadedSkinBuffer, 21, 36, 6, 1, 7, 11, 6, 1); // Chest Neck Small Line (top layer)
   }
+  skinCtx.drawImage(shadingBuffer, 0, 0, 20, 20);
   if(revertSkin) {
-    skinCtx.drawImage(shadingBuffer, 0, 0, 20, 20);
     finalCtx.save();
     finalCtx.scale(-1, 1);
     finalCtx.drawImage(skinCanvas, skinCtx.canvas.width * -1, 0, skinCtx.canvas.width, skinCtx.canvas.height);
     finalCtx.restore();
   }else{
-    skinCtx.drawImage(shadingBuffer, 0, 0, 20, 20);
     finalCtx.drawImage(skinCanvas,0,0,300,300)
   }
 
@@ -753,11 +752,11 @@ const siteCanvas = document.getElementById("final-canvas");
 const markedCanvas = document.getElementById("marked-canvas");
 async function addListeners() {
 	//failedBuffer = await loadImage("../assets/images/notFound.png");
-	failedBuffer = await loadImage("https://raw.githubusercontent.com/MauritsWilke/mcpfp/main/static/PFP/notFound.png");
+	failedBuffer = await loadImage("https://raw.githubusercontent.com/AlonsoAliaga/mcpfp/main/assets/images/notFound.png");
 	//const shading = await loadImage("/20x20pshading.png");
-	backdropBuffer = await loadImage("https://raw.githubusercontent.com/MauritsWilke//main/static/backdropshading.png");
+	backdropBuffer = await loadImage("https://raw.githubusercontent.com/AlonsoAliaga/mcpfp/main/assets/images/backdropshading.png");
 	//backdropBuffer = await loadImage("../assets/images/backdropshading.png");
-	shadingBuffer = await loadImage("https://raw.githubusercontent.com/MauritsWilke/mcpfp/main/static/20x20pshading.png");
+	shadingBuffer = await loadImage("https://raw.githubusercontent.com/AlonsoAliaga/mcpfp/main/assets/images/20x20pshading.png");
 	//shadingBuffer = await loadImage("../assets/images/20x20pshading.png")
   //document.getElementById("final-canvas").getContext("2d").scale(15, 15);
   backgroundCanvas.getContext("2d").scale(15, 15);
