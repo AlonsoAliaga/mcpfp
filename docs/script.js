@@ -586,7 +586,7 @@ async function processUsername(order) {
       fullSkin = await loadImage(url);
       loadedSkinBuffer = fullSkin;
     }catch(e) {
-      console.log(e);
+      //console.log(e);
       drawFailed();
       return;
     }
@@ -599,13 +599,13 @@ function createGradient(ctx, colours) {
   if(!colours) {
     if(typeof defaultGradients[currentGradient] !== "undefined") {
       colours = defaultGradients[currentGradient].colors;
-      console.log(`Creating gradient.. ${defaultGradients[currentGradient].identifier}`)
+      //console.log(`Creating gradient.. ${defaultGradients[currentGradient].identifier}`)
     }else {
       colours = defaultGradients[0].colors;
-      console.log(`Creating gradient.. ${defaultGradients[0].identifier}`)
+      //console.log(`Creating gradient.. ${defaultGradients[0].identifier}`)
     }
   }else{
-    console.log(`Creating custom gradient.. ${colours}`)
+    //console.log(`Creating custom gradient.. ${colours}`)
   }
 	const gradient = ctx.createLinearGradient(0, 0, 20,20);
 	//const gradient = ctx.createLinearGradient(0, 0, 18.75, 18.75);
@@ -613,7 +613,7 @@ function createGradient(ctx, colours) {
 	let interval = 1;
 	const decrement = 1 / (colours.length - 1);
 	colours.forEach(colour => {
-    console.log(`adding color stop interval: ${interval}`)
+    //console.log(`adding color stop interval: ${interval}`)
 		gradient.addColorStop(interval, colour);
 		interval -= decrement;
 	})
@@ -658,7 +658,7 @@ function updateSkin(inCache = true) {
       createGradient(backgroundCtx);
       finalCtx.drawImage(backgroundCanvas,0,0);
     }else if(backgroundType == 1) {
-      console.log(`Writing custom background..`);
+      //console.log(`Writing custom background..`);
       finalCtx.drawImage(backgroundCanvas,0,0);
       //createGradient(backgroundCtx);
     }else{
@@ -671,19 +671,19 @@ function updateSkin(inCache = true) {
   }
   //siteCtx.fillStyle = "#FFFF00";
   //siteCtx.fillRect(0, 0,siteCanvas.width,siteCanvas.height);
-  console.log("Site canvas:",finalCanvas.width,finalCanvas.height);
+  //console.log("Site canvas:",finalCanvas.width,finalCanvas.height);
   //let skinCanvas = document.getElementById("skin-canvas");
   let skinCtx = skinCanvas.getContext("2d");
   skinCtx.clearRect(0, 0, skinCanvas.width, skinCanvas.height);
   //startingCtx.fillStyle = "#FF0000";
   //startingCtx.fillRect(0, 0,startingCanvas.width,startingCanvas.height);
   skinCtx.imageSmoothingEnabled = false;
-  console.log("Starting canvas:",skinCanvas.width,skinCanvas.height);
+  //console.log("Starting canvas:",skinCanvas.width,skinCanvas.height);
   
   if(shadow) {
     skinCtx.drawImage(backdropBuffer, 0, 0, 20, 20);
   }
-  console.log(`Type of loadedSkinBuffer: ${typeof loadedSkinBuffer}`);
+  //console.log(`Type of loadedSkinBuffer: ${typeof loadedSkinBuffer}`);
   if (loadedSkinBuffer.height === 32) {
     skinCtx.drawImage(loadedSkinBuffer, 8, 9, 7, 7, 8, 4, 7, 7); // Head (bottom layer)
     skinCtx.drawImage(loadedSkinBuffer, 5, 9, 3, 7, 5, 4, 3, 7); // Head Side (bottom layer)
@@ -722,7 +722,7 @@ function updateSkin(inCache = true) {
     finalCtx.drawImage(skinCanvas,0,0,300,300)
   }
 
-  console.log(`Username: ${username}\nRevert skin: ${revertSkin}\nShadow: ${shadow}\nTransparent background: ${transparentBackground}\nIn cache: ${inCache}`);
+  //console.log(`Username: ${username}\nRevert skin: ${revertSkin}\nShadow: ${shadow}\nTransparent background: ${transparentBackground}\nIn cache: ${inCache}`);
 }
 const usernameInputCooldown = document.getElementById('inputTextCooldown');
 let blockInterval;
@@ -859,7 +859,7 @@ function loadCounter() {
  let href = window.location.href;
  if(!href.includes(atob("YWxvbnNvYWxpYWdhLmdpdGh1Yi5pbw=="))) return;
  let link = atob("aHR0cHM6Ly9hbG9uc29hbGlhZ2EtcGFnZS1jb3VudC5nbGl0Y2gubWUvY291bnRlcj9zaXRlPTxzaXRlPiZrZXk9PGtleT4=")
-  .replace(/<site>/g,"mcpfp").replace(/<key>/g,"KEY-A");
+  .replace(/<site>/g,"minecraft-pfp").replace(/<key>/g,"KEY-A");
  let counter = document.getElementById("visitor-counter");
  if(counter) {
    $.ajax({
