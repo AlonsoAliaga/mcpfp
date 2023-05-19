@@ -755,7 +755,7 @@ async function addListeners() {
 	//failedBuffer = await loadImage("../assets/images/notFound.png");
 	failedBuffer = await loadImage("https://raw.githubusercontent.com/MauritsWilke/mcpfp/main/static/PFP/notFound.png");
 	//const shading = await loadImage("/20x20pshading.png");
-	backdropBuffer = await loadImage("https://raw.githubusercontent.com/MauritsWilke/mcpfp/main/static/backdropshading.png");
+	backdropBuffer = await loadImage("https://raw.githubusercontent.com/MauritsWilke//main/static/backdropshading.png");
 	//backdropBuffer = await loadImage("../assets/images/backdropshading.png");
 	shadingBuffer = await loadImage("https://raw.githubusercontent.com/MauritsWilke/mcpfp/main/static/20x20pshading.png");
 	//shadingBuffer = await loadImage("../assets/images/20x20pshading.png")
@@ -768,7 +768,7 @@ async function addListeners() {
     }
   });
   let markedCtx = markedCanvas.getContext("2d");
-  const text = "Generated on https://alonsoaliaga.com/McPFP";
+  const text = "Generated on https://alonsoaliaga.com/minecraft-pfp";
   markedCtx.fillStyle = "#302a3b"; // Set the fill color to white
   markedCtx.fillRect(0, 300, 300, 20);
   let fontSize = 24; // Initial font size
