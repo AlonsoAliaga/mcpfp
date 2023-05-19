@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="shortcut icon" href="https://cdn.discordapp.com/emojis/791742603183259648.webp?size=96&quality=lossless" type="image/x-icon">
+    <link rel="stylesheet" href="./style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  
+    <title>MinecraftPFP Generator | AlonsoAliaga Development</title>
+    
+    <meta name="theme-color" content="#9a14ff"/>
+    <meta property="og:title" content="MinecraftPFP Generator | AlonsoAliaga Development">
+    <meta property="og:image" content="https://raw.githubusercontent.com/AlonsoAliaga/alonsoaliaga.github.io/main/assets/img/apple-touch-icon.png">
+    <meta property="og:description" content="Create cool pixel art minecraft profile pictures with your skin. No more paying fiverr artists!">
+    <meta property="og:url" content="https://alonsoaliaga.github.io/index.html">
+  </head>
+  <body onload="loadCounter(); checkSite(window); ">
+    <div class="content">
+      <div class="header">
+        <h1 style="font-family: MinecraftBold;"><a href="https://alonsoaliaga.com/mcpfp" rel="noopener" target="_blank">MinecraftPFP</a> Generator</h1>
+        
+        <div class="options" style="padding: 10px 10px 10px 10px; margin-bottom: 10px;">
+          <h2 class="rainbow" style="font-size:25px; color:transparent">How is this different from other generators?</h2>
+          This generator allows you to create your own pixel arts profiles with <b class="rainbow">many</b> cool options.<br><br>
+          <h2 style="font-size: 20px; color: rgb(255, 71, 71)">No more paying fiverr artits for Pixel Arts!</h2>
+          <span style="font-size: 17px;">
+            <b>⚠️ If you have cool ideas, suggest them in our <a href="https://alonsoaliaga.com/discord" rel="noopener" target="_blank">official discord server.</a></b><br>
+          </span>
+        </div>
+        <span id="snackbar"><b>💎 Successfully Copied! 💎</b><br><span style="font-size: small;">Thanks for using our tool!</span></span>
+        <span style="font-family: MinecraftBold;">Site options:</span>
+        <div id="appearance" style="display: inline-block;font-family: MinecraftBold;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
+          <input type="checkbox" checked id="darkmode" onclick="toggleDarkmode();"></input>
+          <label for="darkmode" style="margin-bottom: 0px;margin-top: 0px;"> Dark Mode 👁‍🗨</label>
+        </div><br><br>
+        <h2>Enter your username:</h2>
+        <input id="inputText" style="text-align: center; display: inline-block; width: 25%;height: 30px;font-family: MinecraftBold;padding: 15px 20px 15px 20px;"
+          type="text" maxlength="20" checked id="darkmode" value="AlonsoAliaga" class="darkbuttonboxes" 
+          placeholder="Type your username"></input>
+        <input id="inputTextCooldown" style="text-align: center; color:gray;display: none; width: 25%;height: 30px;font-family: MinecraftBold;padding: 15px 20px 15px 20px;"
+          type="text" maxlength="20" checked id="darkmode" value="AlonsoAliaga" class="darkbuttonboxes"
+          placeholder="Type your username" disabled="true"></input>
+        <br><br>
+        <div style="display: inline-block;">
+          <div style="display: flex;align-items: center;">
+            <button style="--hoverTransform: calc(0rem - 7.5rem / 8);--baseTransform: calc(0rem + 7.5rem / 8);" class="button-left" 
+              onclick="previousGradient()">
+              <p style="margin-left:0;padding-right: 0px;" class="button-left">&lt;</p>
+            </button>
+            <!-- <img style="z-index: 100;" src="https://minecraftpfp.com/api/pfp/AlonsoAliaga.png"> -->
+            <canvas width="300px" height="320px" style="display: none;z-index: 100;" id="marked-canvas"></canvas>
+            <canvas width="300px" height="300px" style="display: none;z-index: 100;" id="background-canvas"></canvas>
+            <canvas width="300px" height="300px" style="display: none;z-index: 100;" id="skin-canvas"></canvas>
+            <canvas class="pixelart" width="300px" height="300px" id="final-canvas"></canvas>
+            <button style="--hoverTransform: calc(0rem + 7.5rem / 8);--baseTransform: calc(0rem - 7.5rem / 8);" class="button-right"
+              onclick="nextGradient()">
+              <p style="margin-left:0rem;padding-left: 18px;" class="button-right">&gt;</p>
+            </button>
+          </div>
+        </div>
+        <br><br>
+      </div>
+      <div>
+        <fieldset class="group" style="padding: 0px;"> 
+          <legend id="thelegend">&nbsp;&nbsp;&nbsp;Select your options 🎮&nbsp;&nbsp;&nbsp;</legend> 
+          <ul id="fonts-table" style="font-size: 18px;">
+            <div id="button-revert-skin-div" style="width: 50%;display: inline-block;font-family: MinecraftBold;margin: 0px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
+              <input type="checkbox" id="button-revert-skin" onclick="updateSkin();"></input>
+              <label for="button-revert-skin" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;"> Revert skin ⏪</label>
+            </div><br>
+            <div id="button-shadow-div" style="width: 50%;display: inline-block;font-family: MinecraftBold;margin: 2px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
+              <input type="checkbox" checked id="button-shadow" onclick="updateSkin();"></input>
+              <label for="button-shadow" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;"> Skin Shadow 👥</label>
+            </div><br>
+            <div id="button-no-background-div" style="width: 50%;display: inline-block;font-family: MinecraftBold;margin: 2px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
+              <input type="checkbox" id="button-no-background" onclick="updateSkin();"></input>
+              <label for="button-no-background" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;"> Transparent Background 🧪</label>
+            </div><br>
+            <div id="button-custom-background-div" style="width: 50%;display: inline-block;font-family: MinecraftBold;margin: 2px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
+              <input type="checkbox" name="button-custom-background" checked id="button-custom-background" onclick="uploadCustomBackground(this);"></input>
+              <label for="button-custom-background" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;"> Upload Custom background 🎨</label>
+            </div><br>
+            <div id="button-remove-watermark-download-div" style="width: 50%;display: inline-block;font-family: MinecraftBold;margin: 2px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
+              <input type="checkbox" name="button-remove-watermark-download" id="button-remove-watermark-download"></input>
+              <label for="button-remove-watermark-download" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;"> Remove watermark? 👓</label>
+            </div><br>
+          </ul> 
+        </fieldset><br>
+      </div>
+      <div id="download-all" style="display: inline-block;font-family: MinecraftBold;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
+        <input type="button" style="outline: none; display: none;" checked id="downloadall" onclick="downloadProfile();"></input>
+        <label for="downloadall" style="margin-bottom: 0px;margin-top: 0px;margin-left: 20px;;margin-right: 15px;"> Download your McPFP 📥</label>
+      </div>
+      <br>
+      <!-- 
+      <label id="graylabel2" class="gray" for="outputText" style="font-weight: bold;"><span style="color: #fc5044;">TIP: </span>Click below to copy the content!</label>
+      <div id="result" onclick="copyTextToClipboard(this.textContent);">
+        <h2 style="font-family: MinecraftBold;">Loading..</h2>
+      </div>
+      -->
+      <br>
+      <!--
+      <div class="options">
+        <div id="table">
+          <input type="checkbox" id="version-mode" onclick="updateResult();"></input>
+          <label for="version-mode" style="margin-bottom: 0px;margin-top: 0px;"> Version Mode 🎉</label>
+          <input type="checkbox" id="whitelist-mode" onclick="updateResult();"></input>
+          <label for="whitelist-mode" style="margin-bottom: 0px;margin-top: 0px;"> Whitelist Mode 🏆</label>
+        </div><br>
+        <fieldset class="group"> 
+          <legend id="thelegend">&nbsp;&nbsp;&nbsp;Select errors to whitelist&nbsp;&nbsp;&nbsp;</legend> 
+          <ul id="table-errors" style="font-size: 18px;" class="checkbox">
+            Loading..
+          </ul> 
+        </fieldset><br>
+        <fieldset class="group" style="padding-bottom: 15px;font-size: 18px;"> 
+          <legend id="thelegend">&nbsp;&nbsp;&nbsp;Common options&nbsp;&nbsp;&nbsp;</legend> 
+          <ul id="table-protocols" class="checkbox">
+            <li>
+              <input class="button-solid" type="checkbox" id="mark-all-option" onclick="markAll(); this.checked = false">
+              <label for="mark-all-option" style="margin-bottom: 0px;margin-top: 0px;">✔️ Check all types</label></input>
+            </li>
+            <li>
+              <input class="button-solid" type="checkbox" id="unmark-all-option" onclick="unmarkAll(); this.checked = false">
+              <label for="unmark-all-option" style="margin-bottom: 0px;margin-top: 0px;">📛 Uncheck all types</label></input>
+            </li>
+          </ul> 
+        </fieldset>
+      </div>
+      -->
+      <!-- <div>
+        <div class="row">
+          <div class="col-md-3" style="font-size: 20px; font-family: MinecraftBold;">
+            <label for="output-indentation">Output indentation: </label>
+            <select id="output-indentation"
+                    class="form-control"
+                    onchange="updateOutputText(event);"
+                    style="font-size: 16px; padding: 5px 0px 5px 30px; width: auto; font-family: MinecraftRegular;">
+              <option value='0'>2 spaces</option>
+              <option value='1'>4 spaces</option>
+              <option value='2'>Tab spacing</option>
+            </select>
+          </div>
+        </div>
+      </div> -->
+      <div class="options">
+        <div style="font-size: 18px ;padding-top: 0px;padding-bottom: 0px; font-family: MinecraftRegular;" class="examples">
+          <h2 style="font-size: 18px; font-family: MinecraftBold;">More tools for you:</h2>
+          <div style="text-align: left;font-size: 20px;">
+            <span>💠</span> <span class="rainbow" style="color:transparent"><a href="http://alonsoaliaga.github.io/generator">HEX Generator (RBG)</a></span><br>
+            <span>💠</span> <span><a href="http://alonsoaliaga.github.io/font-generator">Font Generator</a></span><br>
+            <span>💠</span> <span><a href="http://alonsoaliaga.github.io/config-comparator">Config Comparator Updater</a></span><br>
+            <span>💠</span> <span><a href="http://alonsoaliaga.github.io/yaml-parser">YAML/JSON Parser</a></span><br>
+            <span>💠</span> <span><a href="http://alonsoaliaga.github.io/pretty-json">Pretty JSON</a></span><br>
+            <span>💠</span> <span><a href="http://alonsoaliaga.github.io/version-generator">ViaVersion Protocol Generator</a></span>
+          </div>
+          <br>
+          <h2 style="color: transparent;font-size: 18px ;text-align: center; font-family: MinecraftBold;"><a href="https://alonsoaliaga.github.io" rel="noopener" target="_blank">AlonsoAliaga Development</a></h2>
+        </div>
+      </div>
+      <div><br>
+      <h2 style="font-size: 15px ;text-align: center;">Huge thanks to <a href="https://github.com/MauritsWilke/" rel="noopener" target="_blank">MauritsWilke</a> for his <a href="https://github.com/MauritsWilke/mcpfp" rel="noopener" target="_blank">MinecraftPFP</a> in which this project was inspired.</h2>
+      <br>
+      <!-- <div id="mybutton">
+        <button class="buttonface"><a href="https://alonsoaliaga.github.io"><img src="https://raw.githubusercontent.com/AlonsoAliaga/alonsoaliaga.github.io/main/assets/img/apple-touch-icon.png"></a></button>
+      </div> -->
+      <div id="mybutton">
+        <div style="position: center;display: inline-block;">
+          <button class="buttonface"><a href="https://alonsoaliaga.github.io"><img src="https://raw.githubusercontent.com/AlonsoAliaga/alonsoaliaga.github.io/main/assets/img/apple-touch-icon.png"></a></button>
+          <br>
+          <div id="visitor-counter" style="text-align: center;">
+            <span id="counter-amount" style="font-family: MinecraftBold;font-weight: bold;">Visits: 0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script ></script>
+  </div>
+
+  <!-- <script src="jquery-1.6.1.min.js"></script> -->
+  <script src="autoresize.jquery.min.js"></script>
+  <script src="js-yaml.min.js"></script>
+  <script src="script.js"></script>
+  <!-- <script src="script.js"></script> -->
+  
+  <script>
+    
+  </script>
+  </body>
+</html>

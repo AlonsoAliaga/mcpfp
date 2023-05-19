@@ -1,0 +1,18 @@
+# This is a test file for new configuration
+
+option1: true
+option2: "This is new option #2"
+option3:
+- "This"
+- "is"
+- "new"
+- "option"
+- "#3"
+option4:
+  suboption4-1: "This is new suboption4-1"
+  suboption4-2:
+  - "This is new suboption4-2"
+  suboption4-3: "This is a new suboption #4.3"
+option5: 101
+option6: 101.99
+option7: "This is a new option #7"

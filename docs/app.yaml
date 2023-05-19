@@ -1,0 +1,14 @@
+runtime: python27
+api_version: 1
+threadsafe: true
+
+handlers:
+- url: /js
+  static_dir: js
+
+#- url: /examples
+#  static_dir: examples
+#  mime_type: text/plain
+
+- url: .*
+  script: main.app
