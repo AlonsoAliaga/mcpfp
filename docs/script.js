@@ -524,7 +524,7 @@ function toggleWatermark(event) {
 let colorsButton = document.getElementById("colors-amount");
 const maxColorsAmount = 15;
 function removeColor(event) {
-  if(!event) backgroundType = 2;
+  if(event) backgroundType = 2;
   let currentAmount = colorsButton.innerText;
   if(isNaN(currentAmount)) {
     currentAmount = 2;
