@@ -84,15 +84,29 @@
               <label for="button-custom-background" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;"> Upload Custom background 🎨</label>
             </div><br>
             <div id="button-remove-watermark-download-div" style="width: 50%;display: inline-block;font-family: MinecraftBold;margin: 2px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
-              <input type="checkbox" name="button-remove-watermark-download" id="button-remove-watermark-download"></input>
+              <input type="checkbox" name="button-remove-watermark-download" id="button-remove-watermark-download" onclick="toggleWatermark(this);"></input>
               <label for="button-remove-watermark-download" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;"> Remove watermark? 👓</label>
             </div><br>
+            <div id="button-toggle-custom-gradient-div" style="width: 50%;display: inline-block;font-family: MinecraftBold;margin: 2px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
+              <input type="checkbox" name="button-toggle-custom-gradient" id="button-toggle-custom-gradient" onclick="toggleCustomGradientBox(this);"></input>
+              <label for="button-toggle-custom-gradient" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;"> Custom gradient 🦄</label>
+            </div><br>
+            <div id="custom-gradient-box" style="">
+              <fieldset class="group" style="padding: 0px;border-radius: 10px;"> 
+                <legend id="custom-gradient-legend">&nbsp;&nbsp;&nbsp;Pick your colors 🎨&nbsp;&nbsp;&nbsp;</legend>
+                <button class="button-small" onclick="removeColor(this);"><</button>
+                <button style="font-size: 20px;font-family: MinecraftBold;padding: 10px 10px 10px 10px;" id="colors-amount">2</button>
+                <button class="button-small" onclick="addColor(this);">></button><br><br>
+                <div id="colors-div">
+                </div><br>
+              </fieldset>
+            </div>
           </ul> 
         </fieldset><br>
       </div>
       <div id="download-all" style="display: inline-block;font-family: MinecraftBold;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
         <input type="button" style="outline: none; display: none;" checked id="downloadall" onclick="downloadProfile();"></input>
-        <label for="downloadall" style="margin-bottom: 0px;margin-top: 0px;margin-left: 20px;;margin-right: 15px;"> Download your McPFP 📥</label>
+        <label id="download-all-label" for="downloadall" style="margin-bottom: 0px;margin-top: 0px;margin-left: 20px;;margin-right: 15px;"> Download your McPFP with watermark 📥</label>
       </div>
       <br>
       <!-- 

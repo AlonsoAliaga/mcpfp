@@ -1,3 +1,13 @@
+/**
+ * Dear programmer:
+ * When I wrote this code, only god and 
+ * I knew how it worked.
+ * Now, only god knows it!
+ * 
+ * You have been warned.
+ * 
+ * For more information visit: https://alonsoaliaga.com/DearProgrammer
+ */
 const defaultGradients = {
   0:{
     identifier:"default",
@@ -17,7 +27,7 @@ const defaultGradients = {
   },
   4:{
     identifier:"amethyst",
-    colors:["#9D50BB", "#6E48AA"],
+    colors:["#D93894","#B327BB", "#6E48AA"],
   },
   5:{
     identifier:"tiktok",
@@ -262,8 +272,8 @@ function unmarkAll() {
 function test() {
   console.log("TESTING WORKS!")
 }
-let  buttonsToToggleDarkMode = ["appearance","inputText","download-all",
-  "button-custom-background-div","button-revert-skin-div","button-shadow-div","button-no-background-div"];
+let  buttonsToToggleDarkMode = ["appearance","inputText","download-all","colors-amount","button-toggle-custom-gradient-div",
+"button-remove-watermark-download-div","button-custom-background-div","button-revert-skin-div","button-shadow-div","button-no-background-div"];
 function toggleDarkmode() {
     if (document.getElementById('darkmode').checked == true) {
       document.body.classList.add('dark');
@@ -300,7 +310,6 @@ function toggleDarkmode() {
     //console.log("Dark mode is now: "+(document.getElementById('darkmode').checked))
 }
 function checkSite(window) {
-  
   setTimeout(()=>{
     let href = window.location.href;
     if(!href.includes(atob("YWxvbnNvYWxpYWdhLmdpdGh1Yi5pbw=="))) {
@@ -490,6 +499,76 @@ function downloadProfile() {
     anchor.click();
   }
 }
+function toggleCustomGradientBox(event) {
+  let customGradientBox = document.getElementById("custom-gradient-box");
+  let customGradientsOpened = document.getElementById("button-toggle-custom-gradient").checked;
+  if(customGradientsOpened) {
+    if(event) backgroundType = 2;
+    customGradientBox.classList.add("expanded");
+    updateSkin(true);
+  }else{
+    backgroundType = 0;
+    customGradientBox.classList.remove("expanded");
+    updateSkin(true);
+  }
+}
+function toggleWatermark(event) {
+  let removeWatermark = document.getElementById("button-remove-watermark-download").checked;
+  let downloadButton = document.getElementById("download-all-label");
+  if(removeWatermark) {
+    downloadButton.innerText = "Download your McPFP without watermark📥"
+  }else{
+    downloadButton.innerText = "Download your McPFP with watermark 📥"
+  }
+}
+let colorsButton = document.getElementById("colors-amount");
+const maxColorsAmount = 15;
+function removeColor(event) {
+  if(!event) backgroundType = 2;
+  let currentAmount = colorsButton.innerText;
+  if(isNaN(currentAmount)) {
+    currentAmount = 2;
+    colorsButton.innerText = currentAmount;
+  }else{
+    currentAmount--;
+    if(currentAmount < 2) {
+      currentAmount = 2;
+    }
+    colorsButton.innerText = currentAmount;
+  }
+  console.log(`Current amount: ${currentAmount}`);
+  for(let i = maxColorsAmount; i >= currentAmount;i--) {
+    let pickerToHide = document.getElementById(`color-picker-${i}`);
+    console.log(`Hiding color #${i}`);
+    if(pickerToHide) {
+      pickerToHide.style.display = "none";
+    }
+  }
+  if(event) updateSkin(true);
+}
+function addColor(event) {
+  backgroundType = 2;
+  let currentAmount = colorsButton.innerText;
+  if(isNaN(currentAmount)) {
+    currentAmount = 2;
+    colorsButton.innerText = currentAmount;
+  }else{
+    currentAmount++;
+    if(currentAmount > maxColorsAmount) {
+      currentAmount = maxColorsAmount;
+    }
+    colorsButton.innerText = currentAmount;
+  }
+  console.log(`Current amount: ${currentAmount}`);
+  for(let i = 0; i < currentAmount;i++) {
+    let pickerToShow = document.getElementById(`color-picker-${i}`);
+    console.log(`Showing color #${i}`);
+    if(pickerToShow) {
+      pickerToShow.style.display = "";
+    }
+  }
+  updateSkin(true);
+}
 function downloadProfile2() {
   let inputBox = document.getElementById(`inputText`);
   let content = `Original:\nUnknown input`;
@@ -613,8 +692,9 @@ function createGradient(ctx, colours) {
 	let interval = 1;
 	const decrement = 1 / (colours.length - 1);
 	colours.forEach(colour => {
-    //console.log(`adding color stop interval: ${interval}`)
-		gradient.addColorStop(interval, colour);
+    //console.log(`Fixed: ${interval.toFixed(5)}`);
+    //console.log(`Adding color stop interval: ${interval}${interval>1?` CAUTION GREATER+!`:``}${interval<0?` CAUTION LOWER-!`:``}`)
+		gradient.addColorStop(Math.max(0,interval), colour);
 		interval -= decrement;
 	})
 	ctx.fillStyle = gradient;
@@ -627,6 +707,12 @@ function previousGradient() {
   if(typeof defaultGradients[currentGradient - 1] !== "undefined") {
     currentGradient--;
   }else currentGradient = Object.keys(defaultGradients).length - 1;
+  let customGradientsOpened = document.getElementById("button-toggle-custom-gradient");
+  if(customGradientsOpened.checked) {
+    let customGradientBox = document.getElementById("custom-gradient-box");
+    customGradientBox.classList.remove("expanded");
+    customGradientsOpened.checked = false;
+  }
   updateSkin(true);
 }
 function nextGradient() {
@@ -634,6 +720,12 @@ function nextGradient() {
   if(typeof defaultGradients[currentGradient + 1] !== "undefined") {
     currentGradient++;
   }else currentGradient = 0;
+  let customGradientsOpened = document.getElementById("button-toggle-custom-gradient");
+  if(customGradientsOpened.checked) {
+    let customGradientBox = document.getElementById("custom-gradient-box");
+    customGradientBox.classList.remove("expanded");
+    customGradientsOpened.checked = false;
+  }
   updateSkin(true);
 }
 let backgroundType = 0;
@@ -663,7 +755,8 @@ function updateSkin(inCache = true) {
       //createGradient(backgroundCtx);
     }else{
       backgroundCtx.clearRect(0, 0, backgroundCtx.canvas.width, backgroundCtx.canvas.height);
-      createGradient(backgroundCtx,["#abcdef","#fedcba"]);
+      let currentAmount = isNaN(colorsButton.innerText) ? 2 : Math.max(2,Math.min(maxColorsAmount,parseInt(colorsButton.innerText)));
+      createGradient(backgroundCtx,defaultColors.slice(0, currentAmount));
       finalCtx.drawImage(backgroundCanvas,0,0);
     }
   }else{
@@ -743,6 +836,7 @@ function blockUsername(seconds = 5) {
     }
   },1000);
 }
+const defaultColors = [];
 let failedBuffer;
 let backdropBuffer;
 let shadingBuffer;
@@ -751,14 +845,9 @@ const skinCanvas = document.getElementById("skin-canvas");
 const siteCanvas = document.getElementById("final-canvas");
 const markedCanvas = document.getElementById("marked-canvas");
 async function addListeners() {
-	//failedBuffer = await loadImage("../assets/images/notFound.png");
 	failedBuffer = await loadImage("https://raw.githubusercontent.com/AlonsoAliaga/mcpfp/main/assets/images/notFound.png");
-	//const shading = await loadImage("/20x20pshading.png");
 	backdropBuffer = await loadImage("https://raw.githubusercontent.com/AlonsoAliaga/mcpfp/main/assets/images/backdropshading.png");
-	//backdropBuffer = await loadImage("../assets/images/backdropshading.png");
 	shadingBuffer = await loadImage("https://raw.githubusercontent.com/AlonsoAliaga/mcpfp/main/assets/images/20x20pshading.png");
-	//shadingBuffer = await loadImage("../assets/images/20x20pshading.png")
-  //document.getElementById("final-canvas").getContext("2d").scale(15, 15);
   backgroundCanvas.getContext("2d").scale(15, 15);
   skinCanvas.getContext("2d").scale(15, 15);
   usernameInput.addEventListener("keyup", function (e) {
@@ -782,8 +871,41 @@ async function addListeners() {
   markedCtx.textAlign = "center"; // Set the text alignment to center
   markedCtx.textBaseline = "middle"; // Set the text baseline to middle
   markedCtx.fillText(text, markedCanvas.width / 2, 310); // Write the text at the center of the rectangle
-
   processUsername("no-cooldown");
+
+  for(let i = 0; i < maxColorsAmount; i++) {
+    if(defaultColors.length < maxColorsAmount) {
+      let newColor = getRandomHexColor();
+      console.log(`Random color: ${newColor}${newColor.length != 7?` | CAUTION!`:``}`),
+      defaultColors.push(newColor);
+    }
+    let colorsDiv = document.getElementById("colors-div");
+    console.log(`Creating color picker #${i}`);
+    let p = document.createElement("input");
+    p.type = "color";
+    p.id = `color-picker-${i}`;
+    p.index = i;
+    p.value = defaultColors[i];
+    p.addEventListener('change', function() {
+      const color = this.value;
+      console.log(`Color picked: ${color} | ID: ${this.id} | Index: ${this.index}`);
+      defaultColors[this.index] = color;
+      updateSkin(true);
+    });
+    if(i != 0) {
+      let s = document.createElement("span");
+      s.innerText = " ";
+      colorsDiv.appendChild(s);
+    }
+    colorsDiv.appendChild(p);
+    console.log(`Creating color picker #${i}! display="${p.style.display}"`)
+  }
+  removeColor();
+
+  runDelayed();
+}
+function getRandomHexColor() {
+  return `#${Math.floor(Math.random()*16777215).toString(16).toUpperCase().padStart(6, '0')}`;
 }
 function uploadCustomBackground(event) {
   console.log(event);
@@ -962,4 +1084,12 @@ async function drawFailed(ctx) {
 	ctx.drawImage(failedBuffer, 0, 0, 300, 300);
 	ctx.scale(16, 16);
 	//ctx.drawImage(shading, 0, 0, 20, 20)
+}
+function runDelayed() {
+  /*
+  setTimeout(()=>{
+    document.getElementById("button-toggle-custom-gradient").checked = true;
+    toggleCustomGradientBox();
+  },500);
+  */
 }

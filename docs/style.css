@@ -536,6 +536,20 @@ ul {
   from {bottom: 30px; opacity: 1;}
   to {bottom: 0; opacity: 0;}
 }
+.button-small {
+  transform: translate(calc(var(--hoverTransform) * -1));
+  width: 2.5rem;
+  height: 2.5rem;
+  background: #191f27;
+  filter: drop-shadow(7px 7px 4px rgba(0,0,0,.25));
+  border: none;
+  border-radius: 10px;
+  margin: 0;
+  padding: 0;
+  transition: all .3s;
+  font-family: MinecraftBold;
+  color: #fff;
+}
 .button-right {
   transform: translate(calc(var(--hoverTransform) * -1));
   width: 7.5rem;
@@ -574,4 +588,12 @@ ul {
   image-rendering: pixelated;
   z-index: 100;
   border:1px solid #d3d3d3;
+}
+#custom-gradient-box {
+  height: 0;
+  overflow: hidden;
+  transition: height 0.3s ease;
+}
+.expanded {
+  height: fit-content !important;
 }
