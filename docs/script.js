@@ -536,10 +536,10 @@ function removeColor(event) {
     }
     colorsButton.innerText = currentAmount;
   }
-  console.log(`Current amount: ${currentAmount}`);
+  //console.log(`Current amount: ${currentAmount}`);
   for(let i = maxColorsAmount; i >= currentAmount;i--) {
     let pickerToHide = document.getElementById(`color-picker-${i}`);
-    console.log(`Hiding color #${i}`);
+    //console.log(`Hiding color #${i}`);
     if(pickerToHide) {
       pickerToHide.style.display = "none";
     }
@@ -559,10 +559,10 @@ function addColor(event) {
     }
     colorsButton.innerText = currentAmount;
   }
-  console.log(`Current amount: ${currentAmount}`);
+  //console.log(`Current amount: ${currentAmount}`);
   for(let i = 0; i < currentAmount;i++) {
     let pickerToShow = document.getElementById(`color-picker-${i}`);
-    console.log(`Showing color #${i}`);
+    //console.log(`Showing color #${i}`);
     if(pickerToShow) {
       pickerToShow.style.display = "";
     }
@@ -818,7 +818,7 @@ function updateSkin(inCache = true) {
 }
 const usernameInputCooldown = document.getElementById('inputTextCooldown');
 let blockInterval;
-function blockUsername(seconds = 5) {
+function blockUsername(seconds = 3) {
   if(blockInterval) clearInterval(blockInterval);
   usernameInput.style.display = "none"
   usernameInputCooldown.style.display = "inline-block"
@@ -876,11 +876,11 @@ async function addListeners() {
   for(let i = 0; i < maxColorsAmount; i++) {
     if(defaultColors.length < maxColorsAmount) {
       let newColor = getRandomHexColor();
-      console.log(`Random color: ${newColor}${newColor.length != 7?` | CAUTION!`:``}`),
+      //console.log(`Random color: ${newColor}${newColor.length != 7?` | CAUTION!`:``}`),
       defaultColors.push(newColor);
     }
     let colorsDiv = document.getElementById("colors-div");
-    console.log(`Creating color picker #${i}`);
+    //console.log(`Creating color picker #${i}`);
     let p = document.createElement("input");
     p.type = "color";
     p.id = `color-picker-${i}`;
@@ -888,7 +888,7 @@ async function addListeners() {
     p.value = defaultColors[i];
     p.addEventListener('change', function() {
       const color = this.value;
-      console.log(`Color picked: ${color} | ID: ${this.id} | Index: ${this.index}`);
+      //console.log(`Color picked: ${color} | ID: ${this.id} | Index: ${this.index}`);
       defaultColors[this.index] = color;
       updateSkin(true);
     });
@@ -898,7 +898,7 @@ async function addListeners() {
       colorsDiv.appendChild(s);
     }
     colorsDiv.appendChild(p);
-    console.log(`Creating color picker #${i}! display="${p.style.display}"`)
+    //console.log(`Creating color picker #${i}! display="${p.style.display}"`)
   }
   removeColor();
 
@@ -908,7 +908,7 @@ function getRandomHexColor() {
   return `#${Math.floor(Math.random()*16777215).toString(16).toUpperCase().padStart(6, '0')}`;
 }
 function uploadCustomBackground(event) {
-  console.log(event);
+  //console.log(event);
   //let imageContainer = document.getElementById("motd-icon");
   // Create a new input element
   const uploadInput = document.createElement('input');
@@ -935,7 +935,7 @@ function uploadCustomBackground(event) {
         //backgroundCtx.scale(1,1);
         backgroundCtx.drawImage(img,0,0,img.width,img.height,0,0,20,20);
         backgroundCtx.restore();
-        console.log(`Uploaded custom image: ${file.name}`,img.width,img.height);
+        //console.log(`Uploaded custom image: ${file.name}`,img.width,img.height);
         updateSkin(true);
       };
     });
