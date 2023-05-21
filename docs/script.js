@@ -211,6 +211,7 @@ const fonts = {
     }
   }
 }
+const defaultCooldown = 3;
 let copiedTimeout;
 function copyTextToClipboard(text) {
   let textArea = document.createElement('textarea');
@@ -652,7 +653,7 @@ let loadedSkinBuffer = undefined;
 const usernameInput = document.getElementById('inputText');
 const cacheSkins = new Map();
 async function processUsername(order) {
-  if(order != "no-cooldown") blockUsername(5);
+  if(order != "no-cooldown") blockUsername(defaultCooldown);
   let username = usernameInput?.value || "AlonsoAliaga";
   let fullSkin;
   let inCache = cacheSkins.has(username.toLowerCase());
@@ -901,7 +902,6 @@ async function addListeners() {
     //console.log(`Creating color picker #${i}! display="${p.style.display}"`)
   }
   removeColor();
-
   runDelayed();
 }
 function getRandomHexColor() {
