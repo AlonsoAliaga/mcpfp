@@ -311,6 +311,22 @@ function toggleDarkmode() {
     //console.log("Dark mode is now: "+(document.getElementById('darkmode').checked))
 }
 function checkSite(window) {
+  let search = window.location.search;
+  if(typeof search !== "undefined" && search.length > 0) {
+    let parts = atob(search.slice(1)).split("&");
+    for(let part of parts) {
+      let [k,v] = part.split("=");
+      k = btoa(k);
+      if(k == "dXNlcm5hbWU=") {
+        if(v.match(/[a-z0-9_]/gi)) {
+          setTimeout(()=>{
+            usernameInput.value = v;
+            processUsername();
+          },500);
+        }
+      }
+    }
+  }
   setTimeout(()=>{
     let href = window.location.href;
     if(!href.includes(atob("YWxvbnNvYWxpYWdhLmdpdGh1Yi5pbw=="))) {
