@@ -943,6 +943,14 @@ function uploadCustomBackground(event) {
     // Set up a load event listener on the FileReader
     reader.addEventListener('load', function() {
       backgroundType = 1;
+      
+      let customGradientsOpened = document.getElementById("button-toggle-custom-gradient");
+      if(customGradientsOpened.checked) {
+        let customGradientBox = document.getElementById("custom-gradient-box");
+        customGradientBox.classList.remove("expanded");
+        customGradientsOpened.checked = false;
+      }
+      
       // Update the image source with the uploaded image
       var img = new Image();
       img.src = reader.result;
