@@ -37,13 +37,18 @@
           <label for="darkmode" style="margin-bottom: 0px;margin-top: 0px;"> Dark Mode 👁‍🗨</label>
         </div><br><br>
         <h2>Enter your username:</h2>
-        <input id="inputText" style="text-align: center; display: inline-block; width: 25%;height: 30px;font-family: MinecraftBold;padding: 15px 20px 15px 20px;"
-          type="text" maxlength="20" checked id="darkmode" value="AlonsoAliaga" class="darkbuttonboxes" 
-          placeholder="Type your username"></input>
-        <input id="inputTextCooldown" style="text-align: center; color:gray;display: none; width: 25%;height: 30px;font-family: MinecraftBold;padding: 15px 20px 15px 20px;"
+        <div id="inputTextDiv" style="flex-direction: row; text-align: center; align-items: center;">
+          <input id="inputText" style="text-align: center; display: inline-block; width: 300px;height: 30px; margin-right: 5px;font-family: MinecraftBold;padding: 15px 20px 15px 20px;"
+            type="text" maxlength="20" checked id="darkmode" value="AlonsoAliaga" class="darkbuttonboxes" 
+            placeholder="Type your username"></input>
+          <button style="position:absolute;text-align: center;display: inline-block;font-family: MinecraftBold;padding: 15px 20px 15px 20px;" 
+            class="darkbuttonboxes" onclick="uploadCustomSkinTexture(this)">Custom<br>Skin</button>
+        </div>
+        <span id="snackbar-error">Loading error..</span>
+        <input id="inputTextCooldown" style="text-align: center; color:gray; display: none; width: 300px; height: 30px; font-family: MinecraftBold; padding: 15px 20px 15px 20px; margin-bottom: 20px;"
           type="text" maxlength="20" checked id="darkmode" value="AlonsoAliaga" class="darkbuttonboxes"
           placeholder="Type your username" disabled="true"></input>
-        <br><br>
+        <br>
         <div style="display: inline-block;">
           <div style="display: flex;align-items: center;">
             <button style="--hoverTransform: calc(0rem - 7.5rem / 8);--baseTransform: calc(0rem + 7.5rem / 8);" class="button-left" 

@@ -667,8 +667,10 @@ window.onclick = function(event) {
 }
 let loadedSkinBuffer = undefined;
 const usernameInput = document.getElementById('inputText');
+const usernameInputDiv = document.getElementById('inputTextDiv');
 const cacheSkins = new Map();
 async function processUsername(order) {
+  skinType = 0;
   if(order != "no-cooldown") blockUsername(defaultCooldown);
   let username = usernameInput?.value || "AlonsoAliaga";
   let fullSkin;
@@ -745,8 +747,9 @@ function nextGradient() {
   }
   updateSkin(true);
 }
-let backgroundType = 0;
+let backgroundType = 0; //0 - gradient | 1 - image | 2 - custom gradient
 let currentGradient = 0;
+let skinType = 0; //0 - username | 1 - custom
 function updateSkin(inCache = true) {
   let username = usernameInput?.value || "AlonsoAliaga";
   //
@@ -837,8 +840,8 @@ const usernameInputCooldown = document.getElementById('inputTextCooldown');
 let blockInterval;
 function blockUsername(seconds = 3) {
   if(blockInterval) clearInterval(blockInterval);
-  usernameInput.style.display = "none"
-  usernameInputCooldown.style.display = "inline-block"
+  usernameInputDiv.style.display = "none"
+  usernameInputCooldown.style.display = ""
   let i = Math.max(3,seconds);
   usernameInputCooldown.value = `${i} seconds left..`
   blockInterval = setInterval(()=> {
@@ -846,7 +849,7 @@ function blockUsername(seconds = 3) {
     usernameInputCooldown.value = `${i} seconds left..`
     if(i <= 0) {
       usernameInputCooldown.style.display = "none"
-      usernameInput.style.display = "inline-block"
+      usernameInputDiv.style.display = ""
       clearInterval(blockInterval);
       blockInterval = undefined;
       return;
@@ -922,6 +925,70 @@ async function addListeners() {
 }
 function getRandomHexColor() {
   return `#${Math.floor(Math.random()*16777215).toString(16).toUpperCase().padStart(6, '0')}`;
+}
+function uploadCustomSkinTexture(event) {
+  //console.log(event);
+  //let imageContainer = document.getElementById("motd-icon");
+  // Create a new input element
+  const uploadInput = document.createElement('input');
+  uploadInput.type = 'file';
+
+  // Add event listener to handle file selection
+  uploadInput.addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    // Handle the file upload or further processing here
+    
+    // Create a FileReader object
+    const reader = new FileReader();
+
+    // Set up a load event listener on the FileReader
+    reader.addEventListener('load', function() {
+      // Update the image source with the uploaded image
+      var img = new Image();
+      img.src = reader.result;
+      //console.log(`Processing custom image: ${file.name} | ${img.width}px x ${img.height}px`);
+      img.onload = function () {
+        if(img.width !== 64) {
+          alertError(`<b>💎 Wrong skin texture! 💎</b><br><span style="font-size: small;">Skin must be 64px width!</span>`);
+          return;
+        }
+        if(![64,32].includes(img.height)) {
+          alertError(`<b>💎 Wrong skin texture! 💎</b><br><span style="font-size: small;">Skin must be 64px or 32px width!</span>`);
+          return;
+        }
+        skinType = 1;
+        loadedSkinBuffer = img;
+        //console.log(`Uploaded custom image: ${file.name} | ${img.width}px x ${img.height}px`);
+        updateSkin(true);
+      };
+    });
+
+    // Read the uploaded file as a data URL
+    reader.readAsDataURL(file);
+  });
+
+  // Append the input element to the image container
+  document.body.appendChild(uploadInput);
+
+  // Trigger a click event on the input element
+  uploadInput.click();
+  
+  document.body.removeChild(uploadInput);
+}
+let errorTimeout = undefined;
+function alertError(text = "Empty error.") {
+  //console.log(`Alerting: ${text}`)
+  if(errorTimeout) {
+    clearTimeout(errorTimeout);
+    var sb = document.getElementById("snackbar-error");
+    sb.className = sb.className.replace("show", "");
+  }
+  var sb = document.getElementById("snackbar-error");
+  sb.innerHTML = text;
+  //this is where the class name will be added & removed to activate the css
+  sb.className = "show";
+
+  errorTimeout = setTimeout(()=>{ sb.className = sb.className.replace("show", ""); }, 3000);
 }
 function uploadCustomBackground(event) {
   //console.log(event);

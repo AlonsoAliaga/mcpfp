@@ -508,9 +508,30 @@ ul {
   z-index: 100;
   position: fixed;
 }
+#snackbar-error {
+  visibility: hidden;
+  color: #fff;
+  background-color: #620404;
+  min-width: 250px;
+  margin-left: -125px;
+  border-radius: 2px;
+  padding: 16px;
+  text-align: center;
+  left: 50%;
+  bottom: 30px;
+  z-index: 100;
+  position: fixed;
+}
 
 /* This will be activated when the snackbar's class is 'show' which will be added through JS */
 #snackbar.show {
+  visibility: visible;
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+/* This will be activated when the snackbar's class is 'show' which will be added through JS */
+#snackbar-error.show {
   visibility: visible;
   -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
   animation: fadein 0.5s, fadeout 0.5s 2.5s;
@@ -580,10 +601,10 @@ ul {
   font-size: 7rem;
   color: #fff;
 }
-* {
+/* * {
   padding: 0;
   transition: all .3s;
-}
+} */
 .pixelart {
   image-rendering: pixelated;
   z-index: 100;
