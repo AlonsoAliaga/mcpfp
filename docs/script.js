@@ -1085,7 +1085,7 @@ function getRandomHexColor() {
   return `#${Math.floor(Math.random()*16777215).toString(16).toUpperCase().padStart(6, '0')}`;
 }
 function uploadCustomSkinTexture(event) {
-  //console.log(event);
+  if(event.classList.contains("adlockedsmall")) return;
   //let imageContainer = document.getElementById("motd-icon");
   // Create a new input element
   const uploadInput = document.createElement('input');
@@ -1349,9 +1349,9 @@ document.addEventListener("DOMContentLoaded", () => {
   checkSite(window);
 });
 
-function lockElementWithMessage(element,message,iconUrl='https://raw.githubusercontent.com/AlonsoAliaga/mc-renders/main/assets/images/lock-icon.png') {
+function lockElementWithMessage(element,className,message,iconUrl='https://raw.githubusercontent.com/AlonsoAliaga/mc-renders/main/assets/images/lock-icon.png') {
   if(element) {
-    element.classList.add('adlocked');
+    element.classList.add(className);
     const ov = document.createElement('div');
     ov.className = 'overlay';
     ov.innerHTML = `<img src="${iconUrl}"><span>${message}</span>`;
@@ -1359,5 +1359,7 @@ function lockElementWithMessage(element,message,iconUrl='https://raw.githubuserc
   }
 }
 function processAds() {
-  lockElementWithMessage(document.getElementById("arrows-div"),`Disable AdBlock to access this feature!`)
+  lockElementWithMessage(document.getElementById("arrows-div"),"adlocked",`Disable AdBlock to move avatar!`)
+  lockElementWithMessage(document.getElementById("button-toggle-custom-gradient-div"),"adlockedfit",`Disable AdBlock to use custom gradients!`)
+  lockElementWithMessage(document.getElementById("customskindiv"),"adlockedsmall",`Disable AdBlock to use custom skin texture!`)
 }

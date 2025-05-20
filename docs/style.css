@@ -637,7 +637,7 @@ ul {
   padding: 15px 5px 35px 5px;
   position: absolute;
   inset: 0;
-  background: rgba(255, 48, 48, 0.616);
+  background: rgba(255, 48, 48, 0.671);
   display: flex;
   flex-direction: column;
   border-radius: 11px;
@@ -655,6 +655,60 @@ ul {
 }
 .adlocked .overlay span {
   font-size: 0.9rem;
+  color: #ffffff;
+}
+
+.adlockedfit {
+  position: relative;
+}
+.adlockedfit .overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(156, 28, 28, 0.829);
+  flex-direction: column;
+  border-radius: 40px;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  cursor: not-allowed;
+  z-index: 10;
+  width: 100%;
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+}
+.adlockedfit .overlay img {
+  width: 30px;
+}
+.adlockedfit .overlay span {
+  font-size: 0.9rem;
+  color: #ffffff;
+}
+
+.adlockedsmall {
+  position: relative;
+}
+.adlockedsmall .overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(156, 28, 28, 0.829);
+  flex-direction: column;
+  border-radius: 22px;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  cursor: not-allowed;
+  z-index: 10;
+  width: 100%;
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+}
+.adlockedsmall .overlay img {
+  width: 25px;
+}
+.adlockedsmall .overlay span {
+  font-size: 12px;
   color: #ffffff;
 }
 
