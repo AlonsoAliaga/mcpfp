@@ -274,7 +274,8 @@ function test() {
   console.log("TESTING WORKS!")
 }
 let  buttonsToToggleDarkMode = ["appearance","inputText","download-all","colors-amount","button-toggle-custom-gradient-div",
-"button-remove-watermark-download-div","button-custom-background-div","button-revert-skin-div","button-shadow-div","button-no-background-div"];
+"button-remove-watermark-download-div","button-custom-background-div","button-revert-skin-div","button-shadow-div","button-no-background-div",
+"customskindiv","button-pixelate-background-div"];
 function toggleDarkmode() {
     if (document.getElementById('darkmode').checked == true) {
       document.body.classList.add('dark');
@@ -313,19 +314,24 @@ function toggleDarkmode() {
 function checkSite(window) {
   let search = window.location.search;
   if(typeof search !== "undefined" && search.length > 0) {
-    let parts = atob(search.slice(1)).split("&");
-    for(let part of parts) {
-      let [k,v] = part.split("=");
-      k = btoa(k);
-      if(k == "dXNlcm5hbWU=") {
-        if(v.match(/[a-z0-9_]/gi)) {
-          setTimeout(()=>{
-            usernameInput.value = v;
-            processUsername();
-          },500);
-        }
+    try{
+      let parts = atob(search.slice(1)).split("&");
+      for(let part of parts) {
+        let [k,v] = part.split("=");
+        //console.log(k,v)
+        try{
+          k = btoa(k);
+          if(k == "dXNlcm5hbWU=") {
+            if(v.match(/[a-z0-9_]/gi)) {
+              setTimeout(()=>{
+                usernameInput.value = v;
+                processUsername();
+              },500);
+            }
+          }
+        }catch(e){}
       }
-    }
+    }catch(e){}
   }
   setTimeout(()=>{
     let href = window.location.href;
@@ -333,6 +339,48 @@ function checkSite(window) {
       try{document.title = `Page stolen from https://${atob("YWxvbnNvYWxpYWdhLmdpdGh1Yi5pbw==")}`;}catch(e){}
       window.location = `https://${atob("YWxvbnNvYWxpYWdhLmdpdGh1Yi5pbw==")}/mcpfp/`}
   });
+  fetch('https://api.github.com/repos/AlonsoAliaga/AlonsoAliagaAPI/contents/api/tools/tools-list.json?ref=main')
+    .then(res => res.json())
+    .then(content => {
+      const decoded = atob(content.content);
+      const parsed = JSON.parse(decoded);
+      let toolsData = parsed;
+      let toolsArray = []
+      for(let toolData of toolsData) {
+        //console.log(toolData);
+        let clazz = typeof toolData.clazz == "undefined" ? "" : ` class="${toolData.clazz}"`;
+        let style = typeof toolData.style == "undefined" ? "" : ` style="${toolData.style}"`;
+        toolsArray.push(`<span>💠</span> <span${clazz}${style}><a href="${toolData.link}">${toolData.name}</a></span><br>`);
+      }
+      document.getElementById("tools-for-you").innerHTML = toolsArray.join(`
+`);
+    });
+    return;
+/*
+    .then(res => res.json())
+    .then(data => {
+      console.log(data); // your parsed JSON
+    })
+    .catch(err => console.error("Fetch error:", err));
+    */
+   /*
+  let toolsData = [
+    {
+      name:"HEX Generator (RBG)",
+      class:"rainbow",
+      style:"color:transparent",
+      link:"https://alonsoaliaga.com/hex"
+    }
+  ];
+  let toolsArray = []
+  for(let toolData of toolsData) {
+    //console.log(toolData);
+    let clazz = typeof toolData.class == "undefined" ? "" : ` class="${toolData.class}"`;
+    let style = typeof toolData.style == "undefined" ? "" : ` style="${toolData.style}"`;
+    toolsArray.push(`<span>💠</span> <span${clazz}${style}><a href="${toolData.link}">${toolData.name}</a></span><br>`);
+  }
+  document.getElementById("tools-for-you").innerHTML = toolsArray.join("<br>");
+  */
 }
 function selectTab(evt, tabName, buttonName) {
   // Declare all variables
@@ -669,6 +717,8 @@ let loadedSkinBuffer = undefined;
 const usernameInput = document.getElementById('inputText');
 const usernameInputDiv = document.getElementById('inputTextDiv');
 const cacheSkins = new Map();
+let lastFailed = false;
+let lastSuccessUsernameForRenderShowcase = undefined;
 async function processUsername(order) {
   skinType = 0;
   if(order != "no-cooldown") blockUsername(defaultCooldown);
@@ -681,17 +731,35 @@ async function processUsername(order) {
   }else{
     let url = `https://minotar.net/skin/${username}.png`;
     try{
-      fullSkin = await loadImage(url);
+      fullSkin = await loadImageWithCheck(url);
       loadedSkinBuffer = fullSkin;
+      lastFailed = false;
+      updateTest(username);
     }catch(e) {
+      lastFailed = true;
+      //console.log(`Detected error:`)
       //console.log(e);
       drawFailed();
+      updateTest();
       return;
     }
     cacheSkins.set(username.toLowerCase(),fullSkin);
   }
   //Fetch skin logic
   updateSkin(inCache);
+}
+async function loadImageWithCheck(url) {
+  let response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Failed to load image: ${response.status} ${response.statusText}`);
+  }
+  const blob = await response.blob();
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = () => reject(new Error('Error loading image'));
+    img.src = URL.createObjectURL(blob);
+  });
 }
 function createGradient(ctx, colours) {
   if(!colours) {
@@ -750,9 +818,95 @@ function nextGradient() {
 let backgroundType = 0; //0 - gradient | 1 - image | 2 - custom gradient
 let currentGradient = 0;
 let skinType = 0; //0 - username | 1 - custom
+function togglePixelateBorderBox() {
+  let effectBox = document.getElementById("pixelate-background-box");
+  let effectOption = document.getElementById("button-pixelate-background").checked;
+  if(effectOption) {
+    //document.getElementById("button-pixelate-background").checked = false;
+    effectBox.classList.add("expanded");
+  }else{
+    effectBox.classList.remove("expanded");
+  }
+}
+function modifyPixelateBackgroundWidth(event,toAdd) {
+  let customSize= document.getElementById("pixelate-background-size");
+  let newSize = parseInt(customSize.innerText) + (toAdd  * ((event.ctrlKey||event.altKey) ? 2 : 1));
+  if(newSize <= 1) {    
+    customSize.innerText = 1;
+  }else{
+    customSize.innerText = Math.max(1,Math.min(100,newSize));
+  }
+  updateSkin(true);
+}
+function pixelateCtx(ctx) {
+  let customSize= document.getElementById("pixelate-background-size");
+  let size = parseInt(customSize.innerText);
+  let c = ctx.canvas, w = c.width, h = c.height;
+  let tmp = document.createElement("canvas");
+  tmp.width = w/size; tmp.height = h/size;
+  let tctx = tmp.getContext("2d");
+  tctx.drawImage(c, 0, 0, tmp.width, tmp.height);
+  ctx.imageSmoothingEnabled = false;
+  ctx.clearRect(0, 0, w, h);
+  ctx.drawImage(tmp, 0, 0, w, h);
+}
+let addX = 0,addY = 0;
+function moveIcon(direction,event) {
+  let revertSkin = document.getElementById("button-revert-skin").checked;
+  let toModify = event.altKey || event.shiftKey ? 5 : 1;
+  toModify = ["left","right"].includes(direction) ? (revertSkin ? toModify * -1 : toModify) : toModify;
+  if(direction == "left") addX = Math.max(-250,addX - toModify);
+  else if(direction == "right") addX = Math.min(250,addX + toModify);
+  else if(direction == "up") addY = Math.max(0,addY - toModify);
+  else addY = Math.min(250,addY + toModify);
+  updateSkin(true);
+}
+let logoBuffer;
+async function updateTest(username) {
+  return;
+  if(document.getElementById("render-showcase-div").style.display == "none") {
+    //console.log(`Render showcase is hidden. Ignoring..`)
+    return;
+  }
+  if(!logoBuffer) {
+    try{
+      logoBuffer = await loadImage("https://raw.githubusercontent.com/AlonsoAliaga/alonsoaliaga.github.io/main/assets/img/apple-touch-icon.png");
+    }catch(e){
+      console.log(`Error loading logo buffer wtf? ${e.message}`);
+    }
+  }
+  if(lastFailed || typeof username == "undefined") {
+    username = "AlonsoAliaga";
+  }
+  //console.log(`Updating render showcase with username: ${username}`);
+  let link = atob("aHR0cHM6Ly9zdGFybGlnaHRza2lucy5sdW5hcmVjbGlwc2Uuc3R1ZGlvL3JlbmRlci9tYXJjaGluZy97dXNlcm5hbWV9L2ZhY2U=").replace(/{username}/g,username);
+  const canvas = document.getElementById('test');
+  let ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+  const img = new Image();
+  img.crossOrigin = 'anonymous'; // Enable CORS if the image is from another domain
+  img.onload = () => {
+    canvas.width = img.width;
+    canvas.height = img.height;
+    ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+    ctx.globalAlpha = 0.05;
+    ctx.drawImage(logoBuffer,15,15,64,53);
+    ctx.drawImage(logoBuffer,canvas.width - 79, canvas.height - 68,64,53);
+    ctx.globalAlpha = 0.03;
+    ctx.drawImage(logoBuffer,canvas.width/2 - (256/2), canvas.height/2 - (214 / 2),256,214);
+    ctx.globalAlpha = 1.0;
+  }
+  img.onerror = () => {
+    //console.log(`Invalid username: ${username}`)
+    updateTest("AlonsoAliaga");
+  }
+  img.src = link; // Replace with your image URL
+}
 function updateSkin(inCache = true) {
   let username = usernameInput?.value || "AlonsoAliaga";
   //
+  let pixelateBackground = document.getElementById("button-pixelate-background").checked;
   let revertSkin = document.getElementById("button-revert-skin").checked;
   let shadow = document.getElementById("button-shadow").checked;
   let transparentBackground = document.getElementById("button-no-background").checked;
@@ -760,7 +914,8 @@ function updateSkin(inCache = true) {
   let finalCanvas = document.getElementById("final-canvas");
   let finalCtx = finalCanvas.getContext("2d");
   finalCtx.clearRect(0, 0, finalCanvas.width, finalCanvas.height);
-  finalCtx.imageSmoothingEnabled = false;
+  //console.log(finalCanvas.width,finalCanvas.height)
+  finalCtx.imageSmoothingEnabled = true;
   //
   let backgroundCtx = backgroundCanvas.getContext("2d");
   if(!transparentBackground) {
@@ -778,6 +933,9 @@ function updateSkin(inCache = true) {
       let currentAmount = isNaN(colorsButton.innerText) ? 2 : Math.max(2,Math.min(maxColorsAmount,parseInt(colorsButton.innerText)));
       createGradient(backgroundCtx,defaultColors.slice(0, currentAmount));
       finalCtx.drawImage(backgroundCanvas,0,0);
+    }
+    if(pixelateBackground) {
+      pixelateCtx(finalCtx)
     }
   }else{
     finalCanvas.style.border = "none";
@@ -798,8 +956,8 @@ function updateSkin(inCache = true) {
   }
   //console.log(`Type of loadedSkinBuffer: ${typeof loadedSkinBuffer}`);
   if (loadedSkinBuffer.height === 32) {
-    skinCtx.drawImage(loadedSkinBuffer, 8, 9, 7, 7, 8, 4, 7, 7); // Head (bottom layer)
-    skinCtx.drawImage(loadedSkinBuffer, 5, 9, 3, 7, 5, 4, 3, 7); // Head Side (bottom layer)
+    skinCtx.drawImage(loadedSkinBuffer, 8,  9, 7, 7, 8, 4, 7, 7); // Head (bottom layer)
+    skinCtx.drawImage(loadedSkinBuffer, 5,  9, 3, 7, 5, 4, 3, 7); // Head Side (bottom layer)
     skinCtx.drawImage(loadedSkinBuffer, 44, 20, 3, 7, 12, 13, 3, 7); // Arm Right Side (bottom layer)
     skinCtx.drawImage(loadedSkinBuffer, 21, 20, 6, 1, 7, 11, 6, 1); // Chest Neck Small Line (bottom layer)
     skinCtx.drawImage(loadedSkinBuffer, 20, 21, 8, 8, 6, 12, 8, 8); // Chest Other (Bottom layer)
@@ -809,14 +967,14 @@ function updateSkin(inCache = true) {
 
   } else {
     // * BOTTOM LAYER
-    skinCtx.drawImage(loadedSkinBuffer, 8, 9, 7, 7, 8, 4, 7, 7); // Head (bottom layer)
-    skinCtx.drawImage(loadedSkinBuffer, 5, 9, 3, 7, 5, 4, 3, 7); // Head Side (bottom layer)
+    skinCtx.drawImage(loadedSkinBuffer, 8,  9, 7, 7, 8, 4, 7, 7); // Head (bottom layer)
+    skinCtx.drawImage(loadedSkinBuffer, 5,  9, 3, 7, 5, 4, 3, 7); // Head Side (bottom layer)
     skinCtx.drawImage(loadedSkinBuffer, 36, 52, 3, 7, 12, 13, 3, 7); // Arm Right Side (bottom layer)
     skinCtx.drawImage(loadedSkinBuffer, 21, 20, 6, 1, 7, 11, 6, 1); // Chest Neck Small Line (bottom layer)
     skinCtx.drawImage(loadedSkinBuffer, 20, 21, 8, 8, 6, 12, 8, 8); // Chest Other (Bottom layer)
     skinCtx.drawImage(loadedSkinBuffer, 44, 20, 3, 7, 5, 13, 3, 7); // Arm Left Side (bottom layer)
-
-    // * TOP LAYER
+ addY +
+    // * TOP LAYER addY +
     skinCtx.drawImage(loadedSkinBuffer, 40, 9, 7, 7, 8, 4, 7, 7); // Head (top layer)
     skinCtx.drawImage(loadedSkinBuffer, 33, 9, 3, 7, 5, 4, 3, 7); // Head Side (top layer)
     skinCtx.drawImage(loadedSkinBuffer, 52, 52, 3, 7, 12, 13, 3, 7); // Arm Right Side (top layer)
@@ -824,14 +982,14 @@ function updateSkin(inCache = true) {
     skinCtx.drawImage(loadedSkinBuffer, 20, 37, 8, 8, 6, 12, 8, 8); // Chest Other (top layer)
     skinCtx.drawImage(loadedSkinBuffer, 21, 36, 6, 1, 7, 11, 6, 1); // Chest Neck Small Line (top layer)
   }
-  skinCtx.drawImage(shadingBuffer, 0, 0, 20, 20);
+  skinCtx.drawImage(shadingBuffer, 0 , 0, 20, 20);
   if(revertSkin) {
     finalCtx.save();
     finalCtx.scale(-1, 1);
-    finalCtx.drawImage(skinCanvas, skinCtx.canvas.width * -1, 0, skinCtx.canvas.width, skinCtx.canvas.height);
+    finalCtx.drawImage(skinCanvas, addX + (skinCtx.canvas.width * -1), addY, skinCtx.canvas.width, skinCtx.canvas.height);
     finalCtx.restore();
   }else{
-    finalCtx.drawImage(skinCanvas,0,0,300,300)
+    finalCtx.drawImage(skinCanvas,addX,addY,300,300)
   }
 
   //console.log(`Username: ${username}\nRevert skin: ${revertSkin}\nShadow: ${shadow}\nTransparent background: ${transparentBackground}\nIn cache: ${inCache}`);
@@ -1168,7 +1326,9 @@ async function mergeCanvases(canvases) {
 
 	return canvas
 }
-async function drawFailed(ctx) {
+async function drawFailed() {
+	const canvas = document.getElementById("final-canvas");
+	const ctx = canvas.getContext("2d");
 	ctx.clearRect(0, 0, 300, 300);
 	ctx.drawImage(backdropBuffer, 0, 0, 20, 20);
 	ctx.resetTransform();
@@ -1183,4 +1343,21 @@ function runDelayed() {
     toggleCustomGradientBox();
   },500);
   */
+}
+document.addEventListener("DOMContentLoaded", () => {
+  loadCounter();
+  checkSite(window);
+});
+
+function lockElementWithMessage(element,message,iconUrl='https://raw.githubusercontent.com/AlonsoAliaga/mc-renders/main/assets/images/lock-icon.png') {
+  if(element) {
+    element.classList.add('adlocked');
+    const ov = document.createElement('div');
+    ov.className = 'overlay';
+    ov.innerHTML = `<img src="${iconUrl}"><span>${message}</span>`;
+    element.append(ov);
+  }
+}
+function processAds() {
+  lockElementWithMessage(document.getElementById("arrows-div"),`Disable AdBlock to access this feature!`)
 }

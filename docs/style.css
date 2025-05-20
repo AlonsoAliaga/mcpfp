@@ -8,7 +8,11 @@ body {
   font-family: MinecraftRegular;
   list-style-type: none;
 }
-  
+.hidden-box {
+  height: 0;
+  overflow: hidden;
+  transition: height 0.3s ease;
+}
 .modal {
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
@@ -21,6 +25,13 @@ body {
   overflow: auto; /* Enable scroll if needed */
   background-color: rgb(0,0,0); /* Fallback color */
   background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+.center-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 150px !important;
+  /*min-height: 100vh; /* Ensures the container takes at least the full viewport height */
 }
 .error-content {
   text-align: left;
@@ -617,4 +628,37 @@ ul {
 }
 .expanded {
   height: fit-content !important;
+}
+
+.adlocked {
+  position: relative;
+}
+.adlocked .overlay {
+  padding: 15px 5px 35px 5px;
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 48, 48, 0.616);
+  display: flex;
+  flex-direction: column;
+  border-radius: 11px;
+  align-items: center;
+  justify-content: center;
+  cursor: not-allowed;
+  z-index: 10;
+  width: 260px;
+  height: 109px;
+  left: calc(50% - 130px);
+  top: -6px
+}
+.adlocked .overlay img {
+  width: 40px;
+}
+.adlocked .overlay span {
+  font-size: 0.9rem;
+  color: #ffffff;
+}
+
+.arrows-div {
+  display: flex;
+  justify-items: center;
 }
