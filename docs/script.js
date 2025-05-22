@@ -1348,7 +1348,6 @@ document.addEventListener("DOMContentLoaded", () => {
   loadCounter();
   checkSite(window);
 });
-
 function lockElementWithMessage(element,className,message,iconUrl='https://raw.githubusercontent.com/AlonsoAliaga/mc-renders/main/assets/images/lock-icon.png') {
   if(element) {
     element.classList.add(className);
