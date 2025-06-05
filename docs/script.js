@@ -339,48 +339,18 @@ function checkSite(window) {
       try{document.title = `Page stolen from https://${atob("YWxvbnNvYWxpYWdhLmdpdGh1Yi5pbw==")}`;}catch(e){}
       window.location = `https://${atob("YWxvbnNvYWxpYWdhLmdpdGh1Yi5pbw==")}/mcpfp/`}
   });
-  fetch('https://api.github.com/repos/AlonsoAliaga/AlonsoAliagaAPI/contents/api/tools/tools-list.json?ref=main')
+  fetch('https://raw.githubusercontent.com/AlonsoAliaga/AlonsoAliagaAPI/refs/heads/main/api/tools/tools-list.json')
     .then(res => res.json())
     .then(content => {
-      const decoded = atob(content.content);
-      const parsed = JSON.parse(decoded);
-      let toolsData = parsed;
+      let toolsData = content;
       let toolsArray = []
       for(let toolData of toolsData) {
-        //console.log(toolData);
         let clazz = typeof toolData.clazz == "undefined" ? "" : ` class="${toolData.clazz}"`;
         let style = typeof toolData.style == "undefined" ? "" : ` style="${toolData.style}"`;
-        toolsArray.push(`<span>💠</span> <span${clazz}${style}><a href="${toolData.link}">${toolData.name}</a></span><br>`);
+        toolsArray.push(`<span>💠</span> <span${clazz}${style}><a title="${toolData.description}" id="tool-priority-${toolData.priority}" href="${toolData.link}">${toolData.name}</a></span>`);
       }
-      document.getElementById("tools-for-you").innerHTML = toolsArray.join(`
-`);
+      document.getElementById("tools-for-you").innerHTML = toolsArray.join(`<br>`);
     });
-    return;
-/*
-    .then(res => res.json())
-    .then(data => {
-      console.log(data); // your parsed JSON
-    })
-    .catch(err => console.error("Fetch error:", err));
-    */
-   /*
-  let toolsData = [
-    {
-      name:"HEX Generator (RBG)",
-      class:"rainbow",
-      style:"color:transparent",
-      link:"https://alonsoaliaga.com/hex"
-    }
-  ];
-  let toolsArray = []
-  for(let toolData of toolsData) {
-    //console.log(toolData);
-    let clazz = typeof toolData.class == "undefined" ? "" : ` class="${toolData.class}"`;
-    let style = typeof toolData.style == "undefined" ? "" : ` style="${toolData.style}"`;
-    toolsArray.push(`<span>💠</span> <span${clazz}${style}><a href="${toolData.link}">${toolData.name}</a></span><br>`);
-  }
-  document.getElementById("tools-for-you").innerHTML = toolsArray.join("<br>");
-  */
 }
 function selectTab(evt, tabName, buttonName) {
   // Declare all variables
