@@ -240,6 +240,7 @@
       jQuery(document).ready(function($){
       	$('iframe').iframeTracker({
       		blurCallback: function(event) {
+            console.log(`You clicked an ad!`);
             if(unlockFeaturesDiv.style.display != "none") {
               times--;
               if(times <= 0) {
@@ -260,7 +261,7 @@
         max = Math.floor(max);
         return Math.floor(Math.random() * (max - min + 1)) + min;
       }
-    });
+    },5000);
     function testeo1(){}
   </script>
   <script src="resources.js"></script>
