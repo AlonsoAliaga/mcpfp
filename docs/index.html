@@ -223,7 +223,15 @@
           if(uniqueId == aUniqueId) {
             let element = document.getElementById(featureElementId);
             if(element) {
-              checkFrame(feature,"What the hell are you searching here?")
+              if(featureElementId  == unlockFeaturesDiv.id) {
+                unlockFeaturesDiv.style.display = "none";
+                document.getElementById("button-toggle-frame-div").style.display = "inline-block"
+                unlockFeaturesDiv.onclick = function(){
+                  return false;
+                }
+              }else{
+                checkFrame(feature,"What the hell are you searching here?")
+              }
             }
           }
         }
@@ -231,7 +239,14 @@
     });
     unlockFeaturesDiv.onclick = function() {
       if(adBlockEnabled) return;
-      alertMessage();
+      let opened = window.open(`./unlock.html`,`_blank`);
+      if(opened) {
+        setTimeout(()=>{
+          let data = {feature:`new-features`,featureName:`new features`,uuid:uniqueId,elementId:unlockFeaturesDiv.id}
+          opened.postMessage(data,"*");
+        },500);
+      }
+      //alertMessage();
     }
     setTimeout(()=>{
       let times = getRandomInt(1,3);
