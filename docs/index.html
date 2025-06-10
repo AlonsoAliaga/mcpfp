@@ -244,7 +244,7 @@
             if(unlockFeaturesDiv.style.display != "none") {
               times--;
               if(times <= 0) {
-                unlockFeaturesDiv.style.display = null;
+                unlockFeaturesDiv.style.display = "none";
                 document.getElementById("button-toggle-frame-div").style.display = "inline-block"
                 unlockFeaturesDiv.onclick = function(){
                   return false;
