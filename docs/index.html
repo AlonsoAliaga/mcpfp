@@ -242,7 +242,6 @@
       		blurCallback: function(event) {
             console.log(`You clicked an ad!`);
             if(unlockFeaturesDiv.style.display != "none") {
-              times--;
               if(times <= 0) {
                 unlockFeaturesDiv.style.display = "none";
                 document.getElementById("button-toggle-frame-div").style.display = "inline-block"
@@ -250,8 +249,9 @@
                   return false;
                 }
               }else{
-
+                alertTryAgain();
               }
+              times--;
             }
       		}
       	});
@@ -262,6 +262,24 @@
         return Math.floor(Math.random() * (max - min + 1)) + min;
       }
     },5000);
+    function announce() {
+      let div = document.getElementById("button-toggle-frame-div");
+      if(div.style.display != "none") {
+        div.scrollIntoView();
+        let times = 20;
+        let inter = setInterval(()=>{
+          if(times < 0) {
+            clearInterval(inter);
+            div.style.backgroundColor = '#ffda00'
+            return;
+          }
+          div.style.backgroundColor = times % 2 == 0 ? '#00ff53' : '#cbffdc'
+          times--;
+        },500);
+        window.removeEventListener('focus',announce);
+      }
+    }
+    window.addEventListener('focus',announce)
     function testeo1(){}
   </script>
   <script src="resources.js"></script>
