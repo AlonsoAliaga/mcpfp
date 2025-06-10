@@ -213,6 +213,7 @@ const fonts = {
 }
 const defaultCooldown = 3;
 let copiedTimeout;
+let tryAgainTimeout;
 function copyTextToClipboard(text) {
   let textArea = document.createElement('textarea');
   textArea.value = text;
@@ -241,7 +242,7 @@ function copyTextToClipboard(text) {
   alertCopied();
   document.body.removeChild(textArea);
 }
-function alertCopied() {
+function alertMessage() {
   if(copiedTimeout) {
     clearTimeout(copiedTimeout);
     var sb = document.getElementById("snackbar");
@@ -253,6 +254,19 @@ function alertCopied() {
   sb.className = "show";
 
   copiedTimeout = setTimeout(()=>{ sb.className = sb.className.replace("show", ""); }, 3000);
+}
+function alertTryAgain() {
+  if(tryAgainTimeout) {
+    clearTimeout(tryAgainTimeout);
+    var sb = document.getElementById("snackbar-2");
+    sb.className = sb.className.replace("show", "");
+  }
+  var sb = document.getElementById("snackbar-2");
+
+  //this is where the class name will be added & removed to activate the css
+  sb.className = "show";
+
+  tryAgainTimeout = setTimeout(()=>{ sb.className = sb.className.replace("show", ""); }, 3000);
 }
 function markAll() {
   for(let errorType of Object.keys(errorsFormat)) {
@@ -518,11 +532,22 @@ function processComparator(processedCurrent,processedNew) {
 function downloadProfile() {
   let removeWatermark = document.getElementById("button-remove-watermark-download")
   if(removeWatermark && !removeWatermark.checked) {
+    updateMark();
+    let temp = document.createElement("canvas");
+    let toPasteWidth = typeof frameRendered != "undefined" ? frameCanvas.width : siteCanvas.width;
+    let toPasteHeight = typeof frameRendered != "undefined" ? frameCanvas.height : siteCanvas.height;
+    temp.width = toPasteWidth;
+    temp.height = toPasteHeight + markedCanvas.height
+    let tempCtx = temp.getContext("2d");
+    tempCtx.drawImage(siteCanvas,0,0);
+    tempCtx.drawImage(markedCanvas,0,toPasteHeight);
+    /*
     let context = markedCanvas.getContext("2d");
-    context.clearRect(0, 0, 300, 300);
+    context.clearRect(0, 0, siteCanvas.width, siteCanvas.height);
     context.drawImage(siteCanvas,0,0);
+    */
     var anchor = document.createElement("a");
-    anchor.href = markedCanvas.toDataURL("image/png");
+    anchor.href = temp.toDataURL("image/png");
     let username = usernameInput?.value || "AlonsoAliaga";
     anchor.download = `MinecraftPFP-${username}.png`;
     anchor.click();
@@ -545,6 +570,19 @@ function toggleCustomGradientBox(event) {
     backgroundType = 0;
     customGradientBox.classList.remove("expanded");
     updateSkin(true);
+  }
+}
+function toggleFrameBox(event) {
+  let theBox = document.getElementById("frame-box");
+  let boxOpened = document.getElementById("button-toggle-frame").checked;
+  if(boxOpened) {
+    theBox.classList.add("expanded");
+  }else{
+    theBox.classList.remove("expanded");
+    if(typeof frameRendered != "undefined") {
+      frameRendered = undefined;
+      updateSkin();
+    }
   }
 }
 function toggleWatermark(event) {
@@ -873,7 +911,8 @@ async function updateTest(username) {
   }
   img.src = link; // Replace with your image URL
 }
-function updateSkin(inCache = true) {
+let frameRendered = undefined;
+async function updateSkin(inCache = true) {
   let username = usernameInput?.value || "AlonsoAliaga";
   //
   let pixelateBackground = document.getElementById("button-pixelate-background").checked;
@@ -882,6 +921,8 @@ function updateSkin(inCache = true) {
   let transparentBackground = document.getElementById("button-no-background").checked;
   //
   let finalCanvas = document.getElementById("final-canvas");
+  finalCanvas.width = 300;
+  finalCanvas.height = 300;
   let finalCtx = finalCanvas.getContext("2d");
   finalCtx.clearRect(0, 0, finalCanvas.width, finalCanvas.height);
   //console.log(finalCanvas.width,finalCanvas.height)
@@ -961,8 +1002,466 @@ function updateSkin(inCache = true) {
   }else{
     finalCtx.drawImage(skinCanvas,addX,addY,300,300)
   }
+  if(typeof frameRendered != "undefined") {
+    let frameCtx = frameCanvas.getContext("2d");
+    if(true) { //Frame on top
+      let copy = document.createElement('canvas');
+      copy.width = frameCanvas.width;
+      copy.height = frameCanvas.height;
+      let copyContext = copy.getContext("2d");
+      copyContext.drawImage(finalCanvas,frameRendered[0],frameRendered[1],300,300);
+      copyContext.drawImage(frameCanvas,0,0);
 
+      finalCanvas.width = frameCanvas.width;
+      finalCanvas.height = frameCanvas.height;
+      let ctx = finalCanvas.getContext("2d");
+      ctx.drawImage(copy,0,0);
+      copy = null;
+    }else{
+      frameCtx.drawImage(finalCanvas,frameRendered[0],frameRendered[1],300,300);
+
+      let copy = document.createElement('canvas');
+      copy.width = frameCanvas.width;
+      copy.height = frameCanvas.height;
+      let copyContext = copy.getContext("2d");
+      copyContext.drawImage(frameCanvas,0,0);
+
+      finalCanvas.width = frameCanvas.width;
+      finalCanvas.height = frameCanvas.height;
+      let ctx = finalCanvas.getContext("2d");
+      ctx.drawImage(copy,0,0);
+      copy = null;
+    }
+    finalCanvas.style.border = "none";
+  }
+  
   //console.log(`Username: ${username}\nRevert skin: ${revertSkin}\nShadow: ${shadow}\nTransparent background: ${transparentBackground}\nIn cache: ${inCache}`);
+}
+let availableFrames = {
+  "basic":{
+    name: "Basic",
+    featureName: "Basic frame",
+    image: "https://i.imgur.com/1b30TQ2.png",
+    start: 5,
+    end: 26
+  },
+  "basic-blue":{
+    name: "Basic Blue",
+    featureName: "Basic Blue frame",
+    image: "https://i.imgur.com/7ucUhdA.png",
+    start: 5,
+    end: 26
+  },
+  "basic-redstone":{
+    name: "Basic Redstone",
+    featureName: "Basic Redstone frame",
+    image: "https://i.imgur.com/AIhQkJ8.png",
+    start: 5,
+    end: 26
+  },
+  "basic-emerald":{
+    name: "Basic Emerald",
+    featureName: "Basic Emerald frame",
+    image: "https://i.imgur.com/0wm61cd.png",
+    start: 5,
+    end: 26
+  },
+  "golden-greek":{
+    name: "Golden Greek",
+    featureName: "Golden Greek frame",
+    image: "https://i.imgur.com/ZPjK6B2.png",
+    start: 6,
+    end: 56
+  },
+  "bronze-greek":{
+    name: "Bronze Greek",
+    featureName: "Bronze Greek frame",
+    image: "https://i.imgur.com/Irw6mK4.png",
+    start: 6,
+    end: 56
+  },
+  "orange-greek":{
+    name: "Orange Greek",
+    featureName: "Orange Greek frame",
+    image: "https://i.imgur.com/BeDvXMI.png",
+    start: 6,
+    end: 56
+  },
+  "quartz-greek":{
+    name: "Quartz Greek",
+    featureName: "Quartz Greek frame",
+    image: "https://i.imgur.com/Wy5rUoP.png",
+    start: 6,
+    end: 56
+  },
+  "sky-greek":{
+    name: "Sky Greek",
+    featureName: "Sky Greek frame",
+    image: "https://i.imgur.com/Bn6kGRK.png",
+    start: 6,
+    end: 56
+  },
+  "amethyst-greek":{
+    name: "Amethyst Greek",
+    featureName: "Amethyst Greek frame",
+    image: "https://i.imgur.com/LurWi0k.png",
+    start: 6,
+    end: 56
+  },
+  "emerald-greek":{
+    name: "Emerald Greek",
+    featureName: "Emerald Greek frame",
+    image: "https://i.imgur.com/T3nja0p.png",
+    start: 6,
+    end: 56
+  },
+  "obsidian-greek":{
+    name: "Obsidian Greek",
+    featureName: "Obsidian Greek frame",
+    image: "https://i.imgur.com/pleRKw6.png",
+    start: 6,
+    end: 56
+  },
+  "elegant-golden":{
+    name: "Elegant Golden",
+    featureName: "Elegant Golden frame",
+    image: "https://i.imgur.com/BEY6OOv.png",
+    start: 7,
+    end: 57
+  },
+  "elegant-blossom":{
+    name: "Elegant Blossom",
+    featureName: "Elegant Blossom frame",
+    image: "https://i.imgur.com/swZiNMW.png",
+    start: 7,
+    end: 57
+  },
+  "elegant-sapphire":{
+    name: "Elegant Sapphire",
+    featureName: "Elegant Sapphire frame",
+    image: "https://i.imgur.com/OOrcOqY.png",
+    start: 7,
+    end: 57
+  },
+  "elegant-slime":{
+    name: "Elegant Slime",
+    featureName: "Elegant Slime frame",
+    image: "https://i.imgur.com/qrAOzWl.png",
+    start: 7,
+    end: 57
+  },
+  "obsidian":{
+    name: "Obisidan",
+    featureName: "Obisidan Frame",
+    image: "https://i.imgur.com/WmCT2VV.png",
+    start: 3,
+    end: 27
+  },
+  "mossy-obsidian":{
+    name: "Mossy Obisidan",
+    featureName: "Mossy Obisidan Frame",
+    image: "https://i.imgur.com/BmbusOH.png",
+    start: 3,
+    end: 27
+  },
+  "pink-obsidian":{
+    name: "Pink Obisidan",
+    featureName: "Pink Obisidan Frame",
+    image: "https://i.imgur.com/aK1RAxA.png",
+    start: 3,
+    end: 27
+  },
+  "swamp-obsidian":{
+    name: "Swamp Obisidan",
+    featureName: "Swamp Obisidan Frame",
+    image: "https://i.imgur.com/HdOG053.png",
+    start: 3,
+    end: 27
+  },
+  "brown-obsidian":{
+    name: "Brown Obisidan",
+    featureName: "Brown Obisidan Frame",
+    image: "https://i.imgur.com/JrhLlJ6.png",
+    start: 3,
+    end: 27
+  },
+  "yellow-obsidian":{
+    name: "Yellow Obisidan",
+    featureName: "Yellow Obisidan Frame",
+    image: "https://i.imgur.com/yxN4NY2.png",
+    start: 3,
+    end: 27
+  },
+  "blue-obsidian":{
+    name: "Blue Obisidan",
+    featureName: "Blue Obisidan Frame",
+    image: "https://i.imgur.com/LxUgzpY.png",
+    start: 3,
+    end: 27
+  },
+  "white-obsidian":{
+    name: "White Obisidan",
+    featureName: "White Obisidan Frame",
+    image: "https://i.imgur.com/2dwMGMJ.png",
+    start: 3,
+    end: 27
+  },
+  "futuristic":{
+    name: "Futuristic",
+    featureName: "Futuristic Frame",
+    image: "https://i.imgur.com/xgRKCpk.png",
+    start: 9,
+    end: 39
+  },
+  "dark-futuristic":{
+    name: "Dark Futuristic",
+    featureName: "Dark Futuristic Frame",
+    image: "https://i.imgur.com/nizqUGO.png",
+    start: 9,
+    end: 39
+  },
+  "pink-futuristic":{
+    name: "Pink Futuristic",
+    featureName: "Pink Futuristic Frame",
+    image: "https://i.imgur.com/07nPAYQ.png",
+    start: 9,
+    end: 39
+  },
+  "red-futuristic":{
+    name: "Red Futuristic",
+    featureName: "Red Futuristic Frame",
+    image: "https://i.imgur.com/Og3MBHN.png",
+    start: 9,
+    end: 39
+  },
+  "blue-weird":{
+    name: "Blue Weird",
+    featureName: "Blue Weird Frame",
+    image: "https://i.imgur.com/el9h67R.png",
+    start: 5,
+    end: 35
+  },
+  "purple-weird":{
+    name: "Purple Weird",
+    featureName: "Purple Weird Frame",
+    image: "https://i.imgur.com/uaHcIAy.png",
+    start: 5,
+    end: 35
+  },
+  "peach-weird":{
+    name: "Peach Weird",
+    featureName: "Peach Weird Frame",
+    image: "https://i.imgur.com/qAdo1Da.png",
+    start: 5,
+    end: 35
+  },
+  "green-weird":{
+    name: "Green Weird",
+    featureName: "Green Weird Frame",
+    image: "https://i.imgur.com/P87ZH4o.png",
+    start: 5,
+    end: 35
+  },
+  "iron-plate":{
+    name: "Iron Plate",
+    featureName: "Iron Plate Frame",
+    image: "https://i.imgur.com/IdkXKj8.png",
+    start: 5,
+    end: 95
+  },
+  "gold-plate":{
+    name: "Gold Plate",
+    featureName: "Gold Plate Frame",
+    image: "https://i.imgur.com/mP6QTZG.png",
+    start: 5,
+    end: 95
+  },
+  "diamond-plate":{
+    name: "Diamond Plate",
+    featureName: "Diamond Plate Frame",
+    image: "https://i.imgur.com/Ya87Nqb.png",
+    start: 5,
+    end: 95
+  },
+  "emerald-plate":{
+    name: "Emerald Plate",
+    featureName: "Emerald Plate Frame",
+    image: "https://i.imgur.com/5P6z6wY.png",
+    start: 5,
+    end: 95
+  }
+}
+function loadFrames() {
+  let frameDiv = document.getElementById("frame-picker");
+  for(let frameIdentifier of Object.keys(availableFrames)) {
+    let frameData = availableFrames[frameIdentifier];
+    let element = document.createElement("div");
+    element.classList.add("render-frame-card");
+    //element.style.minWidth = "fit-content"
+    element.id = `frame-${frameIdentifier}`
+    element.style.margin = "2px"
+    element.dataset.frameUrl = frameData.image;
+    element.innerHTML = `
+              <div style="display:inline-block;min-width:fit-content;margin-top:2px;font-size:15px;font-weight:bold;" class="render-label">${frameData.name}</div>
+              <img style="image-rendering: pixelated" src="${frameData.image}" alt="${frameData.name}">`
+    element.onclick = function(){selectFrame(frameIdentifier)}
+    frameDiv.appendChild(element);
+  }
+  lockFramesWithMessage(`Unlock this frame!`)
+}
+let smoothImage = undefined;
+async function selectFrame(frameIdentifier) {
+  let frameData = availableFrames[frameIdentifier];
+  if(typeof frameData == "undefined") {
+    frameRendered = undefined;
+    smoothImage = undefined;
+    updateSkin();
+    return;
+  }
+  smoothImage = frameIdentifier;
+  await renderFrame();
+  updateSkin();
+}
+async function checkFrame(smoothImage,location) {
+  try {
+    let element = document.getElementById(`frame-${smoothImage}`);
+    if(!element) return;
+    const storedUnlockData = localStorage.getItem(`lobbyFreim-${btoa(smoothImage)}`);
+    if (!storedUnlockData) {
+        return;
+    }
+    let json = {};
+    try{
+      json = JSON.parse(storedUnlockData);
+    }catch(e) {}
+    let { unlockedUntil, signature } = json;
+    if (typeof unlockedUntil !== 'number' || typeof signature !== 'string') {
+        localStorage.removeItem(`lobbyFreim-${btoa(smoothImage)}`);
+        return;
+    }
+    const expectedSignature = await generateSha256Hash(unlockedUntil + "WhatTheHellAreYouLookingForHere?");
+    let currentTime = Date.now(); 
+    if (signature === expectedSignature && currentTime < unlockedUntil) {
+      let remainingTimeMs = unlockedUntil - currentTime;
+      let remainingHours = Math.floor(remainingTimeMs / (1000 * 60 * 60));
+      let remainingMinutes = Math.floor((remainingTimeMs % (1000 * 60 * 60)) / (1000 * 60));
+      if(location) {
+        //console.warn("Unlocking..");
+        element.innerHTML = element.innerHTML + `<p id="time-left-${smoothImage}" style="margin: 0px" class="unlock-text-frame">Unlocked for<br>${remainingHours}h ${remainingMinutes}m</p>`;
+        element.classList.remove("adblockframe")
+        element.querySelector(".overlay")?.remove();
+        element.disabled = false;
+        element.onclick = function(){
+          selectFrame(smoothImage);
+        };
+        let timeLeftP = document.getElementById(`time-left-${smoothImage}`);
+        if(timeLeftP) {
+          let a = setInterval(()=>{
+            if(currentTime >= unlockedUntil) {
+              let card = document.getElementById(`frame-${smoothImage}`)
+              if(!card) return;
+              let frameData = availableFrames[smoothImage];
+              card.classList.add('adlockedframe');
+              const ov = document.createElement('div');
+              timeLeftP.remove();
+              ov.className = 'overlay';
+              let frameUrl = card.dataset.frameUrl
+              ov.innerHTML = `<img src="${frameUrl}"><span>Unlock this frame!</span>`;
+              ov.onclick = function() {
+                let opened = window.open(`./unlock.html`,`_blank`);
+                if(opened) {
+                  setTimeout(()=>{
+                    let data = {feature:smoothImage,featureName:frameData.featureName,uuid:uniqueId,elementId:card.id}
+                    opened.postMessage(data,"*");
+                  },500);
+                }
+              }
+              card.append(ov);
+              localStorage.removeItem(`lobbyFreim-${btoa(smoothImage)}`)
+              clearInterval(a);
+              return;
+            }
+            currentTime = Date.now();
+            remainingTimeMs = unlockedUntil - currentTime;
+            remainingHours = Math.floor(remainingTimeMs / (1000 * 60 * 60));
+            remainingMinutes = Math.floor((remainingTimeMs % (1000 * 60 * 60)) / (1000 * 60));
+            let remainingSeconds = Math.floor((remainingTimeMs % (1000 * 60)) / 1000);
+            if(remainingSeconds < 0) return;
+            timeLeftP.innerHTML = `Unlocked for<br>${remainingHours}h ${remainingMinutes}m ${remainingSeconds}s`;
+          },1000)
+        }
+      }else {
+        //console.warn("Unlocking but no location..");
+      }
+      return "Failed"
+    } else {
+      if (signature !== expectedSignature) {
+          //console.warn("Unlock data tampered with! Signature mismatch.");
+      }
+      localStorage.removeItem(`lobbyFreim-${btoa(smoothImage)}`);
+    }
+  } catch (error) {
+      localStorage.removeItem(`lobbyFreim-${btoa(smoothImage)}`);
+      //console.warn(`Error checking frame: `,error);
+  }
+}
+async function generateSha256Hash(message) {
+  const msgUint8 = new TextEncoder().encode(message); // encode as (utf-8) Uint8Array
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8); // hash the message
+  const hashArray = Array.from(new Uint8Array(hashBuffer)); // convert buffer to byte array
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join(''); // convert bytes to hex string
+  return hashHex;
+}
+async function renderFrame() {
+  if(typeof smoothImage == "undefined") {
+    frameRendered = undefined;
+    return;
+  }
+  if(!await checkFrame(smoothImage)) {
+    smoothImage = undefined;
+    return
+  }
+  let frameData = availableFrames[smoothImage];
+  if(!frameData) {
+    frameRendered = undefined;
+    smoothImage = undefined;
+    return;
+  }
+  let realAllowedWidth;
+  if(typeof frameData.start == "number") {
+    realAllowedWidth = frameData.end - frameData.start;
+  }else{
+    realAllowedWidth = frameData.end - frameData.start[0];
+  }
+  let frameImage = await loadImage(frameData.image);
+  let proportionValue = 300 / realAllowedWidth;
+  let newFramWidth = proportionValue * frameImage.width;
+  frameCanvas.width = Math.floor(newFramWidth);
+  frameCanvas.height = Math.floor(newFramWidth);
+  let frameCtx = frameCanvas.getContext("2d");
+  let previousWebkitImageSmoothingEnabled = frameCtx.webkitImageSmoothingEnabled;
+  let previousMozImageSmoothingEnabled = frameCtx.mozImageSmoothingEnabled;
+  let previousImageSmoothingEnabled = frameCtx.imageSmoothingEnabled;
+  frameCtx.webkitImageSmoothingEnabled = false;
+  frameCtx.mozImageSmoothingEnabled = false;
+  frameCtx.imageSmoothingEnabled = false;
+  frameCtx.clearRect(0,0,frameCanvas.width,frameCanvas.height)
+  frameCtx.drawImage(frameImage,0,0,frameCanvas.width,frameCanvas.height)
+  let startX = Math.floor(frameData.start * proportionValue)
+  let startY = Math.floor(frameData.start * proportionValue)
+  if(typeof frameData.start == "number") {
+    startX = Math.floor(frameData.start * proportionValue)
+    startY = Math.floor(frameData.start * proportionValue)
+  }else{
+    startX = Math.floor(frameData.start[0] * proportionValue)
+    startY = Math.floor(frameData.start[1] * proportionValue)
+  }
+  //console.log(`Proportion value: ${proportionValue}`)
+  //console.log(`Start X & Y: ${start}`)
+  frameCtx.webkitImageSmoothingEnabled = previousWebkitImageSmoothingEnabled;
+  frameCtx.mozImageSmoothingEnabled = previousMozImageSmoothingEnabled;
+  frameCtx.imageSmoothingEnabled = previousImageSmoothingEnabled;
+  frameRendered = [startX,startY];
 }
 const usernameInputCooldown = document.getElementById('inputTextCooldown');
 let blockInterval;
@@ -992,6 +1491,7 @@ const backgroundCanvas = document.getElementById("background-canvas");
 const skinCanvas = document.getElementById("skin-canvas");
 const siteCanvas = document.getElementById("final-canvas");
 const markedCanvas = document.getElementById("marked-canvas");
+const frameCanvas = document.getElementById('frame-canvas');
 async function addListeners() {
 	failedBuffer = await loadImage("https://raw.githubusercontent.com/AlonsoAliaga/mcpfp/main/assets/images/notFound.png");
 	backdropBuffer = await loadImage("https://raw.githubusercontent.com/AlonsoAliaga/mcpfp/main/assets/images/backdropshading.png");
@@ -1003,22 +1503,7 @@ async function addListeners() {
         processUsername();
     }
   });
-  let markedCtx = markedCanvas.getContext("2d");
-  const text = "Generated on https://alonsoaliaga.com/minecraft-pfp";
-  markedCtx.fillStyle = "#302a3b"; // Set the fill color to white
-  markedCtx.fillRect(0, 300, 300, 20);
-  let fontSize = 24; // Initial font size
-  let textWidth = 0;
-  do {
-    fontSize--; // Decrease the font size
-    markedCtx.font = `${fontSize}px MinecraftBold`; // Set the new font size
-    textWidth = markedCtx.measureText(text).width;
-  } while (textWidth > 290);
-  markedCtx.fillStyle = "#ffffff"; // Set the fill color to gray
-  markedCtx.font = `${fontSize}px MinecraftBold`; // Set the font style
-  markedCtx.textAlign = "center"; // Set the text alignment to center
-  markedCtx.textBaseline = "middle"; // Set the text baseline to middle
-  markedCtx.fillText(text, markedCanvas.width / 2, 310); // Write the text at the center of the rectangle
+  //updateMark();
   processUsername("no-cooldown");
 
   for(let i = 0; i < maxColorsAmount; i++) {
@@ -1225,6 +1710,36 @@ function loadCounter() {
    });
  }
 }
+function updateMark() {
+  markedCanvas.width = typeof frameRendered != "undefined" ? frameCanvas.width : siteCanvas.width;
+  markedCanvas.height = 200;
+  console.log(`Old markCanvas: ${markedCanvas.width}x${markedCanvas.height}`)
+  let markedCtx = markedCanvas.getContext("2d");
+  const text = "Generated on https://alonsoaliaga.com/minecraft-pfp";
+  let fontSize = 24; // Initial font size
+  let textWidth = 0;
+  let finalHeight = 0;
+  do {
+    fontSize--; // Decrease the font size
+    markedCtx.font = `${fontSize}px MinecraftBold`; // Set the new font size
+    let sizes = markedCtx.measureText(text);
+    textWidth = sizes.width;
+    finalHeight = sizes.actualBoundingBoxAscent + sizes.actualBoundingBoxDescent;;
+    console.log(`Text ${fontSize}px: ${textWidth}x${finalHeight}`)
+  } while (textWidth > markedCanvas.width - 10);
+  markedCanvas.height = Math.floor(finalHeight) + 10
+  markedCtx = markedCanvas.getContext("2d");
+
+  markedCtx.fillStyle = "#302a3b"; // Set the fill color to white
+  markedCtx.fillRect(0, 0, markedCanvas.width, markedCanvas.height);
+
+  markedCtx.fillStyle = "#ffffff"; // Set the fill color to gray
+  markedCtx.font = `${fontSize}px MinecraftBold`; // Set the font style
+  markedCtx.textAlign = "center"; // Set the text alignment to center
+  markedCtx.textBaseline = "middle"; // Set the text baseline to middle
+  markedCtx.fillText(text, markedCanvas.width / 2, markedCanvas.height / 2); // Write the text at the center of the rectangle
+  console.log(`New markCanvas: ${markedCanvas.width}x${markedCanvas.height}`)
+}
 function updateOutput(event) {
   //console.log(event)
   let inputText = document.getElementById("inputText");
@@ -1264,8 +1779,33 @@ if (history.scrollRestoration) {
 toggleDarkmode();
 addListeners();
 updateOutput();
-
-//Canvas functions
+const uniqueId = crypto.randomUUID();
+let loaded = false;
+async function lockFramesWithMessage(message,iconUrl='https://raw.githubusercontent.com/AlonsoAliaga/mc-renders/main/assets/images/lock-icon.png') {
+  if(loaded) return;
+  loaded = true;
+  for(let n of Object.keys(availableFrames)) {
+    let card = document.getElementById(`frame-${n}`)
+    if(!card) continue;
+    if(await checkFrame(n,"undefined")) continue;
+    let imageData = availableFrames[n];
+    card.classList.add('adlockedframe');
+    const ov = document.createElement('div');
+    ov.className = 'overlay';
+    let frameUrl = card.dataset.frameUrl
+    ov.innerHTML = `<img src="${frameUrl}"><span>${message}</span>`;
+    ov.onclick = function() {
+      let opened = window.open(`./unlock.html`,`_blank`);
+      if(opened) {
+        setTimeout(()=>{
+          let data = {feature:n,featureName:imageData.featureName,uuid:uniqueId,elementId:card.id}
+          opened.postMessage(data,"*");
+        },500);
+      }
+    }
+    card.append(ov);
+  }
+}
 async function loadImage(url) {
 	return new Promise((resolve, reject) => {
 		const img = new Image()
@@ -1279,7 +1819,6 @@ async function loadImage(url) {
 		}
 	})
 }
-
 async function mergeCanvases(canvases) {
 	const canvas = document.createElement("final-canvas");
 	canvas.width = canvases[0].width;
@@ -1316,6 +1855,7 @@ function runDelayed() {
 }
 document.addEventListener("DOMContentLoaded", () => {
   loadCounter();
+  loadFrames();
   checkSite(window);
 });
 function lockElementWithMessage(element,className,message,iconUrl='https://raw.githubusercontent.com/AlonsoAliaga/mc-renders/main/assets/images/lock-icon.png') {
@@ -1331,4 +1871,5 @@ function processAds() {
   lockElementWithMessage(document.getElementById("arrows-div"),"adlocked",`Disable AdBlock to move avatar!`)
   lockElementWithMessage(document.getElementById("button-toggle-custom-gradient-div"),"adlockedfit",`Disable AdBlock to use custom gradients!`)
   lockElementWithMessage(document.getElementById("customskindiv"),"adlockedsmall",`Disable AdBlock to use custom skin texture!`)
+  lockElementWithMessage(document.getElementById("unlock-features-div"),"adlockedunlockbutton",`Disable AdBlock to read what it says!`)
 }

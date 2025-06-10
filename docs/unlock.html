@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="./style.css">
+  <link rel="shortcut icon" href="https://cdn.discordapp.com/emojis/791742603183259648.webp?size=96&quality=lossless" type="image/x-icon">
+  <title>Unlock this feature by clicking ads!</title>
+  <style>
+    body{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .space {
+      background-color:#ffffff00;
+      height: 10px;
+      width: 450px;
+      margin: 5px;
+    }
+    .content-block {
+      box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.4);
+      padding: 5px;
+      border-width: 4px;
+      /* border-style: double; */
+      border-radius: 15px;
+      width: 750px;
+    }
+    img {
+      /* box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.4); */
+      border-radius: 5px;
+    }
+    p {
+      margin: 3px !important;
+    }
+  </style>
+</head>
+
+<body>
+  <div style="width: 100%;" id="content">
+    <button style="color: white;background-color:#7a0cc3;font-size: 25px !important;height: 100px;border-radius: 0px;width: 100%;font-size: 20px;border-width: 0px;" class="darkbuttonboxes" id="support-button">Loading..</button>
+  </div><br>
+  <script>
+    const SECRET_SALT_FEATURE = "WhatTheHellAreYouLookingForHere?"; // Change this to a strong, unique string
+    const button = document.getElementById("support-button");
+    (() => {
+        populate();
+        function populate(){
+          fetch(decodeAndAdd("aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL0Fsb25zb0FsaWFnYS9BbG9uc29BbGlhZ2FBUEkvcmVmcy9oZWFkcy9tYWluL2FwaS9hZHMvYWRzLmpzb24="))
+            .then(res => res.json())
+            .then(content => {
+              //const decoded = atob(content.content);
+              //const parsed = JSON.parse(decoded);
+              let adsData = content;
+              //adsData = [...content,...content]
+              //console.log(content)
+              for(let adData of adsData) {
+                //console.log(adData);
+                let imageLink = adData.Image;
+                let title = adData.Title;
+                let link = adData.Link;
+                let lines = adData.Lines;
+                let priority = adData.Priority;
+                let div = document.createElement("div");
+                div.classList.add("content-block");
+                let img = document.createElement("img");
+                img.src = imageLink; 
+                img.style.width = "100%";
+                img.style.cursor = "pointer";
+                img.onclick = function(event) {
+                    window.open(link,"_blank");
+                };
+                div.appendChild(img);
+                let h2 = document.createElement("h2");
+                h2.innerHTML = title;
+                div.appendChild(h2);
+                for (let line of lines) {
+                    let p = document.createElement("p");
+                    p.innerHTML = line;
+                    div.appendChild(p);
+                }
+                document.body.appendChild(div);
+                let space = document.createElement("div");
+                space.classList.add("space");
+                document.body.appendChild(space);
+              }
+              setTimeout(()=>{
+                let div = document.createElement("div");
+                let h2 = document.createElement("h2");
+                h2.style.cssText = "font-size: 15px ;text-align: center;";
+                h2.innerHTML = `<br>❤️ Thank you for visiting this site. Check our tools in <a href="https://alonsoaliaga.com/tools" rel="noopener" target="_blank">our official site</a>!<br><br>`
+                div.appendChild(h2);
+                document.body.appendChild(div);
+              },1000);
+            });
+        }
+        function decodeAndAdd(toDecode) {
+          return `${atob(toDecode)}?${generateRandomString(10)}`
+        }
+        function generateRandomString(length) {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let result = '';
+            const charactersLength = characters.length;
+            for (let i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+            return result;
+        }
+        if (!window.opener) {
+            button.innerHTML = `⛔ How did you get here? Click here to return to our generator! ⛔`;
+            button.style.cursor = "pointer"
+            button.onclick = function(event) {
+                window.location = `https://alonsoaliaga.com/minecraft-pfp`
+            }
+            return;
+        }
+        let correct = false;
+        setInterval(()=>{
+            if(!correct) {
+                button.innerHTML = `⛔ How did you get here? Click here to return to our generator! ⛔`;
+                button.style.cursor = "pointer"
+                button.onclick = function(event) {
+                    window.location = `https://alonsoaliaga.com/minecraft-pfp`
+                }
+            }
+        },2000);
+        let active = true;
+        let unlocked = false;
+        window.addEventListener('message', async function(event) {
+            let data = event.data;
+            //console.log(typeof data);
+            if(typeof data != "object") return;
+            const unlockFeaturesUniqueID = data.uuid;
+            const feature = data.feature;
+            const featureName = data.featureName;
+            const featureElementId = data.elementId;
+            //console.log(`Received data to start ads:`)
+            //console.log(data)
+            if(typeof feature != "undefined" && typeof featureElementId != "undefined" 
+                && typeof featureName != "undefined" && typeof unlockFeaturesUniqueID != "undefined") {
+                correct = true;
+                startCount();
+            }
+            function startCount() {
+                if(adBlockEnabled) {
+                    button.innerText = `🚫 Disable AdBlock to unlock special features.`;
+                    return;
+                }
+                window.title = `Unlock ${featureName} feature by clicking ads!`
+                let time = 1;
+                let penaltyTime = 0;
+                let interval = setInterval(()=>{
+                    if(time < 0) {
+                        button.innerText = `🗝️ Click an ad below to unlock ${featureName} feature!`;
+                        ready();
+                        clearInterval(interval);
+                        return;
+                    }
+                    if(document.visibilityState != 'visible' || !active) {
+                        button.innerText = `🚫 Please, stay in this page for ${time} seconds to continue..`;
+                        penaltyTime = 2;
+                    }else if(penaltyTime > 0) {
+                        button.innerText = `🚫 Stay in this page for ${time} seconds to continue..`;
+                        penaltyTime--;
+                    }else{
+                        button.innerText = `⌛ Please wait ${time} seconds..`;
+                        penaltyTime = 0;
+                        time--;
+                    }
+                },1000);
+                function ready() {
+                    jQuery(document).ready(function($){
+                    	$('iframe').iframeTracker({
+                    		blurCallback: function(event) {
+                                unlockNow(event)
+                    		}
+                    	});
+                    });
+                    const elementsArray = Array.from(document.querySelectorAll('div.content-block img'));
+                    elementsArray.forEach((element) => {
+                      element.addEventListener('click', unlockNow);
+                    });
+                    async function unlockNow(event) {
+                        if(time > 0 || unlocked) return;
+                        unlocked = true;
+                        button.innerText = `🔓 ${featureName} has been unlocked! You can now return to the generator!`;
+                        const data = { type: "unlockFeature", feature: feature, featureName: featureName, featureElementId: featureElementId, "uniqueId": unlockFeaturesUniqueID, timestamp: Date.now() };
+                        setTimeout(()=>window.opener.postMessage(data, '*'),500);
+                        try {
+                          // Calculate the expiration timestamp (current time + 12 hours)
+                          const unlockDurationHours = 24;
+                          const unlockedUntil = Date.now() + (unlockDurationHours * 60 * 60 * 1000);
+
+                          // Generate the signature for tamper detection
+                          const signature = await generateSha256Hash(unlockedUntil + SECRET_SALT_FEATURE);
+
+                          // Store the timestamp and its signature in localStorage
+                          const unlockData = {
+                              unlockedUntil: unlockedUntil,
+                              signature: signature
+                          };
+                          localStorage.setItem(`lobbyFreim-${btoa(feature)}`,JSON.stringify(unlockData))
+                          //console.log('Unlock data stored in localStorage:', unlockData);
+                        }catch (error) {
+                          //console.error("Error during unlock process:", error);
+                        }
+                    }
+                }
+                async function generateSha256Hash(message) {
+                    const msgUint8 = new TextEncoder().encode(message); // encode as (utf-8) Uint8Array
+                    const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8); // hash the message
+                    const hashArray = Array.from(new Uint8Array(hashBuffer)); // convert buffer to byte array
+                    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join(''); // convert bytes to hex string
+                    return hashHex;
+                }
+            }
+        });
+        window.addEventListener('focus',  () => { active = true });
+        window.addEventListener('blur',   () => { active = false });
+    })();
+    function processAds(){}
+  </script>
+</body>
+<script src="resources.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery.iframetracker@2.1.0/dist/jquery.iframetracker.min.js"></script>
+</html>

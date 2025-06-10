@@ -505,20 +505,6 @@ ul {
   list-style-type: none;
   padding-inline: 15px;
 }
-#snackbar {
-  visibility: hidden;
-  color: #fff;
-  background-color: #333;
-  min-width: 250px;
-  margin-left: -125px;
-  border-radius: 2px;
-  padding: 16px;
-  text-align: center;
-  left: 50%;
-  bottom: 30px;
-  z-index: 100;
-  position: fixed;
-}
 #snackbar-error {
   visibility: hidden;
   color: #fff;
@@ -533,21 +519,37 @@ ul {
   z-index: 100;
   position: fixed;
 }
-
-/* This will be activated when the snackbar's class is 'show' which will be added through JS */
-#snackbar.show {
-  visibility: visible;
-  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
-  animation: fadein 0.5s, fadeout 0.5s 2.5s;
-}
-
 /* This will be activated when the snackbar's class is 'show' which will be added through JS */
 #snackbar-error.show {
   visibility: visible;
   -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
   animation: fadein 0.5s, fadeout 0.5s 2.5s;
 }
-
+#snackbar,#snackbar-2 {
+  visibility: hidden;
+  color: #fff;
+  background-color: #333;
+  min-width: 250px;
+  margin-left: -125px;
+  border-radius: 2px;
+  padding: 16px;
+  text-align: center;
+  left: 50%;
+  bottom: 30px;
+  z-index: 100;
+  position: fixed;
+}
+/* This will be activated when the snackbar's class is 'show' which will be added through JS */
+#snackbar.show {
+  visibility: visible;
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+#snackbar-2.show {
+  visibility: visible;
+  -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
 /* Animations for fading in and out */
 @-webkit-keyframes fadein {
   from {bottom: 0; opacity: 0;}
@@ -626,6 +628,11 @@ ul {
   overflow: hidden;
   transition: height 0.3s ease;
 }
+#frame-box {
+  height: 0;
+  overflow: hidden;
+  transition: height 0.3s ease;
+}
 .expanded {
   height: fit-content !important;
 }
@@ -637,7 +644,7 @@ ul {
   padding: 15px 5px 35px 5px;
   position: absolute;
   inset: 0;
-  background: rgba(255, 48, 48, 0.671);
+  background: rgba(238, 28, 28, 0.671);
   display: flex;
   flex-direction: column;
   border-radius: 11px;
@@ -712,7 +719,132 @@ ul {
   color: #ffffff;
 }
 
+.adlockedunlockbutton {
+  position: relative;
+}
+.adlockedunlockbutton .overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(241, 48, 48, 0.932);
+  flex-direction: column;
+  border-radius: 22px;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  cursor: not-allowed;
+  z-index: 10;
+  width: 100%;
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+}
+.adlockedunlockbutton .overlay img {
+  width: 25px;
+}
+.adlockedunlockbutton .overlay span {
+  font-size: 12px;
+  color: #ffffff;
+}
+
 .arrows-div {
   display: flex;
   justify-items: center;
+}
+
+.button-container {
+display: flex;
+flex-wrap: wrap;
+justify-content: center;
+gap: 10px;
+}
+
+.button-container button {
+flex: 0 0 30%; /* Each button takes up 30% of the container's width */
+max-width: 160px;
+box-sizing: border-box;
+}
+
+fieldset.group  { 
+  margin: 0; 
+  padding: 0; 
+  /* margin-bottom: 1.25em;  */
+  padding: .125em; 
+} 
+
+fieldset.group legend { 
+  margin: 0; 
+  padding: 0; 
+  font-weight: bold; 
+  font-size: 100%; 
+}
+
+  /* Styles for the render card */
+.render-frame-card {
+  color: #232323;
+	display: flex;
+	flex-direction: column;       /* Stack items vertically */
+	align-items: center;          /* Center items horizontally */
+	justify-content: center;      /* Center items vertically */
+	border: 1px solid #ccc;       /* Optional: for visualization */
+  
+	width: 200px;
+	padding: 5px;
+	border-radius: 12px;
+	background: #f9f9f9;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	text-align: center;
+	cursor: pointer;
+	transition: transform 0.2s, box-shadow 0.2s;
+	vertical-align: middle;
+}
+/* Hover effect for the card */
+.render-frame-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Styles for the image inside the card */
+.render-frame-card img {
+  max-width: 55%;
+  height: auto;
+  margin-bottom: 10px;          /* Space between image and text */  
+
+  width: 55%;
+  height: auto;
+  max-height: 300px;
+  border-radius: 8px;
+}
+
+.adlockedframe {
+	position: relative;
+}
+.adlockedframe .overlay {
+	padding: 15px 5px 5px 5px;
+	position: absolute;
+	inset: 0;
+	background: rgba(180, 32, 32, 0.979);
+	display: flex;
+	flex-direction: column;
+	border-radius: 11px;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	z-index: 10;
+}
+.adlockedframe .overlay img {
+  image-rendering: pixelated;
+	width: 55%;
+}
+.adlockedframe .overlay span {
+	font-size: 0.9rem;
+	color: #ffffff;
+}
+.unlock-text-frame {
+  background-color: #ff5450;
+  color: white;
+  margin: 5px !important;
+  border: #ff141482;
+  border-width: 4px;
+  padding: 6px;
+  border-style: outset;
 }
