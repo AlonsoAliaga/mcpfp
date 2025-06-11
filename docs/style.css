@@ -796,6 +796,7 @@ fieldset.group legend {
 	cursor: pointer;
 	transition: transform 0.2s, box-shadow 0.2s;
 	vertical-align: middle;
+  min-height: 160px;
 }
 /* Hover effect for the card */
 .render-frame-card:hover {
@@ -847,4 +848,7 @@ fieldset.group legend {
   border-width: 4px;
   padding: 6px;
   border-style: outset;
+}
+.bliking-text {
+  
 }

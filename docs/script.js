@@ -1289,6 +1289,118 @@ let availableFrames = {
     image: "https://i.imgur.com/5P6z6wY.png",
     start: 5,
     end: 95
+  },
+  "base-blue":{
+    name: "Base Blue",
+    featureName: "Base Blue Frame",
+    image: "https://i.imgur.com/JUAbQyo.png",
+    start: 7,
+    end: 33
+  },
+  "base-orange":{
+    name: "Base Orage",
+    featureName: "Base Orange Frame",
+    image: "https://i.imgur.com/Mm0Csz8.png",
+    start: 7,
+    end: 33
+  },
+  "base-lime":{
+    name: "Base Lime",
+    featureName: "Base Lime Frame",
+    image: "https://i.imgur.com/AiYrjr2.png",
+    start: 7,
+    end: 33
+  },
+  "base-red":{
+    name: "Base Red",
+    featureName: "Base Red Frame",
+    image: "https://i.imgur.com/pOBxwU5.png",
+    start: 7,
+    end: 33
+  },
+  "pixel-gold":{
+    name: "Pixel Gold",
+    featureName: "Pixel Gold Frame",
+    image: "https://i.imgur.com/LzE8v9D.png",
+    start: 4,
+    end: 36
+  },
+  "pixel-pink":{
+    name: "Pixel Pink",
+    featureName: "Pixel Pink Frame",
+    image: "https://i.imgur.com/JBXm7K0.png",
+    start: 4,
+    end: 36
+  },
+  "pixel-blue":{
+    name: "Pixel Blue",
+    featureName: "Pixel Blue Frame",
+    image: "https://i.imgur.com/sYQ6b0C.png",
+    start: 4,
+    end: 36
+  },
+  "pixel-white":{
+    name: "Pixel White",
+    featureName: "Pixel White Frame",
+    image: "https://i.imgur.com/8OrQgyi.png",
+    start: 4,
+    end: 36
+  },
+  "luxury-gold":{
+    name: "Luxury Gold",
+    featureName: "Luxury Gold Frame",
+    image: "https://i.imgur.com/5l1hJPa.png",
+    start: 6,
+    end: 52
+  },
+  "luxury-emerald":{
+    name: "Luxury Emerald",
+    featureName: "Luxury Emerald Frame",
+    image: "https://i.imgur.com/M3KeZW5.png",
+    start: 6,
+    end: 52
+  },
+  "luxury-obsidian":{
+    name: "Luxury Obisidian",
+    featureName: "Luxury Obisidian Frame",
+    image: "https://i.imgur.com/suRxxDB.png",
+    start: 6,
+    end: 52
+  },
+  "luxury-Diamond":{
+    name: "Luxury Diamond",
+    featureName: "Luxury Diamond Frame",
+    image: "https://i.imgur.com/DqiMcUD.png",
+    start: 6,
+    end: 52
+  },
+  "obsidian-sign":{
+    name: "Obisidian Sign",
+    featureName: "Obisidian Sign Frame",
+    image: "https://i.imgur.com/fWFpJE1.png",
+    start: [21,42],
+    end: 76
+  },
+  "diamond-sign":{
+    name: "Diamond Sign",
+    featureName: "Diamond Sign Frame",
+    image: "https://i.imgur.com/VkzaDk2.png",
+    start: [21,42],
+    end: 76
+  },
+  "gold-sign":{
+    name: "Gold Sign",
+    featureName: "Gold Sign Frame",
+    image: "https://i.imgur.com/W3fmYj2.png",
+    start: [21,42],
+    end: 76
+  },
+  "emerald-sign":{
+    name: "Emerald Sign",
+    featureName: "Emerald Sign Frame",
+    image: "https://i.imgur.com/Lq1ZJAi.png",
+    start: [21,42],
+    end: 76
   }
 }
 function loadFrames() {
@@ -1301,6 +1413,7 @@ function loadFrames() {
     element.id = `frame-${frameIdentifier}`
     element.style.margin = "2px"
     element.dataset.frameUrl = frameData.image;
+    element.dataset.frameName = frameData.name;
     element.innerHTML = `
               <div style="display:inline-block;min-width:fit-content;margin-top:2px;font-size:15px;font-weight:bold;" class="render-label">${frameData.name}</div>
               <img style="image-rendering: pixelated" src="${frameData.image}" alt="${frameData.name}">`
@@ -1366,7 +1479,8 @@ async function checkFrame(smoothImage,location) {
               timeLeftP.remove();
               ov.className = 'overlay';
               let frameUrl = card.dataset.frameUrl
-              ov.innerHTML = `<img src="${frameUrl}"><span>Unlock this frame!</span>`;
+              let frameName = card.dataset.frameName
+              ov.innerHTML = `<span style="color: #ff8484;">${frameName}</span><img src="${frameUrl}"><span class="bliking-text">Unlock this frame!</span>`;
               ov.onclick = function() {
                 let opened = window.open(`./unlock.html`,`_blank`);
                 if(opened) {
@@ -1437,7 +1551,7 @@ async function renderFrame() {
   let proportionValue = 300 / realAllowedWidth;
   let newFramWidth = proportionValue * frameImage.width;
   frameCanvas.width = Math.floor(newFramWidth);
-  frameCanvas.height = Math.floor(newFramWidth);
+  frameCanvas.height = Math.floor(proportionValue * frameImage.height);
   let frameCtx = frameCanvas.getContext("2d");
   let previousWebkitImageSmoothingEnabled = frameCtx.webkitImageSmoothingEnabled;
   let previousMozImageSmoothingEnabled = frameCtx.mozImageSmoothingEnabled;
@@ -1835,7 +1949,8 @@ async function lockFramesWithMessage(message,iconUrl='https://raw.githubusercont
     const ov = document.createElement('div');
     ov.className = 'overlay';
     let frameUrl = card.dataset.frameUrl
-    ov.innerHTML = `<img src="${frameUrl}"><span>${message}</span>`;
+    let frameName = card.dataset.frameName
+    ov.innerHTML = `<span style="color: #ff8484;">${frameName}</span><img src="${frameUrl}"><span class="bliking-text">${message}</span>`;
     ov.onclick = function() {
       let opened = window.open(`./unlock.html`,`_blank`);
       if(opened) {
@@ -1921,3 +2036,32 @@ function processAds() {
   lockElementWithMessage(document.getElementById("customskindiv"),"adlockedsmall",`Disable AdBlock to use custom skin texture!`)
   lockElementWithMessage(document.getElementById("unlock-features-div"),"adlockedunlockbutton",`Disable AdBlock to access new features!`)
 }
+setTimeout(()=>{
+  let success = false;
+  for (const sheet of document.styleSheets) {
+    console.log(sheet)
+    if(success) break;
+    try {
+      for (const rule of sheet.cssRules) {
+        console.log(rule)
+        if (rule.selectorText === '.bliking-text') {
+          let isRed = false;
+          setInterval(()=>{
+            if(isRed) {
+                rule.style.color = 'white';
+                isRed = false;
+            }else{
+                rule.style.color = 'red';
+                isRed = true;
+            }
+          },500);
+          success = true;
+          break;
+        }
+      }
+    } catch (e) {
+      continue;
+    }
+  }
+  console.log(`Success is ${success}`)
+},2500);
