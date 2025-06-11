@@ -1693,7 +1693,7 @@ function loadChecking() {
      data: {
      },
      success: function (result) {
-        console.log(`Total fails: ${counter.dataset.failed}`)
+        //console.log(`Total fails: ${counter.dataset.failed}`)
         counter.dataset.failed = "0";
         counter.style.display = "flex";
         if(isNaN(result)) {
@@ -1706,7 +1706,7 @@ function loadChecking() {
         }
      },
      error: function (e) {
-      console.log(`Total fails: ${counter.dataset.failed}`)
+      //console.log(`Total fails: ${counter.dataset.failed}`)
       if(counter.style.display != "none") {
         let currentFails = +counter.dataset.failed;
         if(currentFails >= 1){
