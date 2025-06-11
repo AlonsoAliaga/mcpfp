@@ -1420,7 +1420,7 @@ function loadFrames() {
     element.onclick = function(){selectFrame(frameIdentifier)}
     frameDiv.appendChild(element);
   }
-  lockFramesWithMessage(`Unlock this frame!`)
+  lockFramesWithMessage(`🔒 Unlock this frame!`)
 }
 let smoothImage = undefined;
 async function selectFrame(frameIdentifier) {
@@ -1480,7 +1480,7 @@ async function checkFrame(smoothImage,location) {
               ov.className = 'overlay';
               let frameUrl = card.dataset.frameUrl
               let frameName = card.dataset.frameName
-              ov.innerHTML = `<span style="color: #ff8484;">${frameName}</span><img src="${frameUrl}"><span class="bliking-text">Unlock this frame!</span>`;
+              ov.innerHTML = `<span style="color: #ff8484;">${frameName}</span><img src="${frameUrl}"><span style="" class="toblink">Unlock this frame!</span>`;
               ov.onclick = function() {
                 let opened = window.open(`./unlock.html`,`_blank`);
                 if(opened) {
@@ -1950,7 +1950,7 @@ async function lockFramesWithMessage(message,iconUrl='https://raw.githubusercont
     ov.className = 'overlay';
     let frameUrl = card.dataset.frameUrl
     let frameName = card.dataset.frameName
-    ov.innerHTML = `<span style="color: #ff8484;">${frameName}</span><img src="${frameUrl}"><span class="bliking-text">${message}</span>`;
+    ov.innerHTML = `<span style="color: #ff8484;">${frameName}</span><img src="${frameUrl}"><span style="" class="toblink">${message}</span>`;
     ov.onclick = function() {
       let opened = window.open(`./unlock.html`,`_blank`);
       if(opened) {
@@ -2037,6 +2037,7 @@ function processAds() {
   lockElementWithMessage(document.getElementById("unlock-features-div"),"adlockedunlockbutton",`Disable AdBlock to access new features!`)
 }
 setTimeout(()=>{
+  return
   let success = false;
   for (const sheet of document.styleSheets) {
     console.log(sheet)
@@ -2065,3 +2066,16 @@ setTimeout(()=>{
   }
   console.log(`Success is ${success}`)
 },2500);
+let isRed = true;
+setInterval(()=>{
+  let toSwitch = document.querySelectorAll(".toblink")
+  toSwitch.forEach((element,index)=>{
+    console.log(`Editing #${index} ${element.id} | isRed=${isRed}`)
+    if(isRed){
+      element.classList.remove("blinkingtext");
+    }else {
+      element.classList.add("blinkingtext");
+    }
+  })
+  isRed = !isRed;
+},500);

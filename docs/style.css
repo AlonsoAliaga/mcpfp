@@ -796,7 +796,7 @@ fieldset.group legend {
 	cursor: pointer;
 	transition: transform 0.2s, box-shadow 0.2s;
 	vertical-align: middle;
-  min-height: 160px;
+  min-height: 185px;
 }
 /* Hover effect for the card */
 .render-frame-card:hover {
@@ -820,7 +820,7 @@ fieldset.group legend {
 	position: relative;
 }
 .adlockedframe .overlay {
-	padding: 15px 5px 5px 5px;
+	padding: 0px;
 	position: absolute;
 	inset: 0;
 	background: rgba(180, 32, 32, 0.979);
@@ -849,6 +849,8 @@ fieldset.group legend {
   padding: 6px;
   border-style: outset;
 }
-.bliking-text {
-  
+.blinkingtext {
+  color: #ffe200 !important;
+}
+.toblink {
 }
