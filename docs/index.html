@@ -132,7 +132,7 @@
                 </div><br>
               </fieldset>
             </div>
-            <div id="button-toggle-frame-div" style="width: 50%;display: none;font-family: MinecraftBold;margin: 2px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
+            <div id="button-toggle-frame-div" style="width: 50%;display: inline-block;font-family: MinecraftBold;margin: 2px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
               <input type="checkbox" name="button-toggle-frame" id="button-toggle-frame" onclick="toggleFrameBox(this);"></input>
               <label for="button-toggle-frame" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;"> Frames 🖼️</label>
             </div>
@@ -241,7 +241,6 @@
     unlockFeaturesDiv.onclick = function() {
       if(adBlockEnabled) return;
       unlockFeaturesDiv.style.display = "none";
-      document.getElementById("button-toggle-frame-div").style.display = "inline-block"
       unlockFeaturesDiv.onclick = function(){
         return false;
       }
