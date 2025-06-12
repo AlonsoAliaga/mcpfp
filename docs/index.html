@@ -240,6 +240,13 @@
     });
     unlockFeaturesDiv.onclick = function() {
       if(adBlockEnabled) return;
+      unlockFeaturesDiv.style.display = "none";
+      document.getElementById("button-toggle-frame-div").style.display = "inline-block"
+      unlockFeaturesDiv.onclick = function(){
+        return false;
+      }
+      announce();
+      return;
       let opened = window.open(`./unlock.html`,`_blank`);
       if(opened) {
         setTimeout(()=>{
