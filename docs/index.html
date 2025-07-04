@@ -21,16 +21,10 @@
     <div class="content">
       <div class="header">
         <h1 style="font-family: MinecraftBold;">Minecraft PFP Generator</h1>
-        <div class="options" style="padding: 10px 10px 10px 10px; margin-bottom: 10px;">
-          <h2 class="rainbow" style="font-size:25px; color:transparent">How is this different from other generators?</h2>
-          This generator allows you to create a custom profile picture using your minecraft skin.
-        </div>
-        <span id="snackbar"><b>💎 Looking for new features? 💎</b><br><span style="font-size: small;">Try clicking an ad..</span></span>
-        <span id="snackbar-2"><b>🚫 Nope, try again.. 🚫</b><br><span style="font-size: small;">Maybe next ad will work..</span></span>
         <span style="font-family: MinecraftBold;">Site options:</span>
         <div id="appearance" style="display: inline-block;font-family: MinecraftBold;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
           <input type="checkbox" checked id="darkmode" onclick="toggleDarkmode();"></input>
-          <label for="darkmode" style="margin-bottom: 0px;margin-top: 0px;"> Dark Mode 👁‍🗨</label>
+          <label for="darkmode" style="margin-bottom: 0px;margin-top: 0px;"> Dark Mode</label>
         </div><br><br>
         <h2>Enter your username:</h2>
         <div id="inputTextDiv" style="flex-direction: row; text-align: center; align-items: center;">
@@ -38,7 +32,7 @@
             type="text" maxlength="20" checked id="darkmode" value="lax1dude" class="darkbuttonboxes" 
             placeholder="Type your username"></input>
           <button id="customskindiv" style="width: 150px;position:absolute;text-align: center;display: inline-block;font-family: MinecraftBold;padding: 15px 20px 15px 20px;" 
-            class="darkbuttonboxes" onclick="uploadCustomSkinTexture(this)">Custom<br>Skin</button>
+            class="darkbuttonboxes" onclick="uploadCustomSkinTexture(this)">Upload Custom<br>Skin</button>
         </div>
         <span id="snackbar-error">Loading error..</span>
         <input id="inputTextCooldown" style="text-align: center; color:gray; display: none; width: 300px; height: 30px; font-family: MinecraftBold; padding: 15px 20px 15px 20px; margin-bottom: 20px;"
@@ -66,7 +60,7 @@
       </div>
       <div>
         <fieldset class="group" style="padding: 0px;"> 
-          <legend id="thelegend">&nbsp;&nbsp;&nbsp;Select your options 🎮&nbsp;&nbsp;&nbsp;</legend> 
+          <legend id="thelegend">&nbsp;&nbsp;&nbsp;Select your options&nbsp;&nbsp;&nbsp;</legend> 
           <ul id="fonts-table" style="font-size: 18px;margin-bottom: 15px;">
             <div id="arrows-div">
               <button class="button-small" onclick="moveIcon('up',event);">▲</button><br>
@@ -79,7 +73,7 @@
             </div><br><br>
             <div id="button-pixelate-background-div" style="width: 50%;display: inline-block;font-family: MinecraftBold;margin: 0px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
               <input type="checkbox" id="button-pixelate-background" onclick="togglePixelateBorderBox();updateSkin();"></input>
-              <label for="button-pixelate-background" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;"> Pixelate Background 🔳</label>
+              <label for="button-pixelate-background" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;"> Pixelate Background</label>
             </div><br>
             <div id="pixelate-background-box" class="hidden-box">
               Pixel size: <button class="button-small" onclick="modifyPixelateBackgroundWidth(event,-1);updateSkin();"><</button>
@@ -89,27 +83,27 @@
             </div>
             <div id="button-revert-skin-div" style="width: 50%;display: inline-block;font-family: MinecraftBold;margin: 0px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
               <input type="checkbox" id="button-revert-skin" onclick="updateSkin();"></input>
-              <label for="button-revert-skin" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;"> Revert skin ⏪</label>
+              <label for="button-revert-skin" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;"> Flip skin</label>
             </div><br>
             <div id="button-shadow-div" style="width: 50%;display: inline-block;font-family: MinecraftBold;margin: 2px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
               <input type="checkbox" checked id="button-shadow" onclick="updateSkin();"></input>
-              <label for="button-shadow" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;"> Skin Shadow 👥</label>
+              <label for="button-shadow" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;"> Skin Shadow</label>
             </div><br>
             <div id="button-no-background-div" style="width: 50%;display: inline-block;font-family: MinecraftBold;margin: 2px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
               <input type="checkbox" id="button-no-background" onclick="updateSkin();"></input>
-              <label for="button-no-background" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;"> Transparent Background 🧪</label>
+              <label for="button-no-background" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;"> Transparent Background</label>
             </div><br>
             <div id="button-custom-background-div" style="width: 50%;display: inline-block;font-family: MinecraftBold;margin: 2px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
               <input type="checkbox" name="button-custom-background" checked id="button-custom-background" onclick="uploadCustomBackground(this);"></input>
-              <label for="button-custom-background" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;"> Upload Custom background 🎨</label>
+              <label for="button-custom-background" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;"> Upload Custom background</label>
             </div><br>
             <div id="button-toggle-custom-gradient-div" style="width: 50%;display: inline-block;font-family: MinecraftBold;margin: 2px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
               <input type="checkbox" name="button-toggle-custom-gradient" id="button-toggle-custom-gradient" onclick="toggleCustomGradientBox(this);"></input>
-              <label for="button-toggle-custom-gradient" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;"> Custom gradient 🦄</label>
+              <label for="button-toggle-custom-gradient" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;"> Custom gradient</label>
             </div><br>
             <div id="custom-gradient-box">
               <fieldset class="group" style="padding: 0px;border-radius: 10px;"> 
-                <legend id="custom-gradient-legend">&nbsp;&nbsp;&nbsp;Pick your colors 🎨&nbsp;&nbsp;&nbsp;</legend>
+                <legend id="custom-gradient-legend">&nbsp;&nbsp;&nbsp;Pick your colors&nbsp;&nbsp;&nbsp;</legend>
                 <button class="button-small" onclick="removeColor(this);"><</button>
                 <button style="font-size: 20px;font-family: MinecraftBold;padding: 10px 10px 10px 10px;" id="colors-amount">2</button>
                 <button class="button-small" onclick="addColor(this);">></button><br><br>
@@ -119,11 +113,11 @@
             </div>
             <div id="button-toggle-frame-div" style="width: 50%;display: inline-block;font-family: MinecraftBold;margin: 2px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
               <input type="checkbox" name="button-toggle-frame" id="button-toggle-frame" onclick="toggleFrameBox(this);"></input>
-              <label for="button-toggle-frame" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;"> Frames 🖼️</label>
+              <label for="button-toggle-frame" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;"> Frames</label>
             </div>
             <div id="frame-box">
               <fieldset class="group" style="padding: 0px;border-radius: 10px;"> 
-                <legend id="frame-legend">&nbsp;&nbsp;&nbsp;Select a frame 🖼️&nbsp;&nbsp;&nbsp;</legend>
+                <legend id="frame-legend">&nbsp;&nbsp;&nbsp;Select a frame&nbsp;&nbsp;&nbsp;</legend>
                 <div id="frame-picker" class="group button-container" style="display: grid;grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));gap: 10px;width: 100%;display: flex;font-size: 15px;font-family: MinecraftBold;margin: 0px 2px 2px 2px;padding: 5px 10px 5px 10px;">
 
                 </div>
