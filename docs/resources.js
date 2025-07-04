@@ -2,31 +2,7 @@ const hours = 12;
 const allowReminder = true;
 let adBlockEnabled = false;
 function isAdBlockEnabled() {
-  return adBlockEnabled;
-}
-async function detectAdBlock() {
-  adBlockEnabled = false;
-  const googleAdUrl = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
-  try {
-      const keywordsToCheck = ['uBlock', "adblock",
-        'height:1px!important', 'height:1px !important', 'display:none!important', 'display:none !important', 'height:1px!important', 'height:1px !important',
-        'height: 1px!important', 'height: 1px !important', 'display: none!important', 'display: none !important', 'height: 1px!important', 'height: 1px !important'
-      ];
-      const response = await fetch(new Request(googleAdUrl));
-      if (!response.headers.get('content-length')) {
-          adBlockEnabled = true;
-      }
-      const responseText = await response.text();
-      const adBlockDetected = keywordsToCheck.some(keyword => responseText.includes(keyword));
-      if (adBlockDetected) {
-          adBlockEnabled = true;
-      }
-  } catch (e) {
-      adBlockEnabled = true;
-  } finally {
-      console.log(`AdBlock Enabled: ${adBlockEnabled}`);
-  }
-  return adBlockEnabled;
+  return false;
 }
 const hiddenBody = false
 const isSpanishLanguage = navigator.language === 'es-ES' ? true : false;
