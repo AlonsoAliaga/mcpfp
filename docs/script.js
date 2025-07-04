@@ -582,11 +582,6 @@ function toggleFrameBox(event) {
 function toggleWatermark(event) {
   let removeWatermark = document.getElementById("button-remove-watermark-download").checked;
   let downloadButton = document.getElementById("download-all-label");
-  if(removeWatermark) {
-    downloadButton.innerText = "Download your McPFP without watermark📥"
-  }else{
-    downloadButton.innerText = "Download your McPFP with watermark 📥"
-  }
 }
 let colorsButton = document.getElementById("colors-amount");
 const maxColorsAmount = 15;
