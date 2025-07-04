@@ -347,12 +347,6 @@ function checkSite(window) {
       }
     }catch(e){}
   }
-  setTimeout(()=>{
-    let href = window.location.href;
-    if(!href.includes(atob("YWxvbnNvYWxpYWdhLmdpdGh1Yi5pbw=="))) {
-      try{document.title = `Page stolen from https://${atob("YWxvbnNvYWxpYWdhLmdpdGh1Yi5pbw==")}`;}catch(e){}
-      window.location = `https://${atob("YWxvbnNvYWxpYWdhLmdpdGh1Yi5pbw==")}/mcpfp/`}
-  });
   fetch('https://raw.githubusercontent.com/AlonsoAliaga/AlonsoAliagaAPI/refs/heads/main/api/tools/tools-list.json')
     .then(res => res.json())
     .then(content => {
