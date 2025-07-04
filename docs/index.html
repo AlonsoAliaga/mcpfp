@@ -9,29 +9,23 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
   
-    <title>MinecraftPFP Generator | AlonsoAliaga Development</title>
+    <title>Minecraft PFP Generator</title>
     
     <meta name="theme-color" content="#9a14ff"/>
     <meta property="og:type" content="article" />
-    <meta property="og:site_name" content="MinecraftPFP Generator by AlonsoAliaga" />
-    <meta property="og:title" content="MinecraftPFP Generator | AlonsoAliaga Development">
+    <meta property="og:site_name" content="Minecraft PFP Generator"/>
+    <meta property="og:title" content="Minecraft PFP Generator">
     <meta property="og:image" content="https://raw.githubusercontent.com/AlonsoAliaga/mcpfp/main/assets/images/thumbnail.png">
-    <meta property="og:description" content="Create cool pixel art minecraft profile pictures with your skin, custom background and custom gradients. No more paying fiverr artists!">
-    <meta property="og:url" content="https://alonsoaliaga.github.io/index.html">
+    <meta property="og:description" content="Create a Minecraft profile picture with your skin.">
+    <meta property="og:url" content="https://leah.chromebooks.lol/mcpfp">
   </head>
   <body>
-    <div id="online-counter" data-failed="0" style="position: relative;background-color: green;height: 30px;display: flex; align-items: center;justify-content: center;">🟢 0 online using our Minecraft Profile Picture Generator!</div>
     <div class="content">
       <div class="header">
-        <h1 style="font-family: MinecraftBold;"><a href="https://alonsoaliaga.com/minecraft-pfp" rel="noopener" target="_blank">MinecraftPFP</a> Generator</h1>
-        <h2 style="font-size: 20px; color: rgb(255, 71, 71)">Use Google Chrome or Opera for a better experience. Edge is reported as not compatible!</h2>
+        <h1 style="font-family: MinecraftBold;">Minecraft PFP Generator</h1>
         <div class="options" style="padding: 10px 10px 10px 10px; margin-bottom: 10px;">
           <h2 class="rainbow" style="font-size:25px; color:transparent">How is this different from other generators?</h2>
-          This generator allows you to create your own pixel arts profiles with <b class="rainbow">many</b> cool options.<br><br>
-          <h2 style="font-size: 20px; color: rgb(255, 71, 71)">No more paying fiverr artits for Pixel Arts!</h2>
-          <span style="font-size: 17px;">
-            <b>⚠️ If you have cool ideas, suggest them in our <a href="https://alonsoaliaga.com/discord" rel="noopener" target="_blank">official discord server.</a></b><br>
-          </span>
+          This generator allows you to create a custom profile picture using your minecraft skin.
         </div>
         <span id="snackbar"><b>💎 Looking for new features? 💎</b><br><span style="font-size: small;">Try clicking an ad..</span></span>
         <span id="snackbar-2"><b>🚫 Nope, try again.. 🚫</b><br><span style="font-size: small;">Maybe next ad will work..</span></span>
@@ -45,14 +39,14 @@
         <h2>Enter your username:</h2>
         <div id="inputTextDiv" style="flex-direction: row; text-align: center; align-items: center;">
           <input id="inputText" style="text-align: center; display: inline-block; width: 300px;height: 30px; margin-right: 5px;font-family: MinecraftBold;padding: 15px 20px 15px 20px;"
-            type="text" maxlength="20" checked id="darkmode" value="AlonsoAliaga" class="darkbuttonboxes" 
+            type="text" maxlength="20" checked id="darkmode" value="lax1dude" class="darkbuttonboxes" 
             placeholder="Type your username"></input>
           <button id="customskindiv" style="width: 150px;position:absolute;text-align: center;display: inline-block;font-family: MinecraftBold;padding: 15px 20px 15px 20px;" 
             class="darkbuttonboxes" onclick="uploadCustomSkinTexture(this)">Custom<br>Skin</button>
         </div>
         <span id="snackbar-error">Loading error..</span>
         <input id="inputTextCooldown" style="text-align: center; color:gray; display: none; width: 300px; height: 30px; font-family: MinecraftBold; padding: 15px 20px 15px 20px; margin-bottom: 20px;"
-          type="text" maxlength="20" checked id="darkmode" value="AlonsoAliaga" class="darkbuttonboxes"
+          type="text" maxlength="20" checked id="darkmode" value="lax1dude" class="darkbuttonboxes"
           placeholder="Type your username" disabled="true"></input>
         <br>
         <div style="display: inline-block;">
@@ -115,7 +109,7 @@
               <label for="button-custom-background" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;"> Upload Custom background 🎨</label>
             </div><br>
             <div id="button-remove-watermark-download-div" style="width: 50%;display: inline-block;font-family: MinecraftBold;margin: 2px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
-              <input type="checkbox" name="button-remove-watermark-download" id="button-remove-watermark-download" onclick="toggleWatermark(this);"></input>
+              <input type="checkbox" enabled name="button-remove-watermark-download" id="button-remove-watermark-download" onclick="toggleWatermark(this);"></input>
               <label for="button-remove-watermark-download" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;"> Remove watermark in download? 👓</label>
             </div><br>
             <div id="button-toggle-custom-gradient-div" style="width: 50%;display: inline-block;font-family: MinecraftBold;margin: 2px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
@@ -183,15 +177,7 @@
       <!-- <div id="mybutton">
         <button class="buttonface"><a href="https://alonsoaliaga.github.io"><img src="https://raw.githubusercontent.com/AlonsoAliaga/alonsoaliaga.github.io/main/assets/img/apple-touch-icon.png"></a></button>
       </div> -->
-      <div id="mybutton">
-        <div style="position: center;display: inline-block;">
-          <button class="buttonface"><a href="https://alonsoaliaga.github.io"><img src="https://raw.githubusercontent.com/AlonsoAliaga/alonsoaliaga.github.io/main/assets/img/apple-touch-icon.png"></a></button>
-          <br>
-          <div id="visitor-counter" style="text-align: center;">
-            <span id="counter-amount" style="font-family: MinecraftBold;font-weight: bold;">Visits: 0</span>
-          </div>
-        </div>
-      </div>
+     
     </div>
     <script ></script>
   </div>
@@ -305,14 +291,6 @@
     function testeo1(){}
   </script>
   <script src="resources.js"></script>
-  <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
-  <script>
-    kofiWidgetOverlay.draw('alonsoaliaga', {
-      'type': 'floating-chat',
-      'floating-chat.donateButton.text': 'Send love ❤️',
-      'floating-chat.donateButton.background-color': '#fcbf47',
-      'floating-chat.donateButton.text-color': '#323842'
-    });
-  </script>
+  <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>  
   </body>
 </html>
