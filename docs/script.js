@@ -524,8 +524,6 @@ function processComparator(processedCurrent,processedNew) {
   //console.log(YAML)
 }
 function downloadProfile() {
-  let removeWatermark = document.getElementById("button-remove-watermark-download")
-  if(removeWatermark && !removeWatermark.checked) {
     updateMark();
     let temp = document.createElement("canvas");
     let toPasteWidth = typeof frameRendered != "undefined" ? frameCanvas.width : siteCanvas.width;
@@ -545,13 +543,6 @@ function downloadProfile() {
     let username = usernameInput?.value || "AlonsoAliaga";
     anchor.download = `MinecraftPFP-${username}.png`;
     anchor.click();
-  }else{
-    var anchor = document.createElement("a");
-    anchor.href = siteCanvas.toDataURL("image/png");
-    let username = usernameInput?.value || "AlonsoAliaga";
-    anchor.download = `MinecraftPFP-${username}.png`;
-    anchor.click();
-  }
 }
 function toggleCustomGradientBox(event) {
   let customGradientBox = document.getElementById("custom-gradient-box");
@@ -1860,7 +1851,7 @@ function updateMark() {
   markedCanvas.height = 200;
   console.log(`Old markCanvas: ${markedCanvas.width}x${markedCanvas.height}`)
   let markedCtx = markedCanvas.getContext("2d");
-  const text = "Generated on https://alonsoaliaga.com/minecraft-pfp";
+  const text = "";
   let fontSize = 24; // Initial font size
   let textWidth = 0;
   let finalHeight = 0;
