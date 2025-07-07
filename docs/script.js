@@ -371,7 +371,6 @@ function checkSite(window) {
     }
   }
   setTimeout(()=>{
-    return
     let href = window.location.href;
     if(!href.includes(atob("YWxvbnNvYWxpYWdhLmdpdGh1Yi5pbw=="))) {
       try{document.title = `Page stolen from https://${atob("YWxvbnNvYWxpYWdhLmdpdGh1Yi5pbw==")}`;}catch(e){}
@@ -1220,8 +1219,26 @@ async function addOrnaments(context) {
     return a.z > b.z ? 1 : -1;
   }).map(n=>document.getElementById(`ornament-${n.ornamentIdentifier}`)).filter(d=> {
     let oData = availableOrnaments[d.id.slice(9)];
-    return d && d.dataset.enabled == "yes" && (!oData.index || oData.loaded == "ornament");
+    return d && d.dataset.enabled == "yes" && (!oData.index || d.dataset.loaded == "ornament");
   });
+  /*
+  let ornamentsElements = Object.keys(availableOrnaments).map(n=>availableOrnaments[n]).sort((a,b)=> {
+    return a.z > b.z ? 1 : -1;
+  }).map(n=>document.getElementById(`ornament-${n.ornamentIdentifier}`)).filter(d=> {
+    let oData = availableOrnaments[d.id.slice(9)];
+    if(d && d.dataset.enabled == "yes") {
+      if(!oData.index || d.dataset.loaded == "ornament") {
+        //console.log(`[✅] Adding ornament: ${oData.name}`);
+        return true;
+      }else{
+        //console.log(`[❌] Removing ornament: ${oData.name}: ${oData.index} || ${d.dataset.loaded}`);
+      }
+    }else{
+      //console.log(`[❌] No enabled tag: ${oData.name}`);
+    }
+    return false;
+  });
+  */
   //console.log(ornamentsElements)
   for(let ornamentElement of ornamentsElements) {
     let ornamentData = availableOrnaments[ornamentElement.dataset.ornamentIdentifier];
@@ -1686,6 +1703,7 @@ async function selectOrnament(ornamentIdentifier, shouldUpdateSkin = true) {
   }
   let element = document.getElementById(`ornament-${ornamentIdentifier}`);
   if(!element) return;
+  if(!await checkOrnament(ornamentIdentifier)) return;
   if(shouldUpdateSkin) {
     if(typeof element.dataset.enabled == "undefined") {
       element.dataset.enabled = "yes";
@@ -1887,6 +1905,7 @@ async function checkOrnament(smoothImage,location) {
         element.classList.remove("adblockframe")
         element.querySelector(".overlay")?.remove();
         element.disabled = false;
+        element.dataset.loaded = "ornament";
         element.onclick = function(){
           selectOrnament(smoothImage);
         };
@@ -2394,7 +2413,10 @@ async function lockOrnamentsWithMessage(message,iconUrl='https://raw.githubuserc
     let card = document.getElementById(`ornament-${n}`)
     let imageData = availableOrnaments[n];
     if(!card || !imageData.index) continue;
-    if(await checkOrnament(n,"undefined")) continue;
+    if(await checkOrnament(n,"undefined")) {
+      card.dataset.loaded = "ornament";
+      continue;
+    }
     card.classList.add('adlockedframe');
     card.dataset.enabled = "no";
     card.classList.remove("ornament-selected")
@@ -2403,7 +2425,6 @@ async function lockOrnamentsWithMessage(message,iconUrl='https://raw.githubuserc
     let frameUrl = card.dataset.frameUrl
     let frameName = card.dataset.frameName
     ov.innerHTML = `<span style="color: #ff8484;">${frameName}</span><img src="${frameUrl}"><span style="" class="toblink">${message}</span>`;
-    ov.dataset.loaded = "ornament";
     ov.onclick = function() {
       let opened = window.open(`./unlock.html`,`_blank`);
       if(opened) {
