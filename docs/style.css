@@ -628,6 +628,11 @@ ul {
   overflow: hidden;
   transition: height 0.3s ease;
 }
+#ornaments-box {
+  height: 0;
+  overflow: hidden;
+  transition: height 0.3s ease;
+}
 #frame-box {
   height: 0;
   overflow: hidden;
@@ -816,6 +821,50 @@ fieldset.group legend {
   border-radius: 8px;
 }
 
+  /* Styles for the render card */
+.render-ornament-card {
+  color: #232323;
+	display: flex;
+	flex-direction: column;       /* Stack items vertically */
+	align-items: center;          /* Center items horizontally */
+	justify-content: center;      /* Center items vertically */
+	border: 1px solid #ccc;       /* Optional: for visualization */
+  
+	width: 150px;
+	padding: 5px;
+	border-radius: 12px;
+	background: #f9f9f9;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	text-align: center;
+	cursor: pointer;
+	transition: transform 0.2s, box-shadow 0.2s;
+	vertical-align: middle;
+  min-height: 185px;
+}
+/* Hover effect for the card */
+.render-ornament-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Styles for the image inside the card */
+.block-cursor {
+  cursor: not-allowed !important;
+}
+.render-ornament-card img {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 10px;          /* Space between image and text */  
+
+  width: 100%;
+  height: auto;
+  max-height: 300px;
+  border-radius: 8px;
+}
+
+.ornament-selected{
+	background: #94ff94;
+}
 .adlockedframe {
 	position: relative;
 }

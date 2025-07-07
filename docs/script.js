@@ -328,26 +328,50 @@ function toggleDarkmode() {
 function checkSite(window) {
   let search = window.location.search;
   if(typeof search !== "undefined" && search.length > 0) {
+    let update = false;
     try{
       let parts = atob(search.slice(1)).split("&");
       for(let part of parts) {
         let [k,v] = part.split("=");
-        //console.log(k,v)
+        console.log(k,v)
         try{
           k = btoa(k);
           if(k == "dXNlcm5hbWU=") {
             if(v.match(/[a-z0-9_]/gi)) {
-              setTimeout(()=>{
-                usernameInput.value = v;
-                processUsername();
-              },500);
+              usernameInput.value = v;
             }
+          }else if(k == "b3JuYW1lbnRz") {
+            let oIds = v.split(",");
+            let oIdsTwo = []
+            for(let oId of oIds) {
+              let parts = oId.split(".")
+              let ornamentData = availableOrnaments[parts[0]];
+              if(!ornamentData) continue;
+              if(!ornamentData.locked) {
+                for(let part of parts) {
+                  if(part.toLowerCase().startsWith("x:")) {
+                    if(typeof ornamentData.x != "undefined" && !isNaN(part.slice(2))) ornamentData.x = parseInt(part.slice(2));
+                  }else if(part.toLowerCase().startsWith("y:")) {
+                    if(typeof ornamentData.y != "undefined" && !isNaN(part.slice(2))) ornamentData.y = parseInt(part.slice(2));
+                  }
+                }
+              }
+              if(isNaN(part[1]))
+              oIdsTwo.push(parts[0]);
+            }
+            updateOrnamentCards(oIdsTwo);
           }
         }catch(e){}
       }
     }catch(e){}
+    if(update) {
+      setTimeout(()=>{
+        processUsername();
+      },500);
+    }
   }
   setTimeout(()=>{
+    return
     let href = window.location.href;
     if(!href.includes(atob("YWxvbnNvYWxpYWdhLmdpdGh1Yi5pbw=="))) {
       try{document.title = `Page stolen from https://${atob("YWxvbnNvYWxpYWdhLmdpdGh1Yi5pbw==")}`;}catch(e){}
@@ -529,6 +553,19 @@ function processComparator(processedCurrent,processedNew) {
   // console.log(differenceYAML);
   //console.log(YAML)
 }
+let smoothImage = undefined;
+async function selectFrame(frameIdentifier) {
+  let frameData = availableFrames[frameIdentifier];
+  if(typeof frameData == "undefined") {
+    frameRendered = undefined;
+    smoothImage = undefined;
+    updateSkin();
+    return;
+  }
+  smoothImage = frameIdentifier;
+  await renderFrame();
+  updateSkin();
+}
 function downloadProfile() {
   let removeWatermark = document.getElementById("button-remove-watermark-download")
   if(removeWatermark && !removeWatermark.checked) {
@@ -570,6 +607,19 @@ function toggleCustomGradientBox(event) {
     backgroundType = 0;
     customGradientBox.classList.remove("expanded");
     updateSkin(true);
+  }
+}
+function toggleOrnamentsBox(event) {
+  let theBox = document.getElementById("ornaments-box");
+  let boxOpened = document.getElementById("button-toggle-ornaments").checked;
+  if(boxOpened) {
+    theBox.classList.add("expanded");
+  }else{
+    theBox.classList.remove("expanded");
+    if(typeof frameRendered != "undefined") {
+      frameRendered = undefined;
+      updateSkin();
+    }
   }
 }
 function toggleFrameBox(event) {
@@ -994,6 +1044,9 @@ async function updateSkin(inCache = true) {
     skinCtx.drawImage(loadedSkinBuffer, 21, 36, 6, 1, 7, 11, 6, 1); // Chest Neck Small Line (top layer)
   }
   skinCtx.drawImage(shadingBuffer, 0 , 0, 20, 20);
+
+  await addOrnaments(skinCtx);
+
   if(revertSkin) {
     finalCtx.save();
     finalCtx.scale(-1, 1);
@@ -1037,365 +1090,523 @@ async function updateSkin(inCache = true) {
   
   //console.log(`Username: ${username}\nRevert skin: ${revertSkin}\nShadow: ${shadow}\nTransparent background: ${transparentBackground}\nIn cache: ${inCache}`);
 }
+let vFullBody = 500;
+let vSuit = 650;
+let vHeadShoulder = 750;
+let vHead = 850;
+let vOrnamentSmall = 999;
+let vOrnamentHead = 1500;
+let availableOrnaments = {
+  "o-crown": {
+    name: "Crown",
+    featureName: "Crown Ornament",
+    image: "https://i.imgur.com/vZRhGaz.png",
+    z: vOrnamentHead,
+    x: 0,
+    y: 0,
+    index: 15,
+  },
+  "o-sunglasses": {
+    name: "Sunglasses",
+    featureName: "Sunglasses Ornament",
+    image: "https://i.imgur.com/ZtoOQLo.png",
+    z: vOrnamentHead,
+    x: 0,
+    y: 0,
+  },
+  "o-duck-head-with-glasses": {
+    name: "Duck Head with Sunglasses",
+    featureName: "Duck Head with Sunglasses Ornament",
+    image: "https://i.imgur.com/k7L6Eg8.png",
+    z: vSuit,
+  },
+  "o-mcdonalds-hat": {
+    name: "McDonalds Hat",
+    featureName: "McDonalds Hat Ornament",
+    image: "https://i.imgur.com/UI7Qshc.png",
+    z: vOrnamentHead,
+    x: 0,
+    y: 0,
+  },
+  "o-mcdonalds-body": {
+    name: "McDonalds Body",
+    featureName: "McDonalds Body Ornament",
+    image: "https://i.imgur.com/17JopEA.png",
+    z: vSuit,
+    index: 36,
+  },
+  "o-oxxo": {
+    name: "Oxxo",
+    featureName: "Oxxo Ornament",
+    image: "https://i.imgur.com/TEfCo93.png",
+    z: vOrnamentHead,
+    x: 0,
+    y: 0,
+    index: 37,
+  },
+  "o-rose": {
+    name: "Rose",
+    featureName: "Rose Ornament",
+    image: "https://i.imgur.com/VGvgZz0.png",
+    z: vOrnamentSmall,
+    x: 0,
+    y: 0,
+    live: "Rose",
+  },
+  "o-tuxedo-rose": {
+    name: "Tuxedo & Rose",
+    featureName: "Tuxedo & Rose",
+    image: "https://i.imgur.com/xFjpWGE.png",
+    z: vSuit,
+    index: 38,
+  },
+  "o-tuxedo-1": {
+    name: "Tuxedo #1",
+    featureName: "Tuxedo #1 Ornament",
+    image: "https://i.imgur.com/Cd5pJD9.png",
+    z: vSuit,
+  },
+  "o-tuxedo-2": {
+    name: "Tuxedo #2",
+    featureName: "Tuxedo #2 Ornament",
+    image: "https://i.imgur.com/El5bLbG.png",
+    z: vSuit,
+  },
+  "o-turban-head": {
+    name: "Turban Head",
+    featureName: "Turban Head Ornament",
+    image: "https://i.imgur.com/f0LFvTQ.png",
+    z: vHead,
+  },
+  "o-turban-full": {
+    name: "Turban Full",
+    featureName: "Turban Full Ornament",
+    image: "https://i.imgur.com/ZkriUwG.png",
+    z: vHeadShoulder,
+  },
+  "o-turban-shoulders": {
+    name: "Turban Shoulders",
+    featureName: "Turban Shoulders Ornament",
+    image: "https://i.imgur.com/WoXpvWv.png",
+    z: vHeadShoulder,
+  },
+  "o-christmas-scarf": {
+    name: "Christmas Scarf",
+    featureName: "Christmas Scarf Ornament",
+    image: "https://i.imgur.com/sUM6Exf.png",
+    z: vHeadShoulder,
+    live: "Christmas",
+  },
+  "o-shark-pijama": {
+    name: "Shark Pijama",
+    featureName: "Shark Pijama Ornament",
+    image: "https://i.imgur.com/2UVRxdK.png",
+    z: vSuit,
+    index: 34,
+  },
+}
+for(let id of Object.keys(availableOrnaments)) {
+  let ornamentData = availableOrnaments[id];
+  ornamentData.ornamentIdentifier = id;
+  if(typeof ornamentData.x == "undefined" && typeof ornamentData.y == "undefined") {
+    ornamentData.locked = true;
+  }
+}
+async function addOrnaments(context) {
+  let multiplier = 1;
+  // let finalCanvas = document.getElementById("final-canvas");
+  // let context = finalCanvas.getContext("2d");
+  let ornamentsElements = Object.keys(availableOrnaments).map(n=>availableOrnaments[n]).sort((a,b)=> {
+    return a.z > b.z ? 1 : -1;
+  }).map(n=>document.getElementById(`ornament-${n.ornamentIdentifier}`)).filter(d=> {
+    let oData = availableOrnaments[d.id.slice(9)];
+    return d && d.dataset.enabled == "yes" && (!oData.index || oData.loaded == "ornament");
+  });
+  //console.log(ornamentsElements)
+  for(let ornamentElement of ornamentsElements) {
+    let ornamentData = availableOrnaments[ornamentElement.dataset.ornamentIdentifier];
+    //if(!ornamentData || !await checkOrnament(ornamentElement.dataset.ornamentIdentifier)) continue;
+    //console.log(`[🎩] Loading ornament: ${ornamentData.name}`);
+    if(typeof ornamentData.buffer == "undefined") {
+      try{
+        let buffer = await loadImage(ornamentData.image);
+        ornamentData.buffer = buffer;
+        //console.log(`[✅] Downloaded ornament: ${ornamentData.name} => ${ornamentData.image}`);
+      }catch(e) {
+        //console.log(`[❌] Error downloading ornament: ${ornamentData.name} => ${ornamentData.image}`);
+        //console.log(e);
+      }
+    }
+    let ornamentBuffer = ornamentData.buffer;
+    if(typeof ornamentBuffer != "undefined") {
+      //console.log(`[🪅] Drawing ornament: ${ornamentData.name}`);
+      let addX = ornamentData.locked ? 0 : (ornamentData.x || 0) * multiplier;
+      let addY = ornamentData.locked ? 0 : (ornamentData.y || 0) * multiplier;
+      context.drawImage(ornamentBuffer,-5 * multiplier + addX, -5 * multiplier + addY,30 * multiplier,25 * multiplier);
+    }else{
+      //console.log(`[❌] Undefined! Not drawing ornament: ${ornamentData.name}`);
+    }
+  }
+}
 let availableFrames = {
-  "basic":{
+  "f-basic":{
     name: "Basic",
     featureName: "Basic frame",
     image: "https://i.imgur.com/1b30TQ2.png",
     start: 5,
     end: 26
   },
-  "basic-blue":{
+  "f-basic-blue":{
     name: "Basic Blue",
     featureName: "Basic Blue frame",
     image: "https://i.imgur.com/7ucUhdA.png",
     start: 5,
     end: 26
   },
-  "basic-redstone":{
+  "f-basic-redstone":{
     name: "Basic Redstone",
     featureName: "Basic Redstone frame",
     image: "https://i.imgur.com/AIhQkJ8.png",
     start: 5,
     end: 26
   },
-  "basic-emerald":{
+  "f-basic-emerald":{
     name: "Basic Emerald",
     featureName: "Basic Emerald frame",
     image: "https://i.imgur.com/0wm61cd.png",
     start: 5,
     end: 26
   },
-  "golden-greek":{
+  "f-golden-greek":{
     name: "Golden Greek",
     featureName: "Golden Greek frame",
     image: "https://i.imgur.com/ZPjK6B2.png",
     start: 6,
     end: 56
   },
-  "bronze-greek":{
+  "f-bronze-greek":{
     name: "Bronze Greek",
     featureName: "Bronze Greek frame",
     image: "https://i.imgur.com/Irw6mK4.png",
     start: 6,
     end: 56
   },
-  "orange-greek":{
+  "f-orange-greek":{
     name: "Orange Greek",
     featureName: "Orange Greek frame",
     image: "https://i.imgur.com/BeDvXMI.png",
     start: 6,
     end: 56
   },
-  "quartz-greek":{
+  "f-quartz-greek":{
     name: "Quartz Greek",
     featureName: "Quartz Greek frame",
     image: "https://i.imgur.com/Wy5rUoP.png",
     start: 6,
     end: 56
   },
-  "sky-greek":{
+  "f-sky-greek":{
     name: "Sky Greek",
     featureName: "Sky Greek frame",
     image: "https://i.imgur.com/Bn6kGRK.png",
     start: 6,
     end: 56
   },
-  "amethyst-greek":{
+  "f-amethyst-greek":{
     name: "Amethyst Greek",
     featureName: "Amethyst Greek frame",
     image: "https://i.imgur.com/LurWi0k.png",
     start: 6,
     end: 56
   },
-  "emerald-greek":{
+  "f-emerald-greek":{
     name: "Emerald Greek",
     featureName: "Emerald Greek frame",
     image: "https://i.imgur.com/T3nja0p.png",
     start: 6,
     end: 56
   },
-  "obsidian-greek":{
+  "f-obsidian-greek":{
     name: "Obsidian Greek",
     featureName: "Obsidian Greek frame",
     image: "https://i.imgur.com/pleRKw6.png",
     start: 6,
     end: 56
   },
-  "elegant-golden":{
+  "f-elegant-golden":{
     name: "Elegant Golden",
     featureName: "Elegant Golden frame",
     image: "https://i.imgur.com/BEY6OOv.png",
     start: 7,
     end: 57
   },
-  "elegant-blossom":{
+  "f-elegant-blossom":{
     name: "Elegant Blossom",
     featureName: "Elegant Blossom frame",
     image: "https://i.imgur.com/swZiNMW.png",
     start: 7,
     end: 57
   },
-  "elegant-sapphire":{
+  "f-elegant-sapphire":{
     name: "Elegant Sapphire",
     featureName: "Elegant Sapphire frame",
     image: "https://i.imgur.com/OOrcOqY.png",
     start: 7,
     end: 57
   },
-  "elegant-slime":{
+  "f-elegant-slime":{
     name: "Elegant Slime",
     featureName: "Elegant Slime frame",
     image: "https://i.imgur.com/qrAOzWl.png",
     start: 7,
     end: 57
   },
-  "obsidian":{
+  "f-obsidian":{
     name: "Obisidan",
     featureName: "Obisidan Frame",
     image: "https://i.imgur.com/WmCT2VV.png",
     start: 3,
     end: 27
   },
-  "mossy-obsidian":{
+  "f-mossy-obsidian":{
     name: "Mossy Obisidan",
     featureName: "Mossy Obisidan Frame",
     image: "https://i.imgur.com/BmbusOH.png",
     start: 3,
     end: 27
   },
-  "pink-obsidian":{
+  "f-pink-obsidian":{
     name: "Pink Obisidan",
     featureName: "Pink Obisidan Frame",
     image: "https://i.imgur.com/aK1RAxA.png",
     start: 3,
     end: 27
   },
-  "swamp-obsidian":{
+  "f-swamp-obsidian":{
     name: "Swamp Obisidan",
     featureName: "Swamp Obisidan Frame",
     image: "https://i.imgur.com/HdOG053.png",
     start: 3,
     end: 27
   },
-  "brown-obsidian":{
+  "f-brown-obsidian":{
     name: "Brown Obisidan",
     featureName: "Brown Obisidan Frame",
     image: "https://i.imgur.com/JrhLlJ6.png",
     start: 3,
     end: 27
   },
-  "yellow-obsidian":{
+  "f-yellow-obsidian":{
     name: "Yellow Obisidan",
     featureName: "Yellow Obisidan Frame",
     image: "https://i.imgur.com/yxN4NY2.png",
     start: 3,
     end: 27
   },
-  "blue-obsidian":{
+  "f-blue-obsidian":{
     name: "Blue Obisidan",
     featureName: "Blue Obisidan Frame",
     image: "https://i.imgur.com/LxUgzpY.png",
     start: 3,
     end: 27
   },
-  "white-obsidian":{
+  "f-white-obsidian":{
     name: "White Obisidan",
     featureName: "White Obisidan Frame",
     image: "https://i.imgur.com/2dwMGMJ.png",
     start: 3,
     end: 27
   },
-  "futuristic":{
+  "f-futuristic":{
     name: "Futuristic",
     featureName: "Futuristic Frame",
     image: "https://i.imgur.com/xgRKCpk.png",
     start: 9,
     end: 39
   },
-  "dark-futuristic":{
+  "f-dark-futuristic":{
     name: "Dark Futuristic",
     featureName: "Dark Futuristic Frame",
     image: "https://i.imgur.com/nizqUGO.png",
     start: 9,
     end: 39
   },
-  "pink-futuristic":{
+  "f-pink-futuristic":{
     name: "Pink Futuristic",
     featureName: "Pink Futuristic Frame",
     image: "https://i.imgur.com/07nPAYQ.png",
     start: 9,
     end: 39
   },
-  "red-futuristic":{
+  "f-red-futuristic":{
     name: "Red Futuristic",
     featureName: "Red Futuristic Frame",
     image: "https://i.imgur.com/Og3MBHN.png",
     start: 9,
     end: 39
   },
-  "blue-weird":{
+  "f-blue-weird":{
     name: "Blue Weird",
     featureName: "Blue Weird Frame",
     image: "https://i.imgur.com/el9h67R.png",
     start: 5,
     end: 35
   },
-  "purple-weird":{
+  "f-purple-weird":{
     name: "Purple Weird",
     featureName: "Purple Weird Frame",
     image: "https://i.imgur.com/uaHcIAy.png",
     start: 5,
     end: 35
   },
-  "peach-weird":{
+  "f-peach-weird":{
     name: "Peach Weird",
     featureName: "Peach Weird Frame",
     image: "https://i.imgur.com/qAdo1Da.png",
     start: 5,
     end: 35
   },
-  "green-weird":{
+  "f-green-weird":{
     name: "Green Weird",
     featureName: "Green Weird Frame",
     image: "https://i.imgur.com/P87ZH4o.png",
     start: 5,
     end: 35
   },
-  "iron-plate":{
+  "f-iron-plate":{
     name: "Iron Plate",
     featureName: "Iron Plate Frame",
     image: "https://i.imgur.com/IdkXKj8.png",
     start: 5,
     end: 95
   },
-  "gold-plate":{
+  "f-gold-plate":{
     name: "Gold Plate",
     featureName: "Gold Plate Frame",
     image: "https://i.imgur.com/mP6QTZG.png",
     start: 5,
     end: 95
   },
-  "diamond-plate":{
+  "f-diamond-plate":{
     name: "Diamond Plate",
     featureName: "Diamond Plate Frame",
     image: "https://i.imgur.com/Ya87Nqb.png",
     start: 5,
     end: 95
   },
-  "emerald-plate":{
+  "f-emerald-plate":{
     name: "Emerald Plate",
     featureName: "Emerald Plate Frame",
     image: "https://i.imgur.com/5P6z6wY.png",
     start: 5,
     end: 95
   },
-  "base-blue":{
+  "f-base-blue":{
     name: "Base Blue",
     featureName: "Base Blue Frame",
     image: "https://i.imgur.com/JUAbQyo.png",
     start: 7,
     end: 33
   },
-  "base-orange":{
+  "f-base-orange":{
     name: "Base Orage",
     featureName: "Base Orange Frame",
     image: "https://i.imgur.com/Mm0Csz8.png",
     start: 7,
     end: 33
   },
-  "base-lime":{
+  "f-base-lime":{
     name: "Base Lime",
     featureName: "Base Lime Frame",
     image: "https://i.imgur.com/AiYrjr2.png",
     start: 7,
     end: 33
   },
-  "base-red":{
+  "f-base-red":{
     name: "Base Red",
     featureName: "Base Red Frame",
     image: "https://i.imgur.com/pOBxwU5.png",
     start: 7,
     end: 33
   },
-  "pixel-gold":{
+  "f-pixel-gold":{
     name: "Pixel Gold",
     featureName: "Pixel Gold Frame",
     image: "https://i.imgur.com/LzE8v9D.png",
     start: 4,
     end: 36
   },
-  "pixel-pink":{
+  "f-pixel-pink":{
     name: "Pixel Pink",
     featureName: "Pixel Pink Frame",
     image: "https://i.imgur.com/JBXm7K0.png",
     start: 4,
     end: 36
   },
-  "pixel-blue":{
+  "f-pixel-blue":{
     name: "Pixel Blue",
     featureName: "Pixel Blue Frame",
     image: "https://i.imgur.com/sYQ6b0C.png",
     start: 4,
     end: 36
   },
-  "pixel-white":{
+  "f-pixel-white":{
     name: "Pixel White",
     featureName: "Pixel White Frame",
     image: "https://i.imgur.com/8OrQgyi.png",
     start: 4,
     end: 36
   },
-  "luxury-gold":{
+  "f-luxury-gold":{
     name: "Luxury Gold",
     featureName: "Luxury Gold Frame",
     image: "https://i.imgur.com/5l1hJPa.png",
     start: 6,
     end: 52
   },
-  "luxury-emerald":{
+  "f-luxury-emerald":{
     name: "Luxury Emerald",
     featureName: "Luxury Emerald Frame",
     image: "https://i.imgur.com/M3KeZW5.png",
     start: 6,
     end: 52
   },
-  "luxury-obsidian":{
+  "f-luxury-obsidian":{
     name: "Luxury Obisidian",
     featureName: "Luxury Obisidian Frame",
     image: "https://i.imgur.com/suRxxDB.png",
     start: 6,
     end: 52
   },
-  "luxury-Diamond":{
+  "f-luxury-Diamond":{
     name: "Luxury Diamond",
     featureName: "Luxury Diamond Frame",
     image: "https://i.imgur.com/DqiMcUD.png",
     start: 6,
     end: 52
   },
-  "obsidian-sign":{
+  "f-obsidian-sign":{
     name: "Obisidian Sign",
     featureName: "Obisidian Sign Frame",
     image: "https://i.imgur.com/fWFpJE1.png",
     start: [21,42],
     end: 76
   },
-  "diamond-sign":{
+  "f-diamond-sign":{
     name: "Diamond Sign",
     featureName: "Diamond Sign Frame",
     image: "https://i.imgur.com/VkzaDk2.png",
     start: [21,42],
     end: 76
   },
-  "gold-sign":{
+  "f-gold-sign":{
     name: "Gold Sign",
     featureName: "Gold Sign Frame",
     image: "https://i.imgur.com/W3fmYj2.png",
     start: [21,42],
     end: 76
   },
-  "emerald-sign":{
+  "f-emerald-sign":{
     name: "Emerald Sign",
     featureName: "Emerald Sign Frame",
     image: "https://i.imgur.com/Lq1ZJAi.png",
@@ -1422,18 +1633,146 @@ function loadFrames() {
   }
   lockFramesWithMessage(`🔒 Unlock this frame!`)
 }
-let smoothImage = undefined;
-async function selectFrame(frameIdentifier) {
-  let frameData = availableFrames[frameIdentifier];
-  if(typeof frameData == "undefined") {
-    frameRendered = undefined;
-    smoothImage = undefined;
-    updateSkin();
+let singleClickTimer = undefined;
+function loadOrnaments() {
+  let ornamentDiv = document.getElementById("ornaments-picker");
+  for(let ornamentIdentifier of Object.keys(availableOrnaments)) {
+    let ornamentData = availableOrnaments[ornamentIdentifier];
+    let element = document.createElement("div");
+    element.classList.add("render-ornament-card");
+    //element.style.minWidth = "fit-content"
+    element.id = `ornament-${ornamentIdentifier}`
+    //element.ornamentIdentifier = `ornament-${ornamentIdentifier}`
+    element.style.margin = "2px"
+    element.dataset.ornamentIdentifier = ornamentIdentifier;
+    element.dataset.frameUrl = ornamentData.image;
+    element.dataset.frameName = ornamentData.name;
+    element.innerHTML = `
+              <div style="display:inline-block;min-width:fit-content;margin-top:2px;font-size:15px;font-weight:bold;" class="render-label">${ornamentData.name}</div>
+              <img style="image-rendering: pixelated" src="${ornamentData.image}" alt="${ornamentData.name}">`
+    element.onclick = function(){
+      if(singleClickTimer) {
+        clearTimeout(singleClickTimer);
+        singleClickTimer = undefined;
+        //console.log(`DOUBLE CLICK!`)
+        selectOrnament(ornamentIdentifier, false);
+        return;
+      }
+      singleClickTimer = setTimeout(function() {
+        //console.log(`SINGLE CLICK!`)
+        singleClickTimer = undefined;
+        selectOrnament(ornamentIdentifier);
+      }, 250);   
+    };
+    ornamentDiv.appendChild(element);
+  }
+  lockOrnamentsWithMessage(`🔒 Unlock this frame!`)
+}
+async function updateOrnamentCards(toEnable = []) {
+  for(let ornamentIdentifier of Object.keys(availableOrnaments)) {
+    let element = document.getElementById(`ornament-${ornamentIdentifier}`);
+    if(toEnable.includes(ornamentIdentifier)) {
+      element.dataset.enabled = "yes";
+    }
+    if(element.dataset.enabled == "yes") {
+      element.classList.add("ornament-selected");
+    }
+  }
+}
+async function selectOrnament(ornamentIdentifier, shouldUpdateSkin = true) {
+  let ornamentData = availableOrnaments[ornamentIdentifier];
+  if(typeof ornamentData == "undefined") {
     return;
   }
-  smoothImage = frameIdentifier;
-  await renderFrame();
-  updateSkin();
+  let element = document.getElementById(`ornament-${ornamentIdentifier}`);
+  if(!element) return;
+  if(shouldUpdateSkin) {
+    if(typeof element.dataset.enabled == "undefined") {
+      element.dataset.enabled = "yes";
+      element.classList.add("ornament-selected");
+    }else if(element.dataset.enabled == "no") {
+      element.dataset.enabled = "yes";
+      element.classList.add("ornament-selected");
+    }else{
+      element.dataset.enabled = "no";
+      element.classList.remove("ornament-selected");
+    }
+  }else{
+    if(typeof element.dataset.enabled == "undefined" || element.dataset.enabled == "no") {
+      element.classList.add("ornament-selected");
+      element.dataset.enabled = "yes";
+      shouldUpdateSkin = true;
+    }
+  }
+  let movementBoxDiv = document.getElementById("ornaments-movement-box-div");
+  let movementArrowsDiv = document.getElementById("ornaments-movement");
+  if(element.dataset.enabled == "yes") {
+    if(ornamentData.locked) {
+      movementBoxDiv.style.display = "none";
+      //movementArrowsDiv.textContent = `You shouldn't be reading this..`
+    }else{
+      movementBoxDiv.style.display = null;
+      movementArrowsDiv.dataset.movingOrnament = ornamentIdentifier;
+      //movementArrowsDiv.textContent = `Loading arrows..`
+      if(ornamentData.hasOwnProperty("x") && ornamentData.hasOwnProperty("y")) {
+        movementArrowsDiv.innerHTML = `<button class="button-small" onclick="moveOrnament('up',event);">▲</button><br>
+                    <div style="display: flex;margin: 10px;vertical-align: middle;align-items: center;">
+                      <button class="button-small" style="display: inline;margin: 10px;vertical-align: middle" onclick="moveOrnament('left',event);">⯇</button>
+                      <span style="font-weight: bold;">Move<br>${ornamentData.name}</span>
+                      <button class="button-small" style="display: inline;margin: 10px;vertical-align: middle" onclick="moveOrnament('right',event);">⯈</button><br>
+                    </div>
+                    <button class="button-small" onclick="moveOrnament('down',event);">▼</button>`
+      }else if(ornamentData.hasOwnProperty("x")) {
+        movementArrowsDiv.innerHTML = `<div style="display: flex;margin: 10px;vertical-align: middle;align-items: center;">
+                      <button class="button-small" style="display: inline;margin: 10px;vertical-align: middle" onclick="moveOrnament('left',event);">⯇</button>
+                      <span style="font-weight: bold;">Move<br>${ornamentData.name}</span>
+                      <button class="button-small" style="display: inline;margin: 10px;vertical-align: middle" onclick="moveOrnament('right',event);">⯈</button><br>
+                    </div>`
+      }else{
+        movementArrowsDiv.innerHTML = `<button class="button-small" onclick="moveOrnament('up',event);">▲</button><br>
+                    <span style="font-weight: bold;">Move<br>${ornamentData.name}</span><br>
+                    <button class="button-small" onclick="moveOrnament('down',event);">▼</button>`
+      }
+    }
+  }else{
+    movementBoxDiv.style.display = "none";
+    //movementArrowsDiv.textContent = `You shouldn't be reading this..`
+  }
+  if(shouldUpdateSkin) updateSkin();
+}
+function moveOrnament(direction,event) {
+  let movementArrowsDiv = document.getElementById("ornaments-movement");
+  let currentOrnamentIdentifier = movementArrowsDiv.dataset.movingOrnament;
+  if(!currentOrnamentIdentifier) return;
+  let ornamentData = availableOrnaments[currentOrnamentIdentifier];
+  if(!ornamentData) return;
+  let revertSkin = document.getElementById("button-revert-skin").checked;
+  let toModify = event.altKey || event.shiftKey ? 5 : 1;
+  toModify = ["left","right"].includes(direction) ? (revertSkin ? toModify * -1 : toModify) : toModify;
+  let modified = false;
+  if(ornamentData.hasOwnProperty("x")) {
+    if(direction == "left") {
+      ornamentData.x = ornamentData.x - toModify;
+      modified = true;
+    }else if(direction == "right") {
+      ornamentData.x = ornamentData.x + toModify;
+      modified = true;
+    }
+  }
+  if(ornamentData.hasOwnProperty("y")) {
+    if(direction == "up") {
+      ornamentData.y = ornamentData.y - toModify;
+      modified = true;
+    }else if(direction == "down") {
+      ornamentData.y = ornamentData.y + toModify;
+      modified = true;
+    }
+  }
+  if(modified) updateSkin();
+}
+function increaseValue() {
+  let ornamentData = availableOrnaments[currentOrnamentIdentifier];
+
 }
 async function checkFrame(smoothImage,location) {
   try {
@@ -1517,6 +1856,90 @@ async function checkFrame(smoothImage,location) {
   } catch (error) {
       localStorage.removeItem(`lobbyFreim-${btoa(smoothImage)}`);
       //console.warn(`Error checking frame: `,error);
+  }
+}
+async function checkOrnament(smoothImage,location) {
+  try {
+    let element = document.getElementById(`ornament-${smoothImage}`);
+    if(!element) return;
+    const storedUnlockData = localStorage.getItem(`lobbyUrna-${btoa(smoothImage)}`);
+    if (!storedUnlockData) {
+        return;
+    }
+    let json = {};
+    try{
+      json = JSON.parse(storedUnlockData);
+    }catch(e) {}
+    let { unlockedUntil, signature } = json;
+    if (typeof unlockedUntil !== 'number' || typeof signature !== 'string') {
+        localStorage.removeItem(`lobbyUrna-${btoa(smoothImage)}`);
+        return;
+    }
+    const expectedSignature = await generateSha256Hash(unlockedUntil + "WhatTheHellAreYouLookingForHere?");
+    let currentTime = Date.now(); 
+    if (signature === expectedSignature && currentTime < unlockedUntil) {
+      let remainingTimeMs = unlockedUntil - currentTime;
+      let remainingHours = Math.floor(remainingTimeMs / (1000 * 60 * 60));
+      let remainingMinutes = Math.floor((remainingTimeMs % (1000 * 60 * 60)) / (1000 * 60));
+      if(location) {
+        console.warn("Unlocking..");
+        element.innerHTML = element.innerHTML + `<p id="time-left-${smoothImage}" style="margin: 0px" class="unlock-text-frame">Unlocked for<br>${remainingHours}h ${remainingMinutes}m</p>`;
+        element.classList.remove("adblockframe")
+        element.querySelector(".overlay")?.remove();
+        element.disabled = false;
+        element.onclick = function(){
+          selectOrnament(smoothImage);
+        };
+        let timeLeftP = document.getElementById(`time-left-${smoothImage}`);
+        if(timeLeftP) {
+          let a = setInterval(()=>{
+            if(currentTime >= unlockedUntil) {
+              let card = document.getElementById(`ornament-${smoothImage}`)
+              if(!card) return;
+              let frameData = availableFrames[smoothImage];
+              card.classList.add('adlockedframe');
+              const ov = document.createElement('div');
+              timeLeftP.remove();
+              ov.className = 'overlay';
+              let frameUrl = card.dataset.frameUrl
+              let frameName = card.dataset.frameName
+              ov.innerHTML = `<span style="color: #ff8484;">${frameName}</span><img src="${frameUrl}"><span style="" class="toblink">Unlock this ornament!</span>`;
+              ov.onclick = function() {
+                let opened = window.open(`./unlock.html`,`_blank`);
+                if(opened) {
+                  setTimeout(()=>{
+                    let data = {feature:smoothImage,featureName:frameData.featureName,uuid:uniqueId,elementId:card.id}
+                    opened.postMessage(data,"*");
+                  },500);
+                }
+              }
+              card.append(ov);
+              localStorage.removeItem(`lobbyUrna-${btoa(smoothImage)}`)
+              clearInterval(a);
+              return;
+            }
+            currentTime = Date.now();
+            remainingTimeMs = unlockedUntil - currentTime;
+            remainingHours = Math.floor(remainingTimeMs / (1000 * 60 * 60));
+            remainingMinutes = Math.floor((remainingTimeMs % (1000 * 60 * 60)) / (1000 * 60));
+            let remainingSeconds = Math.floor((remainingTimeMs % (1000 * 60)) / 1000);
+            if(remainingSeconds < 0) return;
+            timeLeftP.innerHTML = `Unlocked for<br>${remainingHours}h ${remainingMinutes}m ${remainingSeconds}s`;
+          },1000)
+        }
+      }else {
+        console.warn("Unlocking but no location..");
+      }
+      return "Failed"
+    } else {
+      if (signature !== expectedSignature) {
+          console.warn("Unlock data tampered with! Signature mismatch.");
+      }
+      localStorage.removeItem(`lobbyUrna-${btoa(smoothImage)}`);
+    }
+  } catch (error) {
+      localStorage.removeItem(`lobbyUrna-${btoa(smoothImage)}`);
+      console.warn(`Error checking frame: `,error);
   }
 }
 async function generateSha256Hash(message) {
@@ -1963,6 +2386,36 @@ async function lockFramesWithMessage(message,iconUrl='https://raw.githubusercont
     card.append(ov);
   }
 }
+let loadedOrnaments = false;
+async function lockOrnamentsWithMessage(message,iconUrl='https://raw.githubusercontent.com/AlonsoAliaga/mc-renders/main/assets/images/lock-icon.png') {
+  if(loadedOrnaments) return;
+  loadedOrnaments = true;
+  for(let n of Object.keys(availableOrnaments)) {
+    let card = document.getElementById(`ornament-${n}`)
+    let imageData = availableOrnaments[n];
+    if(!card || !imageData.index) continue;
+    if(await checkOrnament(n,"undefined")) continue;
+    card.classList.add('adlockedframe');
+    card.dataset.enabled = "no";
+    card.classList.remove("ornament-selected")
+    const ov = document.createElement('div');
+    ov.className = 'overlay';
+    let frameUrl = card.dataset.frameUrl
+    let frameName = card.dataset.frameName
+    ov.innerHTML = `<span style="color: #ff8484;">${frameName}</span><img src="${frameUrl}"><span style="" class="toblink">${message}</span>`;
+    ov.dataset.loaded = "ornament";
+    ov.onclick = function() {
+      let opened = window.open(`./unlock.html`,`_blank`);
+      if(opened) {
+        setTimeout(()=>{
+          let data = {feature:n,featureName:imageData.featureName,uuid:uniqueId,elementId:card.id}
+          opened.postMessage(data,"*");
+        },500);
+      }
+    }
+    card.append(ov);
+  }
+}
 async function loadImage(url) {
 	return new Promise((resolve, reject) => {
 		const img = new Image()
@@ -2010,9 +2463,29 @@ function runDelayed() {
   },500);
   */
 }
+function checkingDate() {
+  for(let id of Object.keys(availableOrnaments)) {
+    let oData = availableOrnaments[id];
+    if(oData.live)
+      lockElementWithMessage(document.getElementById(`ornament-${id}`),"adlockedframe",`Disable AdBlock to access ${oData.name}`,oData.image);
+  }
+}
+function lockElementWithMessage(element,className,message,iconUrl='https://raw.githubusercontent.com/AlonsoAliaga/mc-renders/main/assets/images/lock-icon.png') {
+  if(element) {
+    if(typeof className == "object") className.forEach(e=>element.classList.add(e));
+    else element.classList.add(className);
+    const ov = document.createElement('div');
+    ov.className = 'overlay';
+    ov.innerHTML = `<img src="${iconUrl}"><span>${message}</span>`;
+    ov.style.cssText = "cursor: not-allowed !important";
+    element.append(ov);
+    element.onclick = function(){};
+  }
+}
 document.addEventListener("DOMContentLoaded", () => {
   loadCounter();
   loadFrames();
+  loadOrnaments();
   checkSite(window);
   setTimeout(()=>{
     loadChecking();
@@ -2021,16 +2494,8 @@ document.addEventListener("DOMContentLoaded", () => {
     },10000)
   },2500)
 });
-function lockElementWithMessage(element,className,message,iconUrl='https://raw.githubusercontent.com/AlonsoAliaga/mc-renders/main/assets/images/lock-icon.png') {
-  if(element) {
-    element.classList.add(className);
-    const ov = document.createElement('div');
-    ov.className = 'overlay';
-    ov.innerHTML = `<img src="${iconUrl}"><span>${message}</span>`;
-    element.append(ov);
-  }
-}
 function processAds() {
+  checkingDate();
   lockElementWithMessage(document.getElementById("arrows-div"),"adlocked",`Disable AdBlock to move avatar!`)
   lockElementWithMessage(document.getElementById("button-toggle-custom-gradient-div"),"adlockedfit",`Disable AdBlock to use custom gradients!`)
   lockElementWithMessage(document.getElementById("customskindiv"),"adlockedsmall",`Disable AdBlock to use custom skin texture!`)
@@ -2070,7 +2535,7 @@ let isRed = true;
 setInterval(()=>{
   let toSwitch = document.querySelectorAll(".toblink")
   toSwitch.forEach((element,index)=>{
-    console.log(`Editing #${index} ${element.id} | isRed=${isRed}`)
+    //console.log(`Editing #${index} ${element.id} | isRed=${isRed}`)
     if(isRed){
       element.classList.remove("blinkingtext");
     }else {

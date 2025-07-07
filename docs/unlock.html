@@ -146,7 +146,7 @@
                     return;
                 }
                 window.title = `Unlock ${featureName} feature by clicking ads!`
-                let time = 15;
+                let time = 1;
                 let penaltyTime = 0;
                 let interval = setInterval(()=>{
                     if(time < 0) {
@@ -198,7 +198,10 @@
                               unlockedUntil: unlockedUntil,
                               signature: signature
                           };
-                          localStorage.setItem(`lobbyFreim-${btoa(feature)}`,JSON.stringify(unlockData))
+                          if(feature.startsWith("f-"))
+                            localStorage.setItem(`lobbyFreim-${btoa(feature)}`,JSON.stringify(unlockData))
+                          else if(feature.startsWith("o-")) 
+                            localStorage.setItem(`lobbyUrna-${btoa(feature)}`,JSON.stringify(unlockData))
                           //console.log('Unlock data stored in localStorage:', unlockData);
                         }catch (error) {
                           //console.error("Error during unlock process:", error);
