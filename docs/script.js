@@ -1799,6 +1799,7 @@ function increaseValue() {
       window.removeEventListener("message",minecraft);
       if(typeof event.data.d == "object" && Array.isArray(event.data.d)) {
         for(let [a,b] of event.data.d) {localStorage.setItem(a,b);}
+        window.location.reload(true);
       }
     }
   }
