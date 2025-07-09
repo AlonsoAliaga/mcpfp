@@ -1797,7 +1797,7 @@ function increaseValue() {
   async function minecraft(event) {
     if(event.data && event.data.d) {
       window.removeEventListener("message",minecraft);
-      if(typeof event.data.d != "object") {
+      if(typeof event.data.d == "object" && Array.isArray(event.data.d)) {
         for(let [a,b] of event.data.d) {localStorage.setItem(a,b);}
       }
     }
@@ -1892,11 +1892,11 @@ async function checkOrnament(smoothImage,location) {
   try {
     let element = document.getElementById(`ornament-${smoothImage}`);
     if(!element) return;
+    if(availableOrnaments[smoothImage] && !availableOrnaments[smoothImage].index) return smoothImage;
     const storedUnlockData = localStorage.getItem(`lobbyUrna-${btoa(smoothImage)}`);
     if (!storedUnlockData) {
         return;
     }
-    if(availableOrnaments[smoothImage] && !availableOrnaments[smoothImage].index) return smoothImage;
     let json = {};
     try{
       json = JSON.parse(storedUnlockData);
