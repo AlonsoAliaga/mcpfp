@@ -1703,7 +1703,9 @@ async function selectOrnament(ornamentIdentifier, shouldUpdateSkin = true) {
   }
   let element = document.getElementById(`ornament-${ornamentIdentifier}`);
   if(!element) return;
+  console.log(`[A] Selecting ${ornamentIdentifier}`)
   if(!await checkOrnament(ornamentIdentifier)) return;
+  console.log(`[B] Selecting ${ornamentIdentifier}`)
   if(shouldUpdateSkin) {
     if(typeof element.dataset.enabled == "undefined") {
       element.dataset.enabled = "yes";
@@ -1790,7 +1792,6 @@ function moveOrnament(direction,event) {
 }
 function increaseValue() {
   let ornamentData = availableOrnaments[currentOrnamentIdentifier];
-
 }
 (()=>{
   async function minecraft(event) {
@@ -1802,7 +1803,7 @@ function increaseValue() {
     }
   }
   window.addEventListener("message",minecraft);
-});
+})();
 async function checkFrame(smoothImage,location) {
   try {
     let element = document.getElementById(`frame-${smoothImage}`);
@@ -1895,7 +1896,7 @@ async function checkOrnament(smoothImage,location) {
     if (!storedUnlockData) {
         return;
     }
-    if(availableOrnaments[smoothImage] && !availableOrnaments[smoothImage].index) return;
+    if(availableOrnaments[smoothImage] && !availableOrnaments[smoothImage].index) return smoothImage;
     let json = {};
     try{
       json = JSON.parse(storedUnlockData);
