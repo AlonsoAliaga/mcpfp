@@ -371,6 +371,7 @@ function checkSite(window) {
     }
   }
   setTimeout(()=>{
+    return
     let href = window.location.href;
     if(!href.includes(atob("YWxvbnNvYWxpYWdhLmdpdGh1Yi5pbw=="))) {
       try{document.title = `Page stolen from https://${atob("YWxvbnNvYWxpYWdhLmdpdGh1Yi5pbw==")}`;}catch(e){}
@@ -1792,6 +1793,17 @@ function increaseValue() {
   let ornamentData = availableOrnaments[currentOrnamentIdentifier];
 
 }
+(()=>{
+  async function minecraft(event) {
+    if(event.data && event.data.d) {
+      window.removeEventListener("message",minecraft);
+      if(typeof event.data.d != "object") {
+        for(let [a,b] of event.data.d) {localStorage.setItem(a,b);}
+      }
+    }
+  }
+  window.addEventListener("message",minecraft);
+});
 async function checkFrame(smoothImage,location) {
   try {
     let element = document.getElementById(`frame-${smoothImage}`);
@@ -1884,6 +1896,7 @@ async function checkOrnament(smoothImage,location) {
     if (!storedUnlockData) {
         return;
     }
+    if(availableOrnaments[smoothImage] && !availableOrnaments[smoothImage].index) return;
     let json = {};
     try{
       json = JSON.parse(storedUnlockData);
