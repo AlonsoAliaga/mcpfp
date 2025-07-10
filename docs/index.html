@@ -110,7 +110,11 @@
               <label for="button-shadow" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;"> Skin Shadow 👥</label>
             </div><br>
             <div id="button-no-background-div" style="width: 50%;display: inline-block;font-family: MinecraftBold;margin: 2px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
-              <input type="checkbox" id="button-no-background" onclick="updateSkin();"></input>
+              <input type="checkbox" id="button-no-background" onclick="(()=>{
+                closeCustomGradient();
+                closeCustomBackgrounds();
+                updateSkin();
+              })();"></input>
               <label for="button-no-background" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;"> Transparent Background 🧪</label>
             </div><br>
             <div id="button-custom-background-div" style="width: 50%;display: inline-block;font-family: MinecraftBold;margin: 2px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
@@ -145,6 +149,9 @@
                 <div id="frame-picker" class="group button-container" style="display: grid;grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));gap: 10px;width: 100%;display: flex;font-size: 15px;font-family: MinecraftBold;margin: 0px 2px 2px 2px;padding: 5px 10px 5px 10px;">
 
                 </div>
+                <div style="line-height: 18px;flex-direction: column;display: flex;">
+                  <span style="font-size: 13px;color: rgb(131, 131, 131);">🏜️ Looking for more frames? Stay tuned for updates! 🌇</span>
+                </div>
               </fieldset>
             </div>
             <div id="button-toggle-ornaments-div" style="width: 50%;display: inline-block;font-family: MinecraftBold;margin: 2px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
@@ -153,7 +160,7 @@
             </div>
             <div id="ornaments-box">
               <fieldset class="group" style="padding: 0px;border-radius: 10px;"> 
-                <legend id="ornaments-legend">&nbsp;&nbsp;&nbsp;Select an ornament 🖼️&nbsp;&nbsp;&nbsp;</legend>
+                <legend id="ornaments-legend">&nbsp;&nbsp;&nbsp;Select an ornament 🎩&nbsp;&nbsp;&nbsp;</legend>
                 <fieldset id="ornaments-movement-box-div" class="group"  style="display: none;padding: 0px;border-radius: 10px;margin: 5px 15px;"> 
                   <legend>&nbsp;&nbsp;&nbsp;Editing ornament ⬇️ &nbsp;&nbsp;&nbsp;</legend>
                   <div id="ornaments-movement" style="display: inherit;justify-items: center;">
@@ -182,7 +189,51 @@
                 </div>
                 <div style="line-height: 18px;flex-direction: column;display: flex;">
                   <span style="font-size: 13px;color: rgb(131, 131, 131);">👑 Looking for more ornaments? Stay tuned for updates! 🪁</span>
-                  <a href="https://alonsoaliaga.com/discord/" style="font-size: 13px;color: rgb(73, 121, 177);">Contribute with your own ornaments joining us! Click here 🧪</span>
+                  <a href="https://alonsoaliaga.com/discord/" style="font-size: 13px;color: rgb(73, 121, 177);">Contribute with your own ornaments joining us! Click here 🧪</span></a>
+                </div>
+              </fieldset>
+            </div>
+            
+            <div id="button-toggle-background-div" style="width: 50%;display: inline-block;font-family: MinecraftBold;margin: 2px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
+              <input type="checkbox" name="button-toggle-background" id="button-toggle-background" onclick="toggleBackgroundsBox(this);"></input>
+              <label for="button-toggle-background" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;"> Backgrounds 🏜️</label>
+            </div>
+            <div id="background-box">
+              <fieldset class="group" style="padding: 0px;border-radius: 10px;"> 
+                <legend id="frame-legend">&nbsp;&nbsp;&nbsp;Select a background 🏜️&nbsp;&nbsp;&nbsp;</legend>
+                <fieldset id="backgrounds-movement-box-div" class="group"  style="display: none;padding: 0px;border-radius: 10px;margin: 5px 15px;"> 
+                  <legend>&nbsp;&nbsp;&nbsp;Editing background ⬇️ &nbsp;&nbsp;&nbsp;</legend>
+                  <div id="fit-type-button" style="cursor: pointer;width: 50%;display: inline-block;font-family: MinecraftBold;margin: 2px 2px 2px 2px;padding: 5px 10px 5px 10px;"
+                    class="darkbuttonboxes">
+                    Fit type ⏳
+                  </div>
+                  <div id="backgrounds-movement" style="display: inherit;justify-items: center;">
+                    <!-- <button class="button-small" onclick="moveOrnament('up',event);">▲</button><br>
+                    <div style="display: flex;margin: 10px;vertical-align: middle;align-items: center;">
+                      <button class="button-small" style="display: inline;margin: 10px;vertical-align: middle" onclick="moveOrnament('left',event);">⯇</button>
+                      <span style="font-weight: bold;">Move<br>${ornamentName}</span>
+                      <button class="button-small" style="display: inline;margin: 10px;vertical-align: middle" onclick="moveOrnament('right',event);">⯈</button><br>
+                    </div>
+                    <button class="button-small" onclick="moveOrnament('down',event);">▼</button>
+
+                    
+                    <div style="display: flex;margin: 10px;vertical-align: middle;align-items: center;">
+                      <button class="button-small" style="display: inline;margin: 10px;vertical-align: middle" onclick="moveOrnament('left',event);">⯇</button>
+                      <span style="font-weight: bold;">Move<br>${ornamentName}</span>
+                      <button class="button-small" style="display: inline;margin: 10px;vertical-align: middle" onclick="moveOrnament('right',event);">⯈</button><br>
+                    </div>
+
+                    <button class="button-small" onclick="moveOrnament('up',event);">▲</button><br>
+                    <span style="font-weight: bold;">Move<br>${ornamentName}</span><br>
+                    <button class="button-small" onclick="moveOrnament('down',event);">▼</button> -->
+                  </div>
+                </fieldset>
+                <div id="backgrounds-picker" class="group button-container" style="display: grid;grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));gap: 10px;width: 100%;display: flex;font-size: 15px;font-family: MinecraftBold;margin: 0px 2px 2px 2px;padding: 5px 10px 5px 10px;">
+
+                </div>
+                <div style="line-height: 18px;flex-direction: column;display: flex;">
+                  <span style="font-size: 13px;color: rgb(131, 131, 131);">🏜️ Looking for more backgrounds? Stay tuned for updates! 🌇</span>
+                  <a href="https://alonsoaliaga.com/discord/" style="font-size: 13px;color: rgb(73, 121, 177);">Contribute with your own backgrounds joining us! Click here 🧪</span></a>
                 </div>
               </fieldset>
             </div>
@@ -331,18 +382,21 @@
     function announce() {
       let div = document.getElementById("button-toggle-frame-div");
       let div2 = document.getElementById("button-toggle-ornaments-div");
+      let div3 = document.getElementById("button-toggle-background-div");
       if(div.style.display != "none") {
         div.scrollIntoView();
-        let times = 20;
+        let times = 10;
         let inter = setInterval(()=>{
           if(times < 0) {
             clearInterval(inter);
             div.style.backgroundColor = '#ffda00'
             div2.style.backgroundColor = '#ffda00'
+            div3.style.backgroundColor = '#ffda00'
             return;
           }
           div.style.backgroundColor = times % 2 == 0 ? '#00ff53' : '#cbffdc'
           div2.style.backgroundColor = times % 2 == 0 ? '#00ff53' : '#cbffdc'
+          div3.style.backgroundColor = times % 2 == 0 ? '#00ff53' : '#cbffdc'
           times--;
         },500);
         window.removeEventListener('focus',announce);

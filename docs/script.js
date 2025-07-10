@@ -211,6 +211,9 @@ const fonts = {
     }
   }
 }
+let movementBackgroundBoxDiv = document.getElementById("backgrounds-movement-box-div");
+let movementBackgroundArrowsDiv = document.getElementById("backgrounds-movement");
+let fitTypeButton = document.getElementById("fit-type-button");
 const defaultCooldown = 3;
 let copiedTimeout;
 let tryAgainTimeout;
@@ -242,6 +245,7 @@ function copyTextToClipboard(text) {
   alertCopied();
   document.body.removeChild(textArea);
 }
+let selectedBackgroundIdentifier = undefined;
 function alertMessage() {
   if(copiedTimeout) {
     clearTimeout(copiedTimeout);
@@ -599,7 +603,10 @@ function toggleCustomGradientBox(event) {
   let customGradientBox = document.getElementById("custom-gradient-box");
   let customGradientsOpened = document.getElementById("button-toggle-custom-gradient").checked;
   if(customGradientsOpened) {
-    if(event) backgroundType = 2;
+    if(event) {
+      backgroundType = 2;
+      closeCustomBackgrounds();
+    }
     customGradientBox.classList.add("expanded");
     updateSkin(true);
   }else{
@@ -626,6 +633,20 @@ function toggleFrameBox(event) {
   let boxOpened = document.getElementById("button-toggle-frame").checked;
   if(boxOpened) {
     theBox.classList.add("expanded");
+  }else{
+    theBox.classList.remove("expanded");
+    if(typeof frameRendered != "undefined") {
+      frameRendered = undefined;
+      updateSkin();
+    }
+  }
+}
+function toggleBackgroundsBox(event) {
+  let theBox = document.getElementById("background-box");
+  let boxOpened = document.getElementById("button-toggle-background").checked;
+  if(boxOpened) {
+    theBox.classList.add("expanded");
+
   }else{
     theBox.classList.remove("expanded");
     if(typeof frameRendered != "undefined") {
@@ -851,12 +872,8 @@ function previousGradient() {
   if(typeof defaultGradients[currentGradient - 1] !== "undefined") {
     currentGradient--;
   }else currentGradient = Object.keys(defaultGradients).length - 1;
-  let customGradientsOpened = document.getElementById("button-toggle-custom-gradient");
-  if(customGradientsOpened.checked) {
-    let customGradientBox = document.getElementById("custom-gradient-box");
-    customGradientBox.classList.remove("expanded");
-    customGradientsOpened.checked = false;
-  }
+  closeCustomGradient();
+  closeCustomBackgrounds();
   updateSkin(true);
 }
 function nextGradient() {
@@ -864,15 +881,11 @@ function nextGradient() {
   if(typeof defaultGradients[currentGradient + 1] !== "undefined") {
     currentGradient++;
   }else currentGradient = 0;
-  let customGradientsOpened = document.getElementById("button-toggle-custom-gradient");
-  if(customGradientsOpened.checked) {
-    let customGradientBox = document.getElementById("custom-gradient-box");
-    customGradientBox.classList.remove("expanded");
-    customGradientsOpened.checked = false;
-  }
+  closeCustomGradient();
+  closeCustomBackgrounds();
   updateSkin(true);
 }
-let backgroundType = 0; //0 - gradient | 1 - image | 2 - custom gradient
+let backgroundType = 0; //0 - gradient | 1 - image | 2 - custom gradient | 3 - custom background
 let currentGradient = 0;
 let skinType = 0; //0 - username | 1 - custom
 function togglePixelateBorderBox() {
@@ -977,9 +990,15 @@ async function updateSkin(inCache = true) {
   //console.log(finalCanvas.width,finalCanvas.height)
   finalCtx.imageSmoothingEnabled = true;
   //
+  let customBackgroundCanvas = undefined;
   let backgroundCtx = backgroundCanvas.getContext("2d");
   if(!transparentBackground) {
     finalCanvas.style.border = "1px solid #d3d3d3";
+    if(backgroundType == 3 && typeof selectedBackgroundIdentifier == "undefined") {
+      backgroundType = 0;
+      closeCustomGradient();
+      closeCustomBackgrounds();
+    }
     if(backgroundType == 0) {
       backgroundCtx.clearRect(0, 0, backgroundCtx.canvas.width, backgroundCtx.canvas.height);
       createGradient(backgroundCtx);
@@ -988,13 +1007,24 @@ async function updateSkin(inCache = true) {
       //console.log(`Writing custom background..`);
       finalCtx.drawImage(backgroundCanvas,0,0);
       //createGradient(backgroundCtx);
-    }else{
+    }else if(backgroundType == 2) {
       backgroundCtx.clearRect(0, 0, backgroundCtx.canvas.width, backgroundCtx.canvas.height);
       let currentAmount = isNaN(colorsButton.innerText) ? 2 : Math.max(2,Math.min(maxColorsAmount,parseInt(colorsButton.innerText)));
       createGradient(backgroundCtx,defaultColors.slice(0, currentAmount));
       finalCtx.drawImage(backgroundCanvas,0,0);
+    }else{
+      customBackgroundCanvas = document.createElement("canvas");
+      let customBackgroundCanvasCtx = customBackgroundCanvas.getContext("2d");
+      customBackgroundCanvas.width = 300;
+      customBackgroundCanvas.height = 300;
+      backgroundCtx.clearRect(0, 0, backgroundCtx.canvas.width, backgroundCtx.canvas.height);
+      //console.log(`🧪 Background canvas width: ${customBackgroundCanvas.width} | height: ${customBackgroundCanvas.height}`)
+      //console.log(`🧪 Background canvas width: ${backgroundCanvas.width} | height: ${backgroundCanvas.height}`)
+      //console.log(`🧪 Background canvas width: ${backgroundCtx.canvas.width} | height: ${backgroundCtx.canvas.height}`)
+      await drawCustomBackground(customBackgroundCanvasCtx);
+      finalCtx.drawImage(backgroundCanvas,0,0);
     }
-    if(pixelateBackground) {
+    if(typeof customBackgroundCanvas == "undefined" && pixelateBackground) {
       pixelateCtx(finalCtx)
     }
   }else{
@@ -1046,6 +1076,18 @@ async function updateSkin(inCache = true) {
 
   await addOrnaments(skinCtx);
 
+  //if(customBackgroundCanvas) console.log("customBackgroundCanvas",customBackgroundCanvas.width,customBackgroundCanvas.height);
+  //else console.log("customBackgroundCanvas undefined undefined");
+  //console.log("backgroundCtx",backgroundCtx.canvas.width,backgroundCtx.canvas.height);
+  //console.log("SkinCtx",skinCtx.canvas.width,skinCtx.canvas.height);
+  //console.log("finalCtx",finalCtx.canvas.width,finalCtx.canvas.height);
+
+  if(typeof customBackgroundCanvas != "undefined") {
+    finalCtx.drawImage(customBackgroundCanvas,0,0);
+    if(pixelateBackground) {
+      pixelateCtx(finalCtx);
+    }
+  }
   if(revertSkin) {
     finalCtx.save();
     finalCtx.scale(-1, 1);
@@ -1685,6 +1727,39 @@ function loadOrnaments() {
   }
   lockOrnamentsWithMessage(`🔒 Unlock this frame!`)
 }
+let singleClickTimerBackground = undefined;
+function loadBackgrounds() {
+  let backgroundDiv = document.getElementById("backgrounds-picker");
+  for(let backgroundIdentifier of Object.keys(availableBackgrounds)) {
+    let backgroundData = availableBackgrounds[backgroundIdentifier];
+    let element = document.createElement("div");
+    element.classList.add("render-background-card");
+    element.id = `background-${backgroundIdentifier}`
+    element.style.margin = "2px"
+    element.dataset.backgroundIdentifier = backgroundIdentifier;
+    element.dataset.frameUrl = backgroundData.image;
+    element.dataset.frameName = backgroundData.name;
+    element.innerHTML = `
+              <div style="display:inline-block;min-width:fit-content;margin-top:2px;font-size:15px;font-weight:bold;" class="render-label">${backgroundData.name}</div>
+              <img style="image-rendering: pixelated" src="${backgroundData.image}" alt="${backgroundData.name}">`
+    element.onclick = function(){
+      if(singleClickTimerBackground) {
+        clearTimeout(singleClickTimerBackground);
+        singleClickTimerBackground = undefined;
+        //console.log(`DOUBLE CLICK!`)
+        selectBackground(backgroundIdentifier, false);
+        return;
+      }
+      singleClickTimerBackground = setTimeout(function() {
+        //console.log(`SINGLE CLICK!`)
+        singleClickTimerBackground = undefined;
+        selectBackground(backgroundIdentifier);
+      }, 250);   
+    };
+    backgroundDiv.appendChild(element);
+  }
+  lockBackgroundsWithMessage(`🔒 Unlock this background!`)
+}
 async function updateOrnamentCards(toEnable = []) {
   for(let ornamentIdentifier of Object.keys(availableOrnaments)) {
     let element = document.getElementById(`ornament-${ornamentIdentifier}`);
@@ -1703,9 +1778,9 @@ async function selectOrnament(ornamentIdentifier, shouldUpdateSkin = true) {
   }
   let element = document.getElementById(`ornament-${ornamentIdentifier}`);
   if(!element) return;
-  console.log(`[A] Selecting ${ornamentIdentifier}`)
+  //console.log(`[A] Selecting ${ornamentIdentifier}`)
   if(!await checkOrnament(ornamentIdentifier)) return;
-  console.log(`[B] Selecting ${ornamentIdentifier}`)
+  //console.log(`[B] Selecting ${ornamentIdentifier}`)
   if(shouldUpdateSkin) {
     if(typeof element.dataset.enabled == "undefined") {
       element.dataset.enabled = "yes";
@@ -1760,6 +1835,108 @@ async function selectOrnament(ornamentIdentifier, shouldUpdateSkin = true) {
   }
   if(shouldUpdateSkin) updateSkin();
 }
+function closeCustomBackgrounds() {
+  let customBackgroundsOpened = document.getElementById("button-toggle-background");
+  if(customBackgroundsOpened.checked) {
+    let customBackgroundsBox = document.getElementById("background-box");
+    customBackgroundsBox.classList.remove("expanded");
+    customBackgroundsOpened.checked = false;
+  }
+}
+function closeCustomGradient() {
+  let customGradientsOpened = document.getElementById("button-toggle-custom-gradient");
+  if(customGradientsOpened.checked) {
+    let customGradientBox = document.getElementById("custom-gradient-box");
+    customGradientBox.classList.remove("expanded");
+    customGradientsOpened.checked = false;
+  }
+}
+async function selectBackground(backgroundIdentifier, shouldUpdateSkin = true) {
+  let backgroundData = availableBackgrounds[backgroundIdentifier];
+  if(typeof backgroundData == "undefined") {
+    return;
+  }
+  let element = document.getElementById(`background-${backgroundIdentifier}`);
+  if(!element) return;
+  console.log(`[A] Selecting ${backgroundIdentifier}`)
+  if(!await checkBackground(backgroundIdentifier)) return;
+  console.log(`[B] Selecting ${backgroundIdentifier}`)
+  //close others:
+  closeCustomGradient();
+  if(shouldUpdateSkin) {
+    if(selectedBackgroundIdentifier == backgroundIdentifier) {
+      backgroundType = 0;
+      selectedBackgroundIdentifier = undefined;
+      shouldUpdateSkin = true;
+    }else{
+      selectedBackgroundIdentifier = backgroundIdentifier;
+      backgroundType = 3;
+      shouldUpdateSkin = true;
+    }
+  }else{
+    backgroundType = 3;
+    if(selectedBackgroundIdentifier !== backgroundIdentifier) {
+      shouldUpdateSkin = true;
+    }
+    selectedBackgroundIdentifier = backgroundIdentifier;
+  }
+  console.log(`🏜️ Final selected background is ${selectedBackgroundIdentifier}`)
+  let backgrounds = [...document.querySelectorAll(".render-background-card")];
+  for(let backgroundElement of backgrounds) {
+    if(backgroundElement.dataset.backgroundIdentifier == selectedBackgroundIdentifier) {
+      backgroundElement.classList.add("background-selected");
+      //console.log(`Adding selected class to ${backgroundElement.dataset.backgroundIdentifier}`)
+    }else{
+      backgroundElement.classList.remove("background-selected");
+      //console.log(`Removing selected class from ${backgroundElement.dataset.backgroundIdentifier}`)
+    }
+  }
+  let movementBoxDiv = document.getElementById("backgrounds-movement-box-div");
+  let movementArrowsDiv = document.getElementById("backgrounds-movement");
+  movementBoxDiv.style.display = "none";
+  /*
+  if(typeof selectedBackgroundIdentifier != "undefined") {
+    if(backgroundData.totalLocked) {
+      movementBoxDiv.style.display = "none";
+      //movementArrowsDiv.textContent = `You shouldn't be reading this..`
+    }else{
+      if(backgroundData.type == "force-fit") {
+        
+      }else if(backgroundData.type == "fit") {
+        
+      }else if(backgroundData.type == "original") {
+        
+      }
+      movementBoxDiv.style.display = null;
+      movementArrowsDiv.dataset.movingBackground = backgroundIdentifier;
+      //movementArrowsDiv.textContent = `Loading arrows..`
+      if(backgroundData.hasOwnProperty("x") && backgroundData.hasOwnProperty("y")) {
+        movementArrowsDiv.innerHTML = `<button class="button-small" onclick="moveOrnament('up',event);">▲</button><br>
+                    <div style="display: flex;margin: 10px;vertical-align: middle;align-items: center;">
+                      <button class="button-small" style="display: inline;margin: 10px;vertical-align: middle" onclick="moveOrnament('left',event);">⯇</button>
+                      <span style="font-weight: bold;">Move<br>${backgroundData.name}</span>
+                      <button class="button-small" style="display: inline;margin: 10px;vertical-align: middle" onclick="moveOrnament('right',event);">⯈</button><br>
+                    </div>
+                    <button class="button-small" onclick="moveOrnament('down',event);">▼</button>`
+      }else if(backgroundData.hasOwnProperty("x")) {
+        movementArrowsDiv.innerHTML = `<div style="display: flex;margin: 10px;vertical-align: middle;align-items: center;">
+                      <button class="button-small" style="display: inline;margin: 10px;vertical-align: middle" onclick="moveOrnament('left',event);">⯇</button>
+                      <span style="font-weight: bold;">Move<br>${backgroundData.name}</span>
+                      <button class="button-small" style="display: inline;margin: 10px;vertical-align: middle" onclick="moveOrnament('right',event);">⯈</button><br>
+                    </div>`
+      }else{
+        movementArrowsDiv.innerHTML = `<button class="button-small" onclick="moveOrnament('up',event);">▲</button><br>
+                    <span style="font-weight: bold;">Move<br>${backgroundData.name}</span><br>
+                    <button class="button-small" onclick="moveOrnament('down',event);">▼</button>`
+      }
+    }
+  }else{
+    movementBoxDiv.style.display = "none";
+    //movementArrowsDiv.textContent = `You shouldn't be reading this..`
+  }
+  */
+  if(shouldUpdateSkin) updateSkin();
+}
 function moveOrnament(direction,event) {
   let movementArrowsDiv = document.getElementById("ornaments-movement");
   let currentOrnamentIdentifier = movementArrowsDiv.dataset.movingOrnament;
@@ -1789,6 +1966,274 @@ function moveOrnament(direction,event) {
     }
   }
   if(modified) updateSkin();
+}
+function moveBackground(direction,event) {
+  if(!selectedBackgroundIdentifier) return;
+  let backgroundData = availableBackgrounds[selectedBackgroundIdentifier];
+  if(!backgroundData) return;
+  if(backgroundData.totalLocked) return;
+  //let revertSkin = document.getElementById("button-revert-skin").checked;
+  let toModify = event.altKey || event.shiftKey ? 5 : 1;
+  //toModify = ["left","right"].includes(direction) ? (revertSkin ? toModify * -1 : toModify) : toModify;
+  let modified = false;
+  if(backgroundData.hasOwnProperty("x")) {
+    if(direction == "left") {
+      backgroundData.x = backgroundData.x - toModify;
+      modified = true;
+    }else if(direction == "right") {
+      backgroundData.x = backgroundData.x + toModify;
+      modified = true;
+    }
+  }
+  if(backgroundData.hasOwnProperty("y")) {
+    if(direction == "up") {
+      backgroundData.y = backgroundData.y - toModify;
+      modified = true;
+    }else if(direction == "down") {
+      backgroundData.y = backgroundData.y + toModify;
+      modified = true;
+    }
+  }
+  if(modified) updateSkin();
+}
+async function drawCustomBackground(backgroundCtx) {
+  movementBackgroundBoxDiv.style.display = "none";
+  if(typeof selectedBackgroundIdentifier == "undefined") return;
+  let backgroundData = availableBackgrounds[selectedBackgroundIdentifier];
+  if(typeof backgroundData == "undefined") return;
+  if(typeof backgroundData.buffer == "undefined") {
+    try{
+      let buffer = await loadImage(backgroundData.image);
+      backgroundData.buffer = buffer;
+      //console.log(`[✅] Downloaded background: ${backgroundData.name} => ${backgroundData.image}`);
+    }catch(e) {
+      //console.log(`[❌] Error downloading background: ${backgroundData.name} => ${backgroundData.image}`);
+      //console.log(e);
+    }
+  }
+  let multiplier = 1;
+  let customBackgroundBuffer = backgroundData.buffer;
+  if(typeof customBackgroundBuffer != "undefined") {
+    //console.log(`[🪅] Drawing background: ${backgroundData.name}`);
+    //console.log(`Custom background width: ${customBackgroundBuffer.width} | height: ${customBackgroundBuffer.height}`)
+    //console.log(`Background canvas width: ${backgroundCtx.canvas.width} | height: ${backgroundCtx.canvas.height}`)
+    let lockX = false;
+    let lockY = false;
+    if(backgroundData.type == "original") {
+      backgroundCtx.drawImage(customBackgroundBuffer,backgroundData.x, backgroundData.y);
+      //console.log(`[Unlocked] New width: ${customBackgroundBuffer.width} | New height: ${customBackgroundBuffer.height}`)
+    }else if(backgroundData.type == "force-fit") {
+      backgroundCtx.drawImage(customBackgroundBuffer,0, 0,backgroundCtx.canvas.width,backgroundCtx.canvas.height);
+      lockX = true;
+      lockY = true;
+      //console.log(`[LockX & LockY] New width: ${backgroundCtx.canvas.width} | New height: ${backgroundCtx.canvas.height}`)
+    }else if(backgroundData.type == "fit") {
+      if(customBackgroundBuffer.width <= customBackgroundBuffer.height) {
+        let proportion = 300 / customBackgroundBuffer.width
+        let newWidth = proportion * customBackgroundBuffer.width
+        let newHeight = proportion * customBackgroundBuffer.height
+        backgroundCtx.drawImage(customBackgroundBuffer,backgroundData.x, backgroundData.y,newWidth,newHeight);
+        //console.log(`[LockX] New width: ${newWidth} | New height: ${newHeight} | ${proportion}`)
+        lockX = true;
+        if(newWidth == 300 && newHeight == 300) {
+          lockX = true;
+          lockY = true;
+        }
+      }else{
+        let proportion = 300 / customBackgroundBuffer.height
+        let newWidth = proportion * customBackgroundBuffer.width
+        let newHeight = proportion * customBackgroundBuffer.height
+        backgroundCtx.drawImage(customBackgroundBuffer,backgroundData.x, backgroundData.y,newWidth,newHeight);
+        //console.log(`[LockY] New width: ${newWidth} | New height: ${newHeight} | ${proportion}`)
+        lockY = true;
+        if(newWidth == 300 && newHeight == 300) {
+          lockX = true;
+          lockY = true;
+        }
+      }
+    }
+    if(backgroundData.totalLocked) {
+      movementBackgroundBoxDiv.style.display = "none";
+    }else{
+      movementBackgroundBoxDiv.style.display = null;
+      updateFitTypeButton(backgroundData.type);
+      if(!lockX && !lockY) {
+        movementBackgroundArrowsDiv.style.display = null;
+        movementBackgroundArrowsDiv.dataset.movingBackground = selectedBackgroundIdentifier;
+        movementBackgroundArrowsDiv.innerHTML = `<button class="button-small" onclick="moveBackground('up',event);">▲</button><br>
+                    <div style="display: flex;margin: 10px;vertical-align: middle;align-items: center;">
+                      <button class="button-small" style="display: inline;margin: 10px;vertical-align: middle" onclick="moveBackground('left',event);">⯇</button>
+                      <span style="font-weight: bold;">Move<br>${backgroundData.name}</span>
+                      <button class="button-small" style="display: inline;margin: 10px;vertical-align: middle" onclick="moveBackground('right',event);">⯈</button><br>
+                    </div>
+                    <button class="button-small" onclick="moveBackground('down',event);">▼</button>`
+      }else if(!lockX) {
+        movementBackgroundArrowsDiv.style.display = null;
+        movementBackgroundArrowsDiv.innerHTML = `<div style="display: flex;margin: 10px;vertical-align: middle;align-items: center;">
+                      <button class="button-small" style="display: inline;margin: 10px;vertical-align: middle" onclick="moveBackground('left',event);">⯇</button>
+                      <span style="font-weight: bold;">Move<br>${backgroundData.name}</span>
+                      <button class="button-small" style="display: inline;margin: 10px;vertical-align: middle" onclick="moveBackground('right',event);">⯈</button><br>
+                    </div>`
+      }else if(!lockY) {
+        movementBackgroundArrowsDiv.style.display = null;
+        movementBackgroundArrowsDiv.innerHTML = `<button class="button-small" onclick="moveBackground('up',event);">▲</button><br>
+                    <span style="font-weight: bold;">Move<br>${backgroundData.name}</span><br>
+                    <button class="button-small" onclick="moveBackground('down',event);">▼</button>`
+      }else{
+        movementBackgroundArrowsDiv.style.display = "none";
+      }
+    }
+  }else{
+    console.log(`[❌] Undefined! Not drawing background: ${ornamentData.name}`);
+  }
+}
+//types: "original", "fit", "force-fit"
+let availableBackgrounds = {
+  "b-8-bit-game": {
+    name: "8-bit Game",
+    featureName: "8-bit Game Background",
+    image: "https://i.imgur.com/vgW8pFD.png",
+    // totalLocked: true,
+    type: "fit",
+    x: 0,
+    y: 0,
+    z: 0,
+  },
+  "b-8-bit-retro-game": {
+    name: "8-bit Retro Game",
+    featureName: "8-bit Retro Game Background",
+    image: "https://i.imgur.com/nclem2H.png",
+    // totalLocked: true,
+    type: "fit",
+    x: 0,
+    y: 0,
+    z: 15,
+  },
+  "b-cute-8-bit-retro-game": {
+    name: "Cute 8-bit Retro Game",
+    featureName: "Cute 8-bit Retro Game Background",
+    image: "https://i.imgur.com/NYlGgzK.png",
+    // totalLocked: true,
+    type: "fit",
+    x: 0,
+    y: 0,
+    z: 15,
+  },
+  "b-pixel-future-city": {
+    name: "Pixel Future City",
+    featureName: "Pixel Future City Background",
+    image: "https://i.imgur.com/LVWrndL.png",
+    // totalLocked: true,
+    type: "fit",
+    x: 0,
+    y: 0,
+    z: 15,
+  },
+  "b-pixel-bricks": {
+    name: "Pixel Bricks",
+    featureName: "Pixel Bricks Background",
+    image: "https://i.imgur.com/YXAeE8G.png",
+    totalLocked: true,
+    type: "fit",
+    x: 0,
+    y: 0,
+    z: 15,
+  },
+  "b-pixel-wood-planks": {
+    name: "Pixel Wood Planks",
+    featureName: "Pixel Wood Planks Background",
+    image: "https://i.imgur.com/hFSLSi8.png",
+    totalLocked: true,
+    type: "fit",
+    x: 0,
+    y: 0,
+    z: 15,
+  },
+  "b-pixel-water": {
+    name: "Pixel Water",
+    featureName: "Pixel Water Background",
+    image: "https://i.imgur.com/XvCliXp.png",
+    totalLocked: true,
+    type: "fit",
+    x: 0,
+    y: 0,
+    z: 15,
+  },
+  "b-pixel-lava": {
+    name: "Pixel Lava",
+    featureName: "Pixel Lava Background",
+    image: "https://i.imgur.com/knQypL1.png",
+    totalLocked: true,
+    type: "fit",
+    x: 0,
+    y: 0,
+    z: 15,
+  },
+  "b-pixel-old-city": {
+    name: "Pixel Old City",
+    featureName: "Pixel Old City Background",
+    image: "https://i.imgur.com/VlvJ6xF.png",
+    totalLocked: true,
+    type: "fit",
+    x: 0,
+    y: 0,
+    z: 15,
+  },
+  "b-pixel-moon-city": {
+    name: "Pixel Moon City",
+    featureName: "Pixel Moon City Background",
+    image: "https://i.imgur.com/O2wUtpK.png",
+    totalLocked: true,
+    type: "fit",
+    x: 0,
+    y: 0,
+    z: 15,
+  },
+  "b-minecraft": {
+    name: "Minecraft",
+    featureName: "Minecraft Background",
+    image: "https://i.imgur.com/t9LqQ21.png",
+    type: "fit",
+    x: 0,
+    y: 0,
+    z: 15,
+  },
+  "b-minecraft-sky": {
+    name: "Minecraft Sky",
+    featureName: "Minecraft Sky Background",
+    image: "https://i.imgur.com/gmE2oPl.png",
+    type: "fit",
+    x: 0,
+    y: 0,
+    z: 15,
+  },
+  "b-minecraft-nether": {
+    name: "Minecraft Nether",
+    featureName: "Minecraft Nether Background",
+    image: "https://i.imgur.com/yP2kFJv.png",
+    type: "fit",
+    x: 0,
+    y: 0,
+    z: 15,
+  },
+  "b-minecraft-creeper": {
+    name: "Minecraft Creeper",
+    featureName: "Minecraft Creeper Background",
+    image: "https://i.imgur.com/lryLQfg.png",
+    type: "original",
+    x: -132,
+    y: -88,
+    z: 15,
+  },
+  "b-minecraft-desert": {
+    name: "Minecraft Desert",
+    featureName: "Minecraft Desert Background",
+    image: "https://i.imgur.com/BjvemqN.png",
+    type: "fit",
+    x: -43,
+    y: 0,
+    z: 15,
+  },
 }
 function increaseValue() {
   let ornamentData = availableOrnaments[currentOrnamentIdentifier];
@@ -1887,6 +2332,92 @@ async function checkFrame(smoothImage,location) {
   } catch (error) {
       localStorage.removeItem(`lobbyFreim-${btoa(smoothImage)}`);
       //console.warn(`Error checking frame: `,error);
+  }
+}
+async function checkBackground(smoothImage,location) {
+  try {
+    let element = document.getElementById(`background-${smoothImage}`);
+    if(!element) return;
+    if(availableBackgrounds[smoothImage] && !availableBackgrounds[smoothImage].z) return smoothImage;
+    const storedUnlockData = localStorage.getItem(`lobbyVakgraun-${btoa(smoothImage)}`);
+    if (!storedUnlockData) {
+        return;
+    }
+    let json = {};
+    try{
+      json = JSON.parse(storedUnlockData);
+    }catch(e) {}
+    let { unlockedUntil, signature } = json;
+    if (typeof unlockedUntil !== 'number' || typeof signature !== 'string') {
+        localStorage.removeItem(`lobbyVakgraun-${btoa(smoothImage)}`);
+        return;
+    }
+    const expectedSignature = await generateSha256Hash(unlockedUntil + "WhatTheHellAreYouLookingForHere?");
+    let currentTime = Date.now(); 
+    if (signature === expectedSignature && currentTime < unlockedUntil) {
+      let remainingTimeMs = unlockedUntil - currentTime;
+      let remainingHours = Math.floor(remainingTimeMs / (1000 * 60 * 60));
+      let remainingMinutes = Math.floor((remainingTimeMs % (1000 * 60 * 60)) / (1000 * 60));
+      if(location) {
+        console.warn("Unlocking..");
+        element.innerHTML = element.innerHTML + `<p id="time-left-${smoothImage}" style="margin: 0px" class="unlock-text-frame">Unlocked for<br>${remainingHours}h ${remainingMinutes}m</p>`;
+        element.classList.remove("adblockframe")
+        element.querySelector(".overlay")?.remove();
+        element.disabled = false;
+        element.dataset.loaded = "ornament";
+        element.onclick = function(){
+          selectOrnament(smoothImage);
+        };
+        let timeLeftP = document.getElementById(`time-left-${smoothImage}`);
+        if(timeLeftP) {
+          let a = setInterval(()=>{
+            if(currentTime >= unlockedUntil) {
+              let card = document.getElementById(`background-${smoothImage}`)
+              if(!card) return;
+              let frameData = availableFrames[smoothImage];
+              card.classList.add('adlockedframe');
+              const ov = document.createElement('div');
+              timeLeftP.remove();
+              ov.className = 'overlay';
+              let frameUrl = card.dataset.frameUrl
+              let frameName = card.dataset.frameName
+              ov.innerHTML = `<span style="color: #ff8484;">${frameName}</span><img src="${frameUrl}"><span style="" class="toblink">Unlock this background!</span>`;
+              ov.onclick = function() {
+                let opened = window.open(`./unlock.html`,`_blank`);
+                if(opened) {
+                  setTimeout(()=>{
+                    let data = {feature:smoothImage,featureName:frameData.featureName,uuid:uniqueId,elementId:card.id}
+                    opened.postMessage(data,"*");
+                  },500);
+                }
+              }
+              card.append(ov);
+              localStorage.removeItem(`lobbyVakgraun-${btoa(smoothImage)}`)
+              clearInterval(a);
+              return;
+            }
+            currentTime = Date.now();
+            remainingTimeMs = unlockedUntil - currentTime;
+            remainingHours = Math.floor(remainingTimeMs / (1000 * 60 * 60));
+            remainingMinutes = Math.floor((remainingTimeMs % (1000 * 60 * 60)) / (1000 * 60));
+            let remainingSeconds = Math.floor((remainingTimeMs % (1000 * 60)) / 1000);
+            if(remainingSeconds < 0) return;
+            timeLeftP.innerHTML = `Unlocked for<br>${remainingHours}h ${remainingMinutes}m ${remainingSeconds}s`;
+          },1000)
+        }
+      }else {
+        console.warn("Unlocking but no location..");
+      }
+      return "Failed"
+    } else {
+      if (signature !== expectedSignature) {
+          console.warn("Unlock data tampered with! Signature mismatch.");
+      }
+      localStorage.removeItem(`lobbyVakgraun-${btoa(smoothImage)}`);
+    }
+  } catch (error) {
+      localStorage.removeItem(`lobbyVakgraun-${btoa(smoothImage)}`);
+      console.warn(`Error checking frame: `,error);
   }
 }
 async function checkOrnament(smoothImage,location) {
@@ -2451,6 +2982,38 @@ async function lockOrnamentsWithMessage(message,iconUrl='https://raw.githubuserc
     card.append(ov);
   }
 }
+let loadedBackgrounds = false;
+async function lockBackgroundsWithMessage(message,iconUrl='https://raw.githubusercontent.com/AlonsoAliaga/mc-renders/main/assets/images/lock-icon.png') {
+  if(loadedBackgrounds) return;
+  loadedBackgrounds = true;
+  for(let n of Object.keys(availableBackgrounds)) {
+    let card = document.getElementById(`background-${n}`)
+    let imageData = availableBackgrounds[n];
+    if(!card || !imageData.z) continue;
+    if(await checkBackground(n,"undefined")) {
+      card.dataset.loaded = "background";
+      continue;
+    }
+    card.classList.add('adlockedframe');
+    card.dataset.enabled = "no";
+    card.classList.remove("background-selected")
+    const ov = document.createElement('div');
+    ov.className = 'overlay';
+    let frameUrl = card.dataset.frameUrl
+    let frameName = card.dataset.frameName
+    ov.innerHTML = `<span style="color: #ff8484;">${frameName}</span><img src="${frameUrl}"><span style="" class="toblink">${message}</span>`;
+    ov.onclick = function() {
+      let opened = window.open(`./unlock.html`,`_blank`);
+      if(opened) {
+        setTimeout(()=>{
+          let data = {feature:n,featureName:imageData.featureName,uuid:uniqueId,elementId:card.id}
+          opened.postMessage(data,"*");
+        },500);
+      }
+    }
+    card.append(ov);
+  }
+}
 async function loadImage(url) {
 	return new Promise((resolve, reject) => {
 		const img = new Image()
@@ -2517,10 +3080,46 @@ function lockElementWithMessage(element,className,message,iconUrl='https://raw.g
     element.onclick = function(){};
   }
 }
+fitTypeButton.addEventListener("click",function(event) {
+  if(typeof selectedBackgroundIdentifier == "undefined") return;
+  let backgroundData = availableBackgrounds[selectedBackgroundIdentifier];
+  if(!backgroundData) return;
+  if(backgroundData.totalLocked) {
+    alert("Playing with the code..");
+    return;
+  }
+  if(!backgroundData.type) {
+    backgroundData.type = "fit";
+  }else if(backgroundData.type == "fit") {
+    backgroundData.type = "force-fit";
+  }else if(backgroundData.type == "force-fit") {
+    backgroundData.type = "original";
+  }else if(backgroundData.type == "original") {
+    backgroundData.type = "fit";
+  }else {
+    backgroundData.type = "fit";
+  }
+  updateFitTypeButton(backgroundData.type);
+  updateSkin(true)
+})
+function updateFitTypeButton(type){
+  if(!type) {
+    fitTypeButton.textContent = `Undefined 🧪`
+  }else if(type == "fit") {
+    fitTypeButton.textContent = `Fit 🧪`
+  }else if(type == "force-fit") {
+    fitTypeButton.textContent = `Force Fit 🧪`
+  }else if(type == "original") {
+    fitTypeButton.textContent = `Original 🧪`
+  }else {
+    fitTypeButton.textContent = `Unknown 🧪`
+  }
+}
 document.addEventListener("DOMContentLoaded", () => {
   loadCounter();
   loadFrames();
   loadOrnaments();
+  loadBackgrounds();
   checkSite(window);
   setTimeout(()=>{
     loadChecking();
