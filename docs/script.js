@@ -1858,9 +1858,9 @@ async function selectBackground(backgroundIdentifier, shouldUpdateSkin = true) {
   }
   let element = document.getElementById(`background-${backgroundIdentifier}`);
   if(!element) return;
-  console.log(`[A] Selecting ${backgroundIdentifier}`)
+  //console.log(`[A] Selecting ${backgroundIdentifier}`)
   if(!await checkBackground(backgroundIdentifier)) return;
-  console.log(`[B] Selecting ${backgroundIdentifier}`)
+  //console.log(`[B] Selecting ${backgroundIdentifier}`)
   //close others:
   closeCustomGradient();
   if(shouldUpdateSkin) {
@@ -1880,7 +1880,7 @@ async function selectBackground(backgroundIdentifier, shouldUpdateSkin = true) {
     }
     selectedBackgroundIdentifier = backgroundIdentifier;
   }
-  console.log(`🏜️ Final selected background is ${selectedBackgroundIdentifier}`)
+  //console.log(`🏜️ Final selected background is ${selectedBackgroundIdentifier}`)
   let backgrounds = [...document.querySelectorAll(".render-background-card")];
   for(let backgroundElement of backgrounds) {
     if(backgroundElement.dataset.backgroundIdentifier == selectedBackgroundIdentifier) {
@@ -2364,9 +2364,9 @@ async function checkBackground(smoothImage,location) {
         element.classList.remove("adblockframe")
         element.querySelector(".overlay")?.remove();
         element.disabled = false;
-        element.dataset.loaded = "ornament";
+        element.dataset.loaded = "background";
         element.onclick = function(){
-          selectOrnament(smoothImage);
+          selectBackground(smoothImage);
         };
         let timeLeftP = document.getElementById(`time-left-${smoothImage}`);
         if(timeLeftP) {
