@@ -43,7 +43,17 @@
     const SECRET_SALT_FEATURE = "WhatTheHellAreYouLookingForHere?"; // Change this to a strong, unique string
     const button = document.getElementById("support-button");
     (() => {
-        populate();
+        setTimeout(()=>{
+          let div = document.createElement("div");
+          let h2 = document.createElement("h2");
+          h2.style.cssText = "font-size: 15px ;text-align: center;";
+          h2.innerHTML = `⛔ This site doesn't contain any ad from <a href="https://www.google.com" rel="noopener" target="_blank">Google</a>!<br><br>`
+          div.appendChild(h2);
+          document.body.appendChild(div);
+        },0);
+        setTimeout(()=>{
+          populate();
+        },150);
         function populate(){
           fetch(decodeAndAdd("aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL0Fsb25zb0FsaWFnYS9BbG9uc29BbGlhZ2FBUEkvcmVmcy9oZWFkcy9tYWluL2FwaS9hZHMvYWRzLmpzb24="))
             .then(res => res.json())
@@ -225,8 +235,8 @@
     function processAds(){}
   </script>
 </body>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5185973148525065"
-   crossorigin="anonymous"></script>
+<!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5185973148525065"
+   crossorigin="anonymous"></script> -->
 <script src="resources.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jquery.iframetracker@2.1.0/dist/jquery.iframetracker.min.js"></script>
