@@ -3080,6 +3080,7 @@ function lockElementWithMessage(element,className,message,iconUrl='https://raw.g
     element.onclick = function(){};
   }
 }
+let myTimeout;
 fitTypeButton.addEventListener("click",function(event) {
   if(typeof selectedBackgroundIdentifier == "undefined") return;
   let backgroundData = availableBackgrounds[selectedBackgroundIdentifier];
@@ -3127,6 +3128,9 @@ document.addEventListener("DOMContentLoaded", () => {
       loadChecking();
     },10000)
   },2500)
+  setTimeout(()=>{
+    if(typeof window.getRandomStyle == "undefined" && myTimeout == undefined) processAds();
+  },2000)
 });
 function processAds() {
   checkingDate();
