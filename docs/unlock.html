@@ -151,7 +151,7 @@
                 startCount();
             }
             function startCount() {
-                if(adBlockEnabled) {
+                if(typeof adBlockEnabled == "undefined" || adBlockEnabled) {
                     button.innerText = `🚫 Disable AdBlock to unlock special features.`;
                     return;
                 }
