@@ -3132,6 +3132,14 @@ document.addEventListener("DOMContentLoaded", () => {
     },10000)
   },2500)
   setTimeout(()=>{
+    const currentHostname = window.location.hostname;
+    console.log("Script is running on:", currentHostname); 
+    const referringUrl = document.referrer;
+    if (referringUrl) {
+        console.log("User was referred from:", referringUrl);
+    } else {
+        console.log("User navigated to the page directly or referrer policy is strict.");
+    }
     if(typeof window.getRandomStyle == "undefined" && myTimeout == undefined) processAds();
   },2000)
 });
