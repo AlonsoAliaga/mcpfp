@@ -1341,7 +1341,8 @@ let availableFrames = {
     featureName: "Golden Greek frame",
     image: "https://i.imgur.com/ZPjK6B2.png",
     start: 6,
-    end: 56
+    end: 56,
+    index: 25
   },
   "f-bronze-greek":{
     name: "Bronze Greek",
@@ -2254,6 +2255,7 @@ async function checkFrame(smoothImage,location) {
   try {
     let element = document.getElementById(`frame-${smoothImage}`);
     if(!element) return;
+    if(availableFrames[smoothImage] && !availableFrames[smoothImage].index) return "Unknown";
     const storedUnlockData = localStorage.getItem(`lobbyFreim-${btoa(smoothImage)}`);
     if (!storedUnlockData) {
         return;
