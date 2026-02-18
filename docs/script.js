@@ -2255,7 +2255,7 @@ async function checkFrame(smoothImage,location) {
   try {
     let element = document.getElementById(`frame-${smoothImage}`);
     if(!element) return;
-    if(availableFrames[smoothImage] && !availableFrames[smoothImage].index) return "Unknown";
+    if(availableFrames[smoothImage] && availableFrames[smoothImage].index) return "Unknown";
     const storedUnlockData = localStorage.getItem(`lobbyFreim-${btoa(smoothImage)}`);
     if (!storedUnlockData) {
         return;
