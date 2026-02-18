@@ -32,7 +32,7 @@ const hiddenBody = false
 const isSpanishLanguage = navigator.language === 'es-ES' ? true : false;
 const imagesCdnUrl = 'https://cdn.jsdelivr.net/gh/The-3Labs-Team/js-anti-adblock@main/assets'  
 const body = document.querySelector('body')
-window.onload = async () => {
+window.addEventListener('load', async () => {
   const adBlockEnabled = await detectAdBlock();
   if (adBlockEnabled) {
     processAds();
@@ -45,7 +45,7 @@ window.onload = async () => {
     }
     showBannerAdBlock();
   }
-};
+});
 function showBannerAdBlock () {
   body.style.overflow = 'hidden'
   let reminder = allowReminder ? `<span onclick="remindMe();" style="width: 50%; height: 60px; padding: 10px; text-align: center; display: flex; justify-content: center; align-items:center; cursor: pointer; background-color: #ff5a5a; color: white; font-weight: bold; ">
