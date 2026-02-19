@@ -1321,8 +1321,7 @@ let availableFrames = {
     featureName: "Basic Blue frame",
     image: "https://i.imgur.com/7ucUhdA.png",
     start: 5,
-    end: 26,
-    index: 25
+    end: 26
   },
   "f-basic-redstone":{
     name: "Basic Redstone",
@@ -1352,14 +1351,16 @@ let availableFrames = {
     featureName: "Bronze Greek frame",
     image: "https://i.imgur.com/Irw6mK4.png",
     start: 6,
-    end: 56
+    end: 56,
+    index: 25
   },
   "f-orange-greek":{
     name: "Orange Greek",
     featureName: "Orange Greek frame",
     image: "https://i.imgur.com/BeDvXMI.png",
     start: 6,
-    end: 56
+    end: 56,
+    index: 25
   },
   "f-quartz-greek":{
     name: "Quartz Greek",
@@ -1380,7 +1381,8 @@ let availableFrames = {
     featureName: "Amethyst Greek frame",
     image: "https://i.imgur.com/LurWi0k.png",
     start: 6,
-    end: 56
+    end: 56,
+    index: 25
   },
   "f-emerald-greek":{
     name: "Emerald Greek",
