@@ -3041,7 +3041,7 @@ async function lockBackgroundsWithMessage(message,iconUrl='https://raw.githubuse
   for(let n of Object.keys(availableBackgrounds)) {
     let card = document.getElementById(`background-${n}`)
     let imageData = availableBackgrounds[n];
-    if(!card || !imageData.z) continue;
+    if(!card) continue;
     if(await checkBackground(n,"undefined")) {
       card.dataset.loaded = "background";
       continue;
