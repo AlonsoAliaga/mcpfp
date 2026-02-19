@@ -2287,7 +2287,7 @@ async function checkFrame(smoothImage,location) {
           alertError(`🔒 To unlock this frame, please disable your AdBlocker!`);
         }
         element.append(ov);
-        return;
+        return "Unknown";
       }
       return "Unknown";
     }
@@ -2386,9 +2386,9 @@ async function checkBackground(smoothImage,location) {
           alertError(`🔒 To unlock this background, please disable your AdBlocker!`);
         }
         element.append(ov);
-        return;
+        return "Unknown";
       }
-
+      return "Unknown";
     }
     const storedUnlockData = localStorage.getItem(`lobbyVakgraun-${btoa(smoothImage)}`);
     if (!storedUnlockData) {
