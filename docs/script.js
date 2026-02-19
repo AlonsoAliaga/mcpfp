@@ -2284,7 +2284,7 @@ async function checkFrame(smoothImage,location) {
         ov.className = 'overlay';
         ov.innerHTML = `<span style="color: #ff8484;">${frameData.featureName}</span><img src="${frameData.image}"><span style="" class="toblink">🔒 Disable AdBlock to unlock this frame!</span>`;
         ov.onclick = function() {
-          alertError(`🔒 To unlock this frame, please disable your AdBlocker!`);
+          alertError(`<b>🔒 To unlock this frame 🔒<br>please disable your AdBlocker!</b>`);
         }
         element.append(ov);
         return "Unknown";
@@ -2383,7 +2383,7 @@ async function checkBackground(smoothImage,location) {
         ov.className = 'overlay';
         ov.innerHTML = `<span style="color: #ff8484;">${backgoundData.featureName}</span><img src="${backgoundData.image}"><span style="" class="toblink">🔒 Disable AdBlock to unlock this background!</span>`;
         ov.onclick = function() {
-          alertError(`🔒 To unlock this background, please disable your AdBlocker!`);
+          alertError(`<b>🔒 To unlock this frame 🔒<br>please disable your AdBlocker!</b>`);
         }
         element.append(ov);
         return "Unknown";
