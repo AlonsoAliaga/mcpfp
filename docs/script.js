@@ -1313,36 +1313,39 @@ let availableFrames = {
     featureName: "Basic frame",
     image: "https://i.imgur.com/1b30TQ2.png",
     start: 5,
-    end: 26
+    end: 26,
+    index: 25
   },
   "f-basic-blue":{
     name: "Basic Blue",
     featureName: "Basic Blue frame",
     image: "https://i.imgur.com/7ucUhdA.png",
     start: 5,
-    end: 26
+    end: 26,
+    index: 25
   },
   "f-basic-redstone":{
     name: "Basic Redstone",
     featureName: "Basic Redstone frame",
     image: "https://i.imgur.com/AIhQkJ8.png",
     start: 5,
-    end: 26
+    end: 26,
+    index: 25
   },
   "f-basic-emerald":{
     name: "Basic Emerald",
     featureName: "Basic Emerald frame",
     image: "https://i.imgur.com/0wm61cd.png",
     start: 5,
-    end: 26
+    end: 26,
+    index: 25
   },
   "f-golden-greek":{
     name: "Golden Greek",
     featureName: "Golden Greek frame",
     image: "https://i.imgur.com/ZPjK6B2.png",
     start: 6,
-    end: 56,
-    index: 25
+    end: 56
   },
   "f-bronze-greek":{
     name: "Bronze Greek",
@@ -1412,7 +1415,8 @@ let availableFrames = {
     featureName: "Elegant Sapphire frame",
     image: "https://i.imgur.com/OOrcOqY.png",
     start: 7,
-    end: 57
+    end: 57,
+    index: 25
   },
   "f-elegant-slime":{
     name: "Elegant Slime",
@@ -1433,7 +1437,8 @@ let availableFrames = {
     featureName: "Mossy Obisidan Frame",
     image: "https://i.imgur.com/BmbusOH.png",
     start: 3,
-    end: 27
+    end: 27,
+    index: 25
   },
   "f-pink-obsidian":{
     name: "Pink Obisidan",
@@ -1454,14 +1459,16 @@ let availableFrames = {
     featureName: "Brown Obisidan Frame",
     image: "https://i.imgur.com/JrhLlJ6.png",
     start: 3,
-    end: 27
+    end: 27,
+    index: 25
   },
   "f-yellow-obsidian":{
     name: "Yellow Obisidan",
     featureName: "Yellow Obisidan Frame",
     image: "https://i.imgur.com/yxN4NY2.png",
     start: 3,
-    end: 27
+    end: 27,
+    index: 25
   },
   "f-blue-obsidian":{
     name: "Blue Obisidan",
@@ -1489,7 +1496,8 @@ let availableFrames = {
     featureName: "Dark Futuristic Frame",
     image: "https://i.imgur.com/nizqUGO.png",
     start: 9,
-    end: 39
+    end: 39,
+    index: 25
   },
   "f-pink-futuristic":{
     name: "Pink Futuristic",
@@ -1503,21 +1511,24 @@ let availableFrames = {
     featureName: "Red Futuristic Frame",
     image: "https://i.imgur.com/Og3MBHN.png",
     start: 9,
-    end: 39
+    end: 39,
+    index: 25
   },
   "f-blue-weird":{
     name: "Blue Weird",
     featureName: "Blue Weird Frame",
     image: "https://i.imgur.com/el9h67R.png",
     start: 5,
-    end: 35
+    end: 35,
+    index: 25
   },
   "f-purple-weird":{
     name: "Purple Weird",
     featureName: "Purple Weird Frame",
     image: "https://i.imgur.com/uaHcIAy.png",
     start: 5,
-    end: 35
+    end: 35,
+    index: 25
   },
   "f-peach-weird":{
     name: "Peach Weird",
@@ -1538,26 +1549,28 @@ let availableFrames = {
     featureName: "Iron Plate Frame",
     image: "https://i.imgur.com/IdkXKj8.png",
     start: 5,
-    end: 95
+    end: 95,
+    index: 25
   },
   "f-gold-plate":{
     name: "Gold Plate",
     featureName: "Gold Plate Frame",
-    image: "https://i.imgur.com/mP6QTZG.png",
+    image: "https://i.imgur.com/5P6z6wY.png",
     start: 5,
-    end: 95
+    end: 95,
+    index: 25
   },
   "f-diamond-plate":{
     name: "Diamond Plate",
     featureName: "Diamond Plate Frame",
-    image: "https://i.imgur.com/Ya87Nqb.png",
+    image: "https://i.imgur.com/mP6QTZG.png",
     start: 5,
     end: 95
   },
   "f-emerald-plate":{
     name: "Emerald Plate",
     featureName: "Emerald Plate Frame",
-    image: "https://i.imgur.com/5P6z6wY.png",
+    image: "https://i.imgur.com/Ya87Nqb.png",
     start: 5,
     end: 95
   },
@@ -1566,28 +1579,32 @@ let availableFrames = {
     featureName: "Base Blue Frame",
     image: "https://i.imgur.com/JUAbQyo.png",
     start: 7,
-    end: 33
+    end: 33,
+    index: 25
   },
   "f-base-orange":{
     name: "Base Orage",
     featureName: "Base Orange Frame",
     image: "https://i.imgur.com/Mm0Csz8.png",
     start: 7,
-    end: 33
+    end: 33,
+    index: 25
   },
   "f-base-lime":{
     name: "Base Lime",
     featureName: "Base Lime Frame",
     image: "https://i.imgur.com/AiYrjr2.png",
     start: 7,
-    end: 33
+    end: 33,
+    index: 25
   },
   "f-base-red":{
     name: "Base Red",
     featureName: "Base Red Frame",
     image: "https://i.imgur.com/pOBxwU5.png",
     start: 7,
-    end: 33
+    end: 33,
+    index: 25
   },
   "f-pixel-gold":{
     name: "Pixel Gold",
@@ -1601,14 +1618,16 @@ let availableFrames = {
     featureName: "Pixel Pink Frame",
     image: "https://i.imgur.com/JBXm7K0.png",
     start: 4,
-    end: 36
+    end: 36,
+    index: 25
   },
   "f-pixel-blue":{
     name: "Pixel Blue",
     featureName: "Pixel Blue Frame",
     image: "https://i.imgur.com/sYQ6b0C.png",
     start: 4,
-    end: 36
+    end: 36,
+    index: 25
   },
   "f-pixel-white":{
     name: "Pixel White",
@@ -1622,7 +1641,8 @@ let availableFrames = {
     featureName: "Luxury Gold Frame",
     image: "https://i.imgur.com/5l1hJPa.png",
     start: 6,
-    end: 52
+    end: 52,
+    index: 25
   },
   "f-luxury-emerald":{
     name: "Luxury Emerald",
@@ -1650,7 +1670,8 @@ let availableFrames = {
     featureName: "Obisidian Sign Frame",
     image: "https://i.imgur.com/fWFpJE1.png",
     start: [21,42],
-    end: 76
+    end: 76,
+    index: 25
   },
   "f-diamond-sign":{
     name: "Diamond Sign",
@@ -2108,7 +2129,7 @@ let availableBackgrounds = {
     type: "fit",
     x: 0,
     y: 0,
-    z: 15,
+    z: 23,
   },
   "b-cute-8-bit-retro-game": {
     name: "Cute 8-bit Retro Game",
@@ -2118,7 +2139,7 @@ let availableBackgrounds = {
     type: "fit",
     x: 0,
     y: 0,
-    z: 15,
+    z: 0,
   },
   "b-pixel-future-city": {
     name: "Pixel Future City",
@@ -2128,7 +2149,7 @@ let availableBackgrounds = {
     type: "fit",
     x: 0,
     y: 0,
-    z: 15,
+    z: 0,
   },
   "b-pixel-bricks": {
     name: "Pixel Bricks",
@@ -2178,7 +2199,7 @@ let availableBackgrounds = {
     type: "fit",
     x: 0,
     y: 0,
-    z: 15,
+    z: 0,
   },
   "b-pixel-moon-city": {
     name: "Pixel Moon City",
@@ -2197,7 +2218,7 @@ let availableBackgrounds = {
     type: "fit",
     x: 0,
     y: 0,
-    z: 15,
+    z: 0,
   },
   "b-minecraft-sky": {
     name: "Minecraft Sky",
@@ -2255,7 +2276,21 @@ async function checkFrame(smoothImage,location) {
   try {
     let element = document.getElementById(`frame-${smoothImage}`);
     if(!element) return;
-    if(availableFrames[smoothImage] && availableFrames[smoothImage].index) return "Unknown";
+    if(availableFrames[smoothImage] && availableFrames[smoothImage].index) {
+      if(typeof window.getRandomStyle == "undefined" || myTimeout != undefined || typeof adBlockEnabled == "undefined" || adBlockEnabled) {
+        let frameData = availableFrames[smoothImage];
+        element.classList.add('adlockedframe');
+        const ov = document.createElement('div');
+        ov.className = 'overlay';
+        ov.innerHTML = `<span style="color: #ff8484;">${frameData.featureName}</span><img src="${frameData.image}"><span style="" class="toblink">🔒 Disable AdBlock to unlock this frame!</span>`;
+        ov.onclick = function() {
+          alertError(`🔒 To unlock this frame, please disable your AdBlocker!`);
+        }
+        element.append(ov);
+        return;
+      }
+      return "Unknown";
+    }
     const storedUnlockData = localStorage.getItem(`lobbyFreim-${btoa(smoothImage)}`);
     if (!storedUnlockData) {
         return;
@@ -2340,7 +2375,21 @@ async function checkBackground(smoothImage,location) {
   try {
     let element = document.getElementById(`background-${smoothImage}`);
     if(!element) return;
-    if(availableBackgrounds[smoothImage] && !availableBackgrounds[smoothImage].z) return smoothImage;
+    if(availableBackgrounds[smoothImage] && !availableBackgrounds[smoothImage].z) {
+      if(typeof window.getRandomStyle == "undefined" || myTimeout != undefined || typeof adBlockEnabled == "undefined" || adBlockEnabled) {
+        let backgoundData = availableBackgrounds[smoothImage];
+        element.classList.add('adlockedframe');
+        const ov = document.createElement('div');
+        ov.className = 'overlay';
+        ov.innerHTML = `<span style="color: #ff8484;">${backgoundData.featureName}</span><img src="${backgoundData.image}"><span style="" class="toblink">🔒 Disable AdBlock to unlock this background!</span>`;
+        ov.onclick = function() {
+          alertError(`🔒 To unlock this background, please disable your AdBlocker!`);
+        }
+        element.append(ov);
+        return;
+      }
+
+    }
     const storedUnlockData = localStorage.getItem(`lobbyVakgraun-${btoa(smoothImage)}`);
     if (!storedUnlockData) {
         return;

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <link rel="stylesheet" href="./style.css">
   <link rel="shortcut icon" href="https://cdn.discordapp.com/emojis/791742603183259648.webp?size=96&quality=lossless" type="image/x-icon">
-  <title>Unlock this feature by clicking ads!</title>
+  <title>Unlock this feature by clicking our ads!</title>
   <style>
     body{
       display: flex;
@@ -200,7 +200,7 @@
                         setTimeout(()=>window.opener.postMessage(data, '*'),500);
                         try {
                           // Calculate the expiration timestamp (current time + 12 hours)
-                          const unlockDurationHours = 24;
+                          const unlockDurationHours = 24 * 5;
                           const unlockedUntil = Date.now() + (unlockDurationHours * 60 * 60 * 1000);
 
                           // Generate the signature for tamper detection
