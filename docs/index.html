@@ -31,36 +31,46 @@
     <div class="content">
       <div class="header">
         <h1 style="font-family: MinecraftBold;"><a href="https://alonsoaliaga.com/minecraft-pfp" rel="noopener" target="_blank">MinecraftPFP</a> Generator</h1>
-        <h2 style="font-size: 20px; color: rgb(255, 71, 71)">Use Google Chrome or Opera for a better experience. Edge is reported as not compatible!</h2>
+        <h2 style="font-size: 20px; color: rgb(255, 71, 71)" data-i18n="browser_warning">Use Google Chrome or Opera for a better experience. Edge is reported as not compatible!</h2>
         <div class="options" style="padding: 10px 10px 10px 10px; margin-bottom: 10px;">
-          <h2 class="rainbow" style="font-size:25px; color:transparent">How is this different from other generators?</h2>
-          This generator allows you to create your own pixel arts profiles with <b class="rainbow">many</b> cool options.<br><br>
-          <h2 style="font-size: 20px; color: rgb(255, 71, 71)">No more paying fiverr artits for Pixel Arts!</h2>
-          <span style="font-size: 17px;">
+          <h2 class="rainbow" style="font-size:25px; color:transparent" data-i18n="description_title">How is this different from other generators?</h2>
+          <p data-i18n="description_text" style="margin: 2px 10px;">This generator allows you to create your own pixel arts profiles with <b class="rainbow">many</b> cool options.</p>
+          <span style="font-size: 17px;" data-i18n="cool_ideas">
             <b>⚠️ If you have cool ideas, suggest them in our <a href="https://alonsoaliaga.com/discord" rel="noopener" target="_blank">official discord server.</a></b><br>
           </span>
+          <div style="display: flex; align-items: center; justify-content: center;">
+            <img src="https://cdn-icons-png.flaticon.com/512/174/174861.png" style="width: 12px; height: auto; margin-right: 4px;">
+            <span data-i18n="donate_text" style="font-size: 15px;">If you found this tool useful, consider <a href="https://alonsoaliaga.com/donate" target="_blank" style="color:#5555ff; text-decoration:underline;">making a donation</a> for our hard work. We appreciate it!</span>
+          </div>
         </div>
         <span id="snackbar"><b>💎 Looking for new features? 💎</b><br><span style="font-size: small;">Try clicking an ad..</span></span>
         <span id="snackbar-2"><b>🚫 Nope, try again.. 🚫</b><br><span style="font-size: small;">Maybe next ad will work..</span></span>
         <span style="font-family: MinecraftBold;">Site options:</span>
         <div id="appearance" style="display: inline-block;font-family: MinecraftBold;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
           <input type="checkbox" checked id="darkmode" onclick="toggleDarkmode();"></input>
-          <label for="darkmode" style="margin-bottom: 0px;margin-top: 0px;"> Dark Mode 👁‍🗨</label>
+          <label for="darkmode" style="margin-bottom: 0px;margin-top: 0px;" data-i18n="darkmode_label"> Dark Mode 👁‍🗨</label>
         </div> <div id="unlock-features-div" style="cursor:pointer;background-color: rgb(98, 250, 106);display: inline-block;font-family: MinecraftBold;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
-          Unlock new features 🚀
-        </div><br><br>
-        <h2>Enter your username:</h2>
+          <span  data-i18n="unlock_features">Unlock new features 🚀</span>
+        </div>
+        <span style="font-size: 12px;">&nbsp;<br></span><br>
+        <div style="display: inline-flex;">
+          <button id="langAutoBtn" class="btn-custom" style="padding: 2px 8px; font-size:14px; background: #3b82f6; border-color: #1d4ed8; color: white;" data-i18n="button_auto">🤖 AUTO</button>
+          <div class="lang-flags" id="flagsContainer">
+              <!-- Flags will be injected here -->
+          </div>
+        </div>
+        <br><br><span data-i18n="input_text_label">Enter your username:</span>
         <div id="inputTextDiv" style="flex-direction: row; text-align: center; align-items: center;">
           <input id="inputText" style="text-align: center; display: inline-block; width: 300px;height: 30px; margin-right: 5px;font-family: MinecraftBold;padding: 15px 20px 15px 20px;"
             type="text" maxlength="20" checked id="darkmode" value="AlonsoAliaga" class="darkbuttonboxes" 
             placeholder="Type your username"></input>
           <button id="customskindiv" style="width: 150px;position:absolute;text-align: center;display: inline-block;font-family: MinecraftBold;padding: 15px 20px 15px 20px;" 
-            class="darkbuttonboxes" onclick="uploadCustomSkinTexture(this)">Custom<br>Skin</button>
+            class="darkbuttonboxes" onclick="uploadCustomSkinTexture(this)"><span data-i18n="custom_skin_label">Custom<br>Skin</span></button>
         </div>
         <span id="snackbar-error">Loading error..</span>
         <input id="inputTextCooldown" style="text-align: center; color:gray; display: none; width: 300px; height: 30px; font-family: MinecraftBold; padding: 15px 20px 15px 20px; margin-bottom: 20px;"
           type="text" maxlength="20" checked id="darkmode" value="AlonsoAliaga" class="darkbuttonboxes"
-          placeholder="Type your username" disabled="true"></input>
+          placeholder="Type your username" disabled="true" data-i18n="[placeholder]input_text"></input>
         <br>
         <div style="display: inline-block;">
           <div style="display: flex;align-items: center;">
@@ -84,58 +94,71 @@
       </div>
       <div>
         <fieldset class="group" style="padding: 0px;"> 
-          <legend id="thelegend">&nbsp;&nbsp;&nbsp;Select your options 🎮&nbsp;&nbsp;&nbsp;</legend> 
+          <legend id="thelegend" data-i18n="select_options">&nbsp;&nbsp;&nbsp;Select your options 🎮&nbsp;&nbsp;&nbsp;</legend> 
           <ul id="fonts-table" style="font-size: 18px;margin-bottom: 15px;">
             <div id="arrows-div">
               <button class="button-small" onclick="moveIcon('up',event);">▲</button><br>
               <div style="display: inline;margin: 10px;vertical-align: middle">
                 <button class="button-small" style="display: inline;margin: 10px;vertical-align: middle" onclick="moveIcon('left',event);">⯇</button>
-                <span style="font-weight: bold;">Move avatar</span>
+                <span style="font-weight: bold;" data-i18n="move_avatar">Move avatar</span>
                 <button class="button-small" style="display: inline;margin: 10px;vertical-align: middle" onclick="moveIcon('right',event);">⯈</button><br>
               </div>
               <button class="button-small" onclick="moveIcon('down',event);">▼</button>
             </div><br><br>
-            <div id="button-pixelate-background-div" style="width: 50%;display: inline-block;font-family: MinecraftBold;margin: 0px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
+            <div id="button-pixelate-background-div" style="width: 60%;display: inline-block;font-family: MinecraftBold;margin: 0px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
               <input type="checkbox" id="button-pixelate-background" onclick="togglePixelateBorderBox();updateSkin();"></input>
-              <label for="button-pixelate-background" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;"> Pixelate Background 🔳</label>
+              <label for="button-pixelate-background" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;" data-i18n="pixelate_background_label"> Pixelate Background 🔳</label>
             </div><br>
             <div id="pixelate-background-box" class="hidden-box">
-              Pixel size: <button class="button-small" onclick="modifyPixelateBackgroundWidth(event,-1);updateSkin();"><</button>
+              <span data-i18n="pixel_size">Pixel size:</span> <button class="button-small" onclick="modifyPixelateBackgroundWidth(event,-1);updateSkin();"><</button>
               <button style="font-size: 18px;font-family: MinecraftBold;padding: 5px 5px 5px 5px;" class="darkbuttonboxes" id="pixelate-background-size">15</button>
               <button class="button-small" onclick="modifyPixelateBackgroundWidth(event,+1);updateSkin();">></button><br>
+            </div>
+            <div id="button-nametag-div" style="width: 60%;display: inline-block;font-family: MinecraftBold;margin: 0px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
+              <input type="checkbox" id="button-nametag" onclick="toggleNametagBox();setTimeout(()=>  updateSkin(true), 100);"></input>
+              <label for="button-nametag" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;" data-i18n="nametag_label"> Nametag 📝</label>
+            </div><br>
+            <div id="arrows-nametag-div" style="background-color: rgba(41, 41, 41, 0.568);width: max-content;justify-self: center;" class="hidden-box">
+              <button class="button-small" onclick="moveNametag('up',event);">▲</button><br>
+              <div style="display: inline;margin: 10px;vertical-align: middle">
+                <button class="button-small" style="display: inline;margin: 10px;vertical-align: middle" onclick="moveNametag('left',event);">⯇</button>
+                <span style="font-weight: bold;" data-i18n="move_nametag">Move nametag</span>
+                <button class="button-small" style="display: inline;margin: 10px;vertical-align: middle" onclick="moveNametag('right',event);">⯈</button><br>
+              </div>
+              <button class="button-small" onclick="moveNametag('down',event);">▼</button>
               <p style="font-size: 5px;"> </p>
             </div>
-            <div id="button-revert-skin-div" style="width: 50%;display: inline-block;font-family: MinecraftBold;margin: 0px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
+            <div id="button-revert-skin-div" style="width: 60%;display: inline-block;font-family: MinecraftBold;margin: 0px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
               <input type="checkbox" id="button-revert-skin" onclick="updateSkin();"></input>
-              <label for="button-revert-skin" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;"> Revert skin ⏪</label>
+              <label for="button-revert-skin" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;" data-i18n="revert_skin_label"> Revert skin ⏪</label>
             </div><br>
-            <div id="button-shadow-div" style="width: 50%;display: inline-block;font-family: MinecraftBold;margin: 2px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
+            <div id="button-shadow-div" style="width: 60%;display: inline-block;font-family: MinecraftBold;margin: 2px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
               <input type="checkbox" checked id="button-shadow" onclick="updateSkin();"></input>
-              <label for="button-shadow" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;"> Skin Shadow 👥</label>
+              <label for="button-shadow" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;" data-i18n="shadow_label"> Skin Shadow 👥</label>
             </div><br>
-            <div id="button-no-background-div" style="width: 50%;display: inline-block;font-family: MinecraftBold;margin: 2px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
+            <div id="button-no-background-div" style="width: 60%;display: inline-block;font-family: MinecraftBold;margin: 2px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
               <input type="checkbox" id="button-no-background" onclick="(()=>{
                 closeCustomGradient();
                 closeCustomBackgrounds();
                 updateSkin();
               })();"></input>
-              <label for="button-no-background" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;"> Transparent Background 🧪</label>
+              <label for="button-no-background" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;" data-i18n="transparent_background_label"> Transparent Background 🧪</label>
             </div><br>
-            <div id="button-custom-background-div" style="width: 50%;display: inline-block;font-family: MinecraftBold;margin: 2px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
+            <div id="button-custom-background-div" style="width: 60%;display: inline-block;font-family: MinecraftBold;margin: 2px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
               <input type="checkbox" name="button-custom-background" checked id="button-custom-background" onclick="uploadCustomBackground(this);"></input>
-              <label for="button-custom-background" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;"> Upload Custom background 🎨</label>
+              <label for="button-custom-background" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;" data-i18n="custom_background_label"> Upload Custom background 🎨</label>
             </div><br>
-            <div id="button-remove-watermark-download-div" style="width: 50%;display: inline-block;font-family: MinecraftBold;margin: 2px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
+            <div id="button-remove-watermark-download-div" style="width: 60%;display: inline-block;font-family: MinecraftBold;margin: 2px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
               <input type="checkbox" name="button-remove-watermark-download" id="button-remove-watermark-download" onclick="toggleWatermark(this);"></input>
-              <label for="button-remove-watermark-download" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;"> Remove watermark in download? 👓</label>
+              <label for="button-remove-watermark-download" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;" data-i18n="remove_watermark_download_label"> Remove watermark in download? 👓</label>
             </div><br>
-            <div id="button-toggle-custom-gradient-div" style="width: 50%;display: inline-block;font-family: MinecraftBold;margin: 2px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
+            <div id="button-toggle-custom-gradient-div" style="width: 60%;display: inline-block;font-family: MinecraftBold;margin: 2px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
               <input type="checkbox" name="button-toggle-custom-gradient" id="button-toggle-custom-gradient" onclick="toggleCustomGradientBox(this);"></input>
-              <label for="button-toggle-custom-gradient" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;"> Custom gradient 🦄</label>
+              <label for="button-toggle-custom-gradient" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;" data-i18n="custom_gradient_label"> Custom gradient 🦄</label>
             </div><br>
             <div id="custom-gradient-box">
               <fieldset class="group" style="padding: 0px;border-radius: 10px;"> 
-                <legend id="custom-gradient-legend">&nbsp;&nbsp;&nbsp;Pick your colors 🎨&nbsp;&nbsp;&nbsp;</legend>
+                <legend id="custom-gradient-legend" data-i18n="custom_gradient_legend">&nbsp;&nbsp;&nbsp;Pick your colors 🎨&nbsp;&nbsp;&nbsp;</legend>
                 <button class="button-small" onclick="removeColor(this);"><</button>
                 <button style="font-size: 20px;font-family: MinecraftBold;padding: 10px 10px 10px 10px;" id="colors-amount">2</button>
                 <button class="button-small" onclick="addColor(this);">></button><br><br>
@@ -143,28 +166,28 @@
                 </div><br>
               </fieldset>
             </div>
-            <div id="button-toggle-frame-div" style="width: 50%;display: inline-block;font-family: MinecraftBold;margin: 2px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
+            <div id="button-toggle-frame-div" style="width: 60%;display: inline-block;font-family: MinecraftBold;margin: 2px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
               <input type="checkbox" name="button-toggle-frame" id="button-toggle-frame" onclick="toggleFrameBox(this);"></input>
-              <label for="button-toggle-frame" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;"> Frames 🖼️</label>
+              <label for="button-toggle-frame" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;" data-i18n="frame_label"> Frames 🖼️</label>
             </div>
             <div id="frame-box">
               <fieldset class="group" style="padding: 0px;border-radius: 10px;"> 
-                <legend id="frame-legend">&nbsp;&nbsp;&nbsp;Select a frame 🖼️&nbsp;&nbsp;&nbsp;</legend>
+                <legend id="frame-legend" data-i18n="frame_legend">&nbsp;&nbsp;&nbsp;Select a frame 🖼️&nbsp;&nbsp;&nbsp;</legend>
                 <div id="frame-picker" class="group button-container" style="display: grid;grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));gap: 10px;width: 100%;display: flex;font-size: 15px;font-family: MinecraftBold;margin: 0px 2px 2px 2px;padding: 5px 10px 5px 10px;">
 
                 </div>
                 <div style="line-height: 18px;flex-direction: column;display: flex;">
-                  <span style="font-size: 13px;color: rgb(131, 131, 131);">🏜️ Looking for more frames? Stay tuned for updates! 🌇</span>
+                  <span style="font-size: 13px;color: rgb(131, 131, 131);" data-i18n="frame_info">🏜️ Looking for more frames? Stay tuned for updates! 🌇</span>
                 </div>
               </fieldset>
             </div>
-            <div id="button-toggle-ornaments-div" style="width: 50%;display: inline-block;font-family: MinecraftBold;margin: 2px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
+            <div id="button-toggle-ornaments-div" style="width: 60%;display: inline-block;font-family: MinecraftBold;margin: 2px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
               <input type="checkbox" name="button-toggle-ornaments" id="button-toggle-ornaments" onclick="toggleOrnamentsBox(this);"></input>
-              <label for="button-toggle-ornaments" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;"> Ornaments 🎩</label>
+              <label for="button-toggle-ornaments" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;" data-i18n="ornaments_label"> Ornaments 🎩</label>
             </div>
             <div id="ornaments-box">
               <fieldset class="group" style="padding: 0px;border-radius: 10px;"> 
-                <legend id="ornaments-legend">&nbsp;&nbsp;&nbsp;Select an ornament 🎩&nbsp;&nbsp;&nbsp;</legend>
+                <legend id="ornaments-legend" data-i18n="ornaments_legend">&nbsp;&nbsp;&nbsp;Select an ornament 🎩&nbsp;&nbsp;&nbsp;</legend>
                 <fieldset id="ornaments-movement-box-div" class="group"  style="display: none;padding: 0px;border-radius: 10px;margin: 5px 15px;"> 
                   <legend>&nbsp;&nbsp;&nbsp;Editing ornament ⬇️ &nbsp;&nbsp;&nbsp;</legend>
                   <div id="ornaments-movement" style="display: inherit;justify-items: center;">
@@ -192,22 +215,22 @@
 
                 </div>
                 <div style="line-height: 18px;flex-direction: column;display: flex;">
-                  <span style="font-size: 13px;color: rgb(131, 131, 131);">👑 Looking for more ornaments? Stay tuned for updates! 🪁</span>
-                  <a href="https://alonsoaliaga.com/discord/" style="font-size: 13px;color: rgb(73, 121, 177);">Contribute with your own ornaments joining us! Click here 🧪</span></a>
+                  <span style="font-size: 13px;color: rgb(131, 131, 131);" data-i18n="ornament_info">👑 Looking for more ornaments? Stay tuned for updates! 🪁</span>
+                  <a href="https://alonsoaliaga.com/discord/" style="font-size: 13px;color: rgb(73, 121, 177);" data-i18n="ornament_contribute_link">Contribute with your own ornaments joining us! Click here 🧪</span></a>
                 </div>
               </fieldset>
             </div>
             
-            <div id="button-toggle-background-div" style="width: 50%;display: inline-block;font-family: MinecraftBold;margin: 2px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
+            <div id="button-toggle-background-div" style="width: 60%;display: inline-block;font-family: MinecraftBold;margin: 2px 2px 2px 2px;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
               <input type="checkbox" name="button-toggle-background" id="button-toggle-background" onclick="toggleBackgroundsBox(this);"></input>
-              <label for="button-toggle-background" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;"> Backgrounds 🏜️</label>
+              <label for="button-toggle-background" style="margin-bottom: 0px;margin-top: 0px;margin-left: 0px;margin-right: 10px;" data-i18n="backgrounds_label"> Backgrounds 🏜️</label>
             </div>
             <div id="background-box">
               <fieldset class="group" style="padding: 0px;border-radius: 10px;"> 
-                <legend id="frame-legend">&nbsp;&nbsp;&nbsp;Select a background 🏜️&nbsp;&nbsp;&nbsp;</legend>
+                <legend id="background-legend" data-i18n="background_legend">&nbsp;&nbsp;&nbsp;Select a background 🏜️&nbsp;&nbsp;&nbsp;</legend>
                 <fieldset id="backgrounds-movement-box-div" class="group"  style="display: none;padding: 0px;border-radius: 10px;margin: 5px 15px;"> 
-                  <legend>&nbsp;&nbsp;&nbsp;Editing background ⬇️ &nbsp;&nbsp;&nbsp;</legend>
-                  <div id="fit-type-button" style="cursor: pointer;width: 50%;display: inline-block;font-family: MinecraftBold;margin: 2px 2px 2px 2px;padding: 5px 10px 5px 10px;"
+                  <legend data-i18n="editing_background_legend">&nbsp;&nbsp;&nbsp;Editing background ⬇️ &nbsp;&nbsp;&nbsp;</legend>
+                  <div id="fit-type-button" style="cursor: pointer;width: 60%;display: inline-block;font-family: MinecraftBold;margin: 2px 2px 2px 2px;padding: 5px 10px 5px 10px;"
                     class="darkbuttonboxes">
                     Fit type ⏳
                   </div>
@@ -236,8 +259,8 @@
 
                 </div>
                 <div style="line-height: 18px;flex-direction: column;display: flex;">
-                  <span style="font-size: 13px;color: rgb(131, 131, 131);">🏜️ Looking for more backgrounds? Stay tuned for updates! 🌇</span>
-                  <a href="https://alonsoaliaga.com/discord/" style="font-size: 13px;color: rgb(73, 121, 177);">Contribute with your own backgrounds joining us! Click here 🧪</span></a>
+                  <span style="font-size: 13px;color: rgb(131, 131, 131);" data-i18n="backgrounds_info">🏜️ Looking for more backgrounds? Stay tuned for updates! 🌇</span>
+                  <a href="https://alonsoaliaga.com/discord/" style="font-size: 13px;color: rgb(73, 121, 177);" data-i18n="backgrounds_contribute_link">Contribute with your own backgrounds joining us! Click here 🧪</span></a>
                 </div>
               </fieldset>
             </div>
@@ -246,26 +269,26 @@
       </div>
       <div id="download-all" style="display: inline-block;font-family: MinecraftBold;padding: 5px 10px 5px 10px;" class="darkbuttonboxes">
         <input type="button" style="outline: none; display: none;" checked id="downloadall" onclick="downloadProfile();"></input>
-        <label id="download-all-label" for="downloadall" style="margin-bottom: 0px;margin-top: 0px;margin-left: 20px;;margin-right: 15px;"> Download your McPFP with watermark 📥</label>
+        <label id="download-all-label" for="downloadall" style="margin-bottom: 0px;margin-top: 0px;margin-left: 20px;;margin-right: 15px;" data-i18n="download_with_label"> Download your McPFP with watermark 📥</label>
       </div>
       <br>
       <br>
       <div style="justify-content: center;display: flex;">
         <div class="center-container">
           <fieldset class="group" style="padding: 0px;width: 300px;align-content: center;"> 
-            <legend style="width: 70%;padding: 0px 15px 5px 15px;" id="thelegend">Looking for a render like this one? 💎</legend> 
+            <legend style="width: 70%;padding: 0px 15px 5px 15px;" id="thelegend" data-i18n="render_showcase_legend">Looking for a render like this one? 💎</legend> 
             <img src="https://raw.githubusercontent.com/AlonsoAliaga/mcpfp/main/assets/showcase/render-showcase.png" style="height: 200px;padding-bottom: 0px;cursor: pointer;" onclick="window.open('https://alonsoaliaga.com/mc-renders', '_blank');">
           </fieldset>
         </div>&nbsp;&nbsp;
         <div class="center-container">
           <fieldset class="group" style="padding: 0px;width: 300px;align-content: center;"> 
-            <legend style="width: 80%;padding: 0px 15px 5px 15px;" id="thelegend">Looking for an animation like this one? 💎</legend> 
+            <legend style="width: 80%;padding: 0px 15px 5px 15px;" id="thelegend" data-i18n="animation_showcase_legend">Looking for an animation like this one? 💎</legend> 
             <img src="https://raw.githubusercontent.com/AlonsoAliaga/mcpfp/main/assets/showcase/skin-showcase.gif" style="height: 200px;padding-bottom: 0px;cursor: pointer;" onclick="window.open('https://alonsoaliaga.com/mc-skin', '_blank');">
           </fieldset>
         </div>&nbsp;&nbsp;
         <div class="center-container">
           <fieldset class="group" style="padding: 0px;width: 300px;align-content: center;"> 
-            <legend style="width: 80%;padding: 0px 15px 5px 15px;" id="thelegend">Looking for a 3D pose like this? 💎</legend> 
+            <legend style="width: 80%;padding: 0px 15px 5px 15px;" id="thelegend" data-i18n="pose_showcase_legend">Looking for a 3D pose like this? 💎</legend> 
             <img src="https://raw.githubusercontent.com/AlonsoAliaga/mcpfp/main/assets/showcase/pose-showcase.png" style="height: 200px;padding-bottom: 0px;cursor: pointer;" onclick="window.open('https://alonsoaliaga.com/skin-poser', '_blank');">
           </fieldset>
         </div>
@@ -273,7 +296,7 @@
       <br>
       <div class="options">
         <div style="font-size: 18px ;padding-top: 0px;padding-bottom: 0px; font-family: MinecraftRegular;" class="examples">
-          <h2 style="font-size: 18px; font-family: MinecraftBold;">More tools for you:</h2>
+          <h2 style="font-size: 18px; font-family: MinecraftBold;" data-i18n="more_tools_label">More tools for you:</h2>
           <div style="text-align: left;font-size: 20px;" id="tools-for-you">
           </div>
           <br>
@@ -281,7 +304,7 @@
         </div>
       </div>
       <br>
-      <h2 style="font-size: 15px ;text-align: center;">Huge thanks to <a href="https://github.com/MauritsWilke/" rel="noopener" target="_blank">MauritsWilke</a> for his <a href="https://github.com/MauritsWilke/mcpfp" rel="noopener" target="_blank">MinecraftPFP</a> in which this project was inspired.</h2>
+      <h2 style="font-size: 15px ;text-align: center;" data-i18n="thanks_footer">Huge thanks to <a href="https://github.com/MauritsWilke/" rel="noopener" target="_blank">MauritsWilke</a> for his <a href="https://github.com/MauritsWilke/mcpfp" rel="noopener" target="_blank">MinecraftPFP</a> in which this project was inspired.</h2>
       <br>
       <!-- <div id="mybutton">
         <button class="buttonface"><a href="https://alonsoaliaga.github.io"><img src="https://raw.githubusercontent.com/AlonsoAliaga/alonsoaliaga.github.io/main/assets/img/apple-touch-icon.png"></a></button>

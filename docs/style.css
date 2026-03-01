@@ -788,6 +788,56 @@ fieldset.group legend {
   font-size: 100%; 
 }
 
+.btn-custom {
+    font-family: 'MinecraftRegular';
+    border-radius: 25px;
+    border-color: var(--btn-border);
+    background-color: var(--btn-bg);
+    color: var(--btn-text);
+    border-style: solid;
+    border-width: 2px;
+    padding: 4px 12px; 
+    cursor: pointer;
+    font-size: 16px; /* +2px (14->16) */
+    transition: transform 0.1s, filter 0.2s;
+    box-shadow: 2px 2px 0px rgba(0,0,0,0.2);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 30px; /* Adjusted height slightly for font */
+    white-space: nowrap; 
+}
+.btn-custom:active { transform: translate(2px, 2px); box-shadow: none; }
+.btn-custom:disabled {
+    filter: grayscale(100%);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.btn-custom input[type="checkbox"] { 
+    accent-color: #ff3399; 
+    width: 16px; /* +2px size */
+    height: 16px; 
+    cursor: pointer;
+}
+/* Lang Flag Styles */
+.lang-flags {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-left: 10px;
+}
+.lang-flag {
+    width: 30px !important;
+    height: auto;
+    cursor: pointer;
+    transition: transform 0.2s;
+    border-radius: 2px;
+    box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+.lang-flag:hover { transform: scale(1.1); }
+.lang-flag.active { border: 2px solid white; transform: scale(1.1); }
   /* Styles for the render card */
 .render-frame-card {
   color: #232323;

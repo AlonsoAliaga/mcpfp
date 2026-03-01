@@ -659,9 +659,9 @@ function toggleWatermark(event) {
   let removeWatermark = document.getElementById("button-remove-watermark-download").checked;
   let downloadButton = document.getElementById("download-all-label");
   if(removeWatermark) {
-    downloadButton.innerText = "Download your McPFP without watermark📥"
+    downloadButton.innerText = getTranslation("download_without_label");
   }else{
-    downloadButton.innerText = "Download your McPFP with watermark 📥"
+    downloadButton.innerText = getTranslation("download_with_label");
   }
 }
 let colorsButton = document.getElementById("colors-amount");
@@ -793,6 +793,21 @@ window.onclick = function(event) {
 }
 let loadedSkinBuffer = undefined;
 const usernameInput = document.getElementById('inputText');
+let loadTime = Date.now();
+usernameInput.addEventListener('keyup', () => {
+  if(Date.now() - loadTime < 1000) {
+    return;
+  }
+  let nametag = document.getElementById("button-nametag").checked;
+  if(nametag) {
+    if(usernameInput.value.length > 0) {
+      nametag.innerText = usernameInput.value;
+    }else{
+      nametag.innerText = "AlonsoAliaga";
+    }
+  }
+  updateSkin(true)
+});
 const usernameInputDiv = document.getElementById('inputTextDiv');
 const cacheSkins = new Map();
 let lastFailed = false;
@@ -931,6 +946,28 @@ function moveIcon(direction,event) {
   else addY = Math.min(250,addY + toModify);
   updateSkin(true);
 }
+let addNametagX = 0;
+let addNametagY = 0;
+function moveNametag(direction,event) {
+  let revertSkin = true;
+  let toModify = event.altKey || event.shiftKey ? 5 : 1;
+  toModify = ["left","right"].includes(direction) ? (revertSkin ? toModify * -1 : toModify) : toModify;
+  if(direction == "right") addNametagX = Math.max(-250,addNametagX - toModify);
+  else if(direction == "left") addNametagX = Math.min(250,addNametagX + toModify);
+  else if(direction == "up") addNametagY = Math.max(-50,addNametagY - toModify);
+  else addNametagY = Math.min(250,addNametagY + toModify);
+  updateSkin(true);
+}
+function toggleNametagBox() {
+  let effectBox = document.getElementById("arrows-nametag-div");
+  let effectOption = document.getElementById("button-nametag").checked;
+  if(effectOption) {
+    //document.getElementById("button-pixelate-background").checked = false;
+    effectBox.classList.add("expanded");
+  }else{
+    effectBox.classList.remove("expanded");
+  }
+}
 let logoBuffer;
 async function updateTest(username) {
   return;
@@ -981,6 +1018,7 @@ async function updateSkin(inCache = true) {
   let revertSkin = document.getElementById("button-revert-skin").checked;
   let shadow = document.getElementById("button-shadow").checked;
   let transparentBackground = document.getElementById("button-no-background").checked;
+  let nametag = document.getElementById("button-nametag").checked;
   //
   let finalCanvas = document.getElementById("final-canvas");
   finalCanvas.width = 300;
@@ -1127,6 +1165,25 @@ async function updateSkin(inCache = true) {
       copy = null;
     }
     finalCanvas.style.border = "none";
+  }
+  finalCtx = finalCanvas.getContext("2d");
+  if(nametag) {
+    let nameToWrite = username;
+    if(nameToWrite.length > 15) {
+      nameToWrite = nameToWrite.substring(0,15);
+    }
+    let fontSize = 30;
+    finalCtx.font = `${fontSize}px Minecraft`;
+    let textWidth = finalCtx.measureText(nameToWrite).width;
+    let padding = 10;
+    let rectWidth = textWidth + padding * 2;
+    let rectHeight = fontSize + padding;
+    let rectX = (finalCanvas.width - rectWidth) / 2;
+    let rectY = 10;
+    finalCtx.fillStyle = "rgba(0, 0, 0, 0.5)";
+    finalCtx.fillRect(rectX + addNametagX, rectY + addNametagY, rectWidth, rectHeight);
+    finalCtx.fillStyle = "#FFFFFF";
+    finalCtx.fillText(nameToWrite, rectX + padding + addNametagX, rectY + fontSize + (padding / 2) - 5 + addNametagY);
   }
   
   //console.log(`Username: ${username}\nRevert skin: ${revertSkin}\nShadow: ${shadow}\nTransparent background: ${transparentBackground}\nIn cache: ${inCache}`);
@@ -3107,6 +3164,138 @@ async function drawFailed() {
 	ctx.scale(16, 16);
 	//ctx.drawImage(shading, 0, 0, 20, 20)
 }
+// --- I18N SYSTEM ---
+const AVAILABLE_LANGUAGES = ['en', 'es', 'fr', 'it', 'zh', 'ja', 'ko', 'de', 'ar', 'ga'];
+const DEFAULT_LANGUAGE = 'en';
+let currentLanguage = DEFAULT_LANGUAGE;
+
+const TRANSLATIONS = {
+    "en": {
+      "options":{
+        "button_auto": "🤖 Auto (EN)"
+      },
+      "selectSkin": "Select a skin",
+      "selectBackground": "Select a background",
+      "selectFrame": "Select a frame",
+    },
+    "es": {
+      "options.button_auto": "🤖 Automático",
+      "selectSkin": "Select a skin",
+      "selectBackground": "Select a background",
+      "selectFrame": "Select a frame",
+    }
+}
+function resolveLanguage() {
+    // Check manual selection first (if we implemented saving it)
+    // For now check navigator
+    let lang = navigator.language || navigator.userLanguage || DEFAULT_LANGUAGE;
+    lang = lang.split('-')[0].toLowerCase();
+    return AVAILABLE_LANGUAGES.includes(lang) ? lang : DEFAULT_LANGUAGE;
+}
+async function loadLanguage(lang) {
+    // Hybrid Approach: Try Fetch (Live Server), Fallback to embedded (File/Offline)
+    const isLocalFile = window.location.protocol === 'file:';
+    
+    if(!isLocalFile) {
+        try {
+            const resp = await fetch(`lang/${lang}.json`);
+            if(resp.ok) {
+                const data = await resp.json();
+                TRANSLATIONS[lang] = data; // Cache/Overwrite
+                return data;
+            }
+        } catch(e) {
+            // console.warn("Failed to load external lang file, using internal fallback if available.", e);
+        }
+    }
+    
+    // Return from internal object if fetch failed or skipped
+    return TRANSLATIONS[lang] || TRANSLATIONS[DEFAULT_LANGUAGE];
+}
+function getTranslation(key, params = {}) {
+    const data = TRANSLATIONS[currentLanguage] || TRANSLATIONS[DEFAULT_LANGUAGE];
+    // Split key by dot (e.g. main.btn_copy)
+    const keys = key.split('.');
+    let value = data;
+    
+    for(const k of keys) {
+        if(value && value[k]) value = value[k];
+        else return key; // Return key if not found
+    }
+    
+    // Replace params
+    for(const [pKey, pVal] of Object.entries(params)) {
+        value = value.replace(`{{${pKey}}}`, pVal);
+    }
+    
+    return value;
+}
+function applyTranslations() {
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        
+        // Check if attribute target (e.g. [placeholder]main.key)
+        if(key.startsWith('[')) {
+            const match = key.match(/^\[(.*?)\](.*)/);
+            if(match) {
+                const attr = match[1];
+                const realKey = match[2];
+                el.setAttribute(attr, getTranslation(realKey));
+            }
+        } else {
+            el.innerHTML = getTranslation(key); // Use innerHTML to support span/links
+        }
+    });
+    
+    // Update dynamic elements that might need forced redraw
+    //updateModeButton(); 
+    //updateAcHelpText();
+    //updateGradient(); // Force re-render of output text which might depend on lang format labels
+}
+async function setLanguage(lang) {
+    if(lang === 'auto') lang = resolveLanguage();
+    if(!AVAILABLE_LANGUAGES.includes(lang)) lang = DEFAULT_LANGUAGE;
+    
+    currentLanguage = lang;
+    await loadLanguage(lang);
+    applyTranslations();
+    
+    // Update UI Flags
+    document.querySelectorAll('.lang-flag').forEach(img => {
+        img.classList.toggle('active', img.dataset.lang === lang);
+    });
+    document.getElementById('langAutoBtn').classList.toggle('opacity-50', lang !== resolveLanguage());
+}
+function initFlags() {
+    const container = document.getElementById('flagsContainer');
+    // Flags mapping (using flagcdn)
+    const flags = {
+        'en': 'us', // English -> US flag
+        'es': 'es',
+        'fr': 'fr',
+        'it': 'it',
+        'zh': 'cn',
+        'ja': 'jp',
+        'ko': 'kr',
+        'de': 'de',
+        'ar': 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Flag_of_the_Arab_League.svg/1920px-Flag_of_the_Arab_League.svg.png',
+        'ga': 'ie'
+    };
+    
+    AVAILABLE_LANGUAGES.forEach(lang => {
+        const img = document.createElement('img');
+        if(flags[lang].startsWith("http")) img.src = flags[lang];
+        else img.src = `https://flagcdn.com/w40/${flags[lang]}.png`;
+        // img.style.height = "26px"
+        img.className = 'lang-flag';
+        img.dataset.lang = lang;
+        img.title = lang.toUpperCase();
+        img.onclick = () => setLanguage(lang);
+        container.appendChild(img);
+    });
+    
+    document.getElementById('langAutoBtn').onclick = () => setLanguage('auto');
+}
 function runDelayed() {
   /*
   setTimeout(()=>{
@@ -3171,6 +3360,7 @@ function updateFitTypeButton(type){
   }
 }
 document.addEventListener("DOMContentLoaded", () => {
+  initFlags();
   loadCounter();
   loadFrames();
   loadOrnaments();
@@ -3182,6 +3372,7 @@ document.addEventListener("DOMContentLoaded", () => {
       loadChecking();
     },10000)
   },2500)
+  setTimeout(() => setLanguage('auto'), 100);
   setTimeout(()=>{
     const currentHostname = window.location.hostname;
     console.log("Script is running on:", currentHostname); 
@@ -3200,6 +3391,7 @@ function processAds() {
   lockElementWithMessage(document.getElementById("button-toggle-custom-gradient-div"),"adlockedfit",`Disable AdBlock to use custom gradients!`)
   lockElementWithMessage(document.getElementById("customskindiv"),"adlockedsmall",`Disable AdBlock to use custom skin texture!`)
   lockElementWithMessage(document.getElementById("unlock-features-div"),"adlockedunlockbutton",`Disable AdBlock to access new features!`)
+  lockElementWithMessage(document.getElementById("button-nametag-div"),"adlockedunlockbutton",`Disable AdBlock to access nametag feature!`)
 }
 setTimeout(()=>{
   return
