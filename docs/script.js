@@ -3401,9 +3401,6 @@ function layer() {
       <img src="https://docs.google.com/drawings/d/e/2PACX-1vQeA_0grxfEpYr9FsuT7ejw7YveuRbkFj-5Ax8g37OwTVFcMvJ0vAKxd2_KyNCr7-PTCd25IfJSuqi6/pub?w=700" style="width: 100%; border-radius: 8px;">
     </a>
   `;
-  profileInputLabel.style.position = 'fixed';
-  profileInputLabel.style.bottom = '10px';
-  profileInputLabel.style.right = '10px';
   profileInputLabel.style.width = '450px';
   profileInputLabel.style.zIndex = '9999';
 }
