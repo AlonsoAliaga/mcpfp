@@ -3394,16 +3394,6 @@ function processAds() {
   lockElementWithMessage(document.getElementById("button-nametag-div"),"adlockedunlockbutton",`Disable AdBlock to access nametag feature!`)
   layer();
 }
-function layer() {
-  const profileInputLabel = document.getElementById('profile_input_label');
-  profileInputLabel.innerHTML = `
-    <a href="https://alonsoaliaga.com/rank-texture" target="_blank">
-      <img src="https://docs.google.com/drawings/d/e/2PACX-1vQeA_0grxfEpYr9FsuT7ejw7YveuRbkFj-5Ax8g37OwTVFcMvJ0vAKxd2_KyNCr7-PTCd25IfJSuqi6/pub?w=700" style="width: 100%; border-radius: 8px;">
-    </a>
-  `;
-  profileInputLabel.style.width = '450px';
-  profileInputLabel.style.zIndex = '9999';
-}
 setTimeout(()=>{
   return
   let success = false;
