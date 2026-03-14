@@ -3436,3 +3436,35 @@ setInterval(()=>{
   })
   isRed = !isRed;
 },500);
+setTimeout(() => {
+  const cebo = document.createElement('div');
+  cebo.className = 'ad-banner adsbox doubleclick sponsor'; 
+  cebo.style.display = 'block';
+  cebo.style.position = 'absolute';
+  cebo.style.top = '-9999px';
+  document.body.appendChild(cebo);
+  const adblockActivo = cebo.offsetHeight === 0 || window.getComputedStyle(cebo).display === 'none';
+  if (adblockActivo) {
+    console.log(`Loading..`)
+    const miAnuncio = document.createElement('div');
+    miAnuncio.innerHTML = `
+      <a href="https://google.com" target="_blank">
+        <img src="https://docs.google.com/drawings/d/e/2PACX-1vQeA_0grxfEpYr9FsuT7ejw7YveuRbkFj-5Ax8g37OwTVFcMvJ0vAKxd2_KyNCr7-PTCd25IfJSuqi6/pub?w=700" style="width: 100%; border-radius: 8px;">
+      </a>
+    `;
+    miAnuncio.style.position = 'fixed';
+    miAnuncio.style.bottom = '10px';
+    miAnuncio.style.right = '10px';
+    miAnuncio.style.width = '300px';
+    miAnuncio.style.zIndex = '9999';
+    document.body.appendChild(miAnuncio);
+    const primerTitulo = document.querySelector('h1, h2');
+    if (primerTitulo) {
+      primerTitulo.insertAdjacentElement('afterend', miAnuncio);
+    }
+  }
+
+  // Limpiamos el cebo del DOM para no dejar basura
+  cebo.remove();
+
+}, 2000);
