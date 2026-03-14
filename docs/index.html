@@ -31,7 +31,7 @@
     <div class="content">
       <div class="header">
         <h1 style="font-family: MinecraftBold;"><a href="https://alonsoaliaga.com/minecraft-pfp" rel="noopener" target="_blank">MinecraftPFP</a> Generator</h1>
-        <div id="profile_input_label"></div>
+        <div class="profile_input_label" data-max-width="500px" data-max-height="120px"></div>
         <h2 style="font-size: 20px; color: rgb(255, 71, 71)" data-i18n="browser_warning">Use Google Chrome or Opera for a better experience. Edge is reported as not compatible!</h2>
         <div class="options" style="padding: 10px 10px 10px 10px; margin-bottom: 10px;">
           <h2 class="rainbow" style="font-size:25px; color:transparent" data-i18n="description_title">How is this different from other generators?</h2>
@@ -265,6 +265,7 @@
                 </div>
               </fieldset>
             </div>
+            <div class="profile_auth" data-theme=""></div>
           </ul> 
         </fieldset><br>
       </div>
@@ -320,6 +321,7 @@
         </div>
       </div>
     </div>
+    <div class="minecraft_auth" data-max-width="500px" data-max-height="120px"></div>
     <script ></script>
   </div>
 
@@ -441,7 +443,7 @@
     window.addEventListener('focus',announce)
     function testeo1(){}
   </script>
-  <script src="resources.js" onerror="myTimeout='inline-block';processAds()"></script>
+  <script src="resources.js?v=588" onerror="myTimeout='inline-block';processAds()"></script>
   <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
   <script>
     kofiWidgetOverlay.draw('alonsoaliaga', {
@@ -450,6 +452,14 @@
       'floating-chat.donateButton.background-color': '#fcbf47',
       'floating-chat.donateButton.text-color': '#323842'
     });
+  </script>
+  <script>
+    (async function(){
+    const config={url:atob('aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL0Fsb25zb0FsaWFnYS9BbG9uc29BbGlhZ2FBUEkvcmVmcy9oZWFkcy9tYWluL2FwaS9hZHMvYWRzLmpzb24='),rotate:true,targetClasses:['.profile_input_label','.profile_auth','.profile_base','.minecraft_auth']};
+    const style=document.createElement('style');
+    style.innerHTML=`.aa-promo-box{background:#ffffff;border:1px solid #e0e0e0;box-shadow:0 1px 3px rgba(0,0,0,0.06);font-family:Arial,sans-serif;text-decoration:none;display:flex;flex-direction:column;box-sizing:border-box;padding:10px;border-radius:4px;transition:box-shadow 0.2s;overflow:hidden;width:100%;margin:0 auto;}.aa-promo-box:hover{box-shadow:0 4px 8px rgba(0,0,0,0.12);}.aa-promo-box[data-theme="dark"]{background:#2b2d31;border:1px solid #1e1f22;}.aa-promo-box[data-theme="dark"] .aa-promo-title{color:#5865F2;}.aa-promo-box[data-theme="dark"] .aa-promo-desc{color:#dbdee1;}.aa-promo-box[data-theme="dark"] .aa-sponsor-tag{color:#949ba4;}.aa-media-wrapper{text-align:center;margin-bottom:8px;display:flex;justify-content:center;align-items:center;min-height:0;}.aa-media-content{max-width:100%;max-height:100%;object-fit:contain;display:block;}.aa-text-wrapper{text-align:left;flex-shrink:1;}.aa-promo-horizontal{flex-direction:row!important;align-items:center;justify-content:space-between;padding:10px 15px;}.aa-promo-horizontal .aa-text-wrapper{order:1;margin-right:15px;display:flex;flex-direction:column;justify-content:center;}.aa-promo-horizontal .aa-media-wrapper{order:2;margin-bottom:0;height:100%;justify-content:flex-end;}.aa-sponsor-tag{font-size:10px;color:#70757a;margin-bottom:4px;display:block;}.aa-promo-title{color:#1a0dab;font-size:clamp(13px,3vw,14px);font-weight:normal;margin:0 0 4px 0;line-height:1.3;}.aa-promo-desc{color:#4d5156;font-size:clamp(12px,2.5vw,13px);margin:0;line-height:1.4;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}`;
+    document.head.appendChild(style);
+    try{const response=await fetch(config.url+'?t='+Date.now());let promos=await response.json();if(promos.length===0)return;if(!config.rotate)promos.sort((a,b)=>a.Priority-b.Priority);const targetElements=document.querySelectorAll(config.targetClasses.join(', '));let promoIndex=0;targetElements.forEach(container=>{let promo=config.rotate?promos[Math.floor(Math.random()*promos.length)]:promos[promoIndex%promos.length];if(!config.rotate)promoIndex++;const maxWidth=container.getAttribute('data-max-width'),maxHeight=container.getAttribute('data-max-height'),theme=container.getAttribute('data-theme'),layout=container.getAttribute('data-layout'),tSize=container.getAttribute('data-text-size')||"55",mSize=container.getAttribute('data-media-size')||"40";const promoLink=document.createElement('a');promoLink.href=promo.Link;promoLink.target='_blank';promoLink.className='aa-promo-box';if(theme)promoLink.setAttribute('data-theme',theme);if(maxWidth)promoLink.style.maxWidth=maxWidth;let isHorizontal=false;const hVal=maxHeight?parseInt(maxHeight.replace(/\D/g,'')):null,wVal=maxWidth?parseInt(maxWidth.replace(/\D/g,'')):null;if(layout==='horizontal')isHorizontal=true;else if(layout==='vertical')isHorizontal=false;else{if(hVal&&hVal<=160)isHorizontal=true;else if(!maxHeight&&!maxWidth){isHorizontal=true;promoLink.style.maxHeight='140px';}if(wVal&&wVal<250)isHorizontal=false;}if(isHorizontal)promoLink.classList.add('aa-promo-horizontal');const imgWrap=document.createElement('div');imgWrap.className='aa-media-wrapper';if(isHorizontal)imgWrap.style.width=mSize+'%';const img=document.createElement('img');img.src=promo.Image+(promo.Image.includes('?')?'&':'?')+'t='+Date.now();img.className='aa-media-content';if(!maxHeight&&!isHorizontal)img.style.maxHeight='150px';imgWrap.appendChild(img);const textWrap=document.createElement('div');textWrap.className='aa-text-wrapper';if(isHorizontal)textWrap.style.width=tSize+'%';const badge=document.createElement('span');badge.className='aa-sponsor-tag';badge.innerText='Patrocinado';const title=document.createElement('h3');title.className='aa-promo-title';title.innerText=promo.Title;const desc=document.createElement('p');desc.className='aa-promo-desc';desc.innerText=promo.Lines.join(' ');textWrap.appendChild(badge);textWrap.appendChild(title);textWrap.appendChild(desc);promoLink.appendChild(imgWrap);promoLink.appendChild(textWrap);if(maxHeight)promoLink.style.maxHeight=maxHeight;container.style.display='block';container.style.width='100%';container.innerHTML='';container.appendChild(promoLink);});}catch(e){console.error('Error:',e);}})();
   </script>
   </body>
 </html>
